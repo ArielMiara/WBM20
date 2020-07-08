@@ -22,3 +22,4 @@ else(${CMAKE_HOST_APPLE})
 endif(${CMAKE_HOST_APPLE})
 
 target_include_directories(WBM20 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+install (TARGETS WBM20 RUNTIME DESTINATION ghaas/bin)
