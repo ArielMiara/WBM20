@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -11,6 +11,8 @@ bfekete@gc.cuny.edu
 *******************************************************************************/
 
 #include <stdio.h>
+#include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -78,7 +80,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	C0 = (-1 + C + D) / (1 + C + D);
 	C1 = ( 1 + C - D) / (1 + C + D);
 	C2 = ( 1 - C + D) / (1 + C + D);
-//   if ((C0 < 0.0) || (C1 < 0.0) || (C2 < 0.0)) { C0 = 1.0; C1 = 0; C2 = 0; } // According to Pounce C1 and C2 can be negative
+    if ((C0 < 0.0) || (C1 < 0.0) || (C2 < 0.0)) { C0 = 1.0; C1 = 0; C2 = 0; } // According to Pounce C1 and C2 can be negative
 
 	MFVarSetFloat (_MDOutMuskingumC0ID, itemID, C0);
 	MFVarSetFloat (_MDOutMuskingumC1ID, itemID, C1);

@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -12,6 +12,7 @@ bfekete@gc.cuny.edu
 
 #include <stdio.h>
 #include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -33,9 +34,7 @@ static void _MDRiverbedShapeExponent (int itemID) {
 	float wMean;     // River width at mean discharge [m]
 // Local
 	float dL;        // Reach length [m]
-//	float eta = 0.25, nu = 0.4,  tau = 8.0,  phi = 0.58;    //old
-//	float eta = 0.36, nu = 0.37, tau = 3.55, phi = 0.51;	//new based on Knighton (avg)
-	float eta = 0.33, nu = 0.35, tau = 3.67, phi = 0.45;	// Hey and Thorn (1986)
+	float eta = 0.25, nu = 0.4, tau = 8.0, phi = 0.58;
 
 	if (MFVarTestMissingVal (_MDInDischMeanID, itemID)) {
 		MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,  itemID, 0.0);
@@ -50,8 +49,6 @@ static void _MDRiverbedShapeExponent (int itemID) {
 		// Slope independent riverbed geometry
 		yMean = eta * pow (discharge, nu);
 		wMean = tau * pow (discharge, phi);
-//		printf("eta = %f, nu = %f, tau = %f, phi = %f\n", eta, nu, tau, phi);
-
 		MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,  itemID, yMean);
 		MFVarSetFloat (_MDOutRiverbedWidthMeanID,     itemID, wMean);
 		MFVarSetFloat (_MDOutRiverbedVelocityMeanID,  itemID, discharge / (yMean * wMean));
@@ -63,7 +60,6 @@ static void _MDRiverbedShapeExponent (int itemID) {
 
 	yMean = eta * pow (discharge, nu);
 	wMean = tau * pow (discharge, phi);
-
 	MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,      itemID, yMean);
 	MFVarSetFloat (_MDOutRiverbedWidthMeanID,         itemID, wMean);
 	MFVarSetFloat (_MDOutRiverbedVelocityMeanID,      itemID, discharge / (yMean * wMean));

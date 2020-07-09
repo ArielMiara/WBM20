@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -11,6 +11,7 @@ bfekete@gc.cuny.edu
 *******************************************************************************/
 
 #include <stdio.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -29,13 +30,12 @@ static void _MDDischLevel1 (int itemID) {
 	else discharge = MFVarGetFloat (_MDInDischLevel2ID,   itemID, 0.0);
 
 //		if (itemID == 25014) printf("discharge= %f\n",discharge);
-//	if (itemID == 1224 || itemID == 531) printf("**DischLevel1** itemID = %d, day = %d, discharge = %f\n", itemID, MFDateGetCurrentDay(), discharge);
 	MFVarSetFloat (_MDOutDischLevel1ID, itemID, discharge);
 }
 
 int MDDischLevel1Def() {
 
-   const char *optStr;
+   char *optStr;
    const char *options [] = { MDNoneStr, (char *) NULL };
 
    

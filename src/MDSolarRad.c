@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -11,7 +11,9 @@ bfekete@gc.cuny.edu
 *******************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -159,7 +161,7 @@ int MDSolarRadDef () {
 		case MDcloud:
 		//	printf ("Option: Cloud!!!");
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
-			    ((_MDInputID         = MFVarGetID (MDVarCloudCover,     "Pro%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInputID         = MDCloudCoverDef()) == CMfailed) ||
 			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDSolarRadiationCloud) == CMfailed)) return (CMfailed);
 			break;

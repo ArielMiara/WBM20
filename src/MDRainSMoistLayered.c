@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -13,9 +13,9 @@ dominik.wisser@unh.edu
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
-
 //float ActETP (float soilMoist[],float MaxSoilMoist[],float potETP, int soilLayerNum, int numSoilLayers)
 //static float ActETP(float [], float[],float,int,int);
 static float *ActETP(float [],float [], float [], float , int , float ,float [],float);
@@ -89,7 +89,7 @@ static void _MDRainSMoistChg (int itemID) {
 	float waterTableDepthParameter =1.0;
 	int i;
 	float isInitial = MFVarGetFloat(_MDInIsInitialID,itemID,0.0);
-	float rootDepth;			//in mm to be consistent with old WBMstable data!
+	float rootDepth;			//in mm to be consistent with old WBMplus data!
 // Local
 	float liquidIn;
  
@@ -440,7 +440,7 @@ int MDRainSMoistChgLayeredSoilDef () {
 	int ret = 0;
 	float par;
 	int i;
-	char soilLiquidName [16];
+	char soilLiquidName [12];
 	char soilSiltFractionName[22];
 	char soilClayFractionName[22];
 	char soilSandFractionName[22];
@@ -495,7 +495,7 @@ int MDRainSMoistChgLayeredSoilDef () {
 							
 		//	printf ("Reading Layer  = %i of %i\n",i, _MDNumberOfSoilMoistureLayers);
 			
-			sprintf (soilDepthName,  "SoilDepth_%02d",  i + 1); //
+			sprintf (soilDepthName, "SoilDepth_%02d", i + 1); //  
 			sprintf (soilLiquidName, "SoilLiquid_%02d", i + 1); //  
 			sprintf (soilIceName, "SoilIce_%02d", i + 1); //  
 			sprintf (soilSiltFractionName, "SoilSiltPercentage_%02d", i + 1); //  	

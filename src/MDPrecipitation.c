@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -11,6 +11,7 @@ bfekete@gc.cuny.edu
 
 #include <stdio.h>
 #include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -68,14 +69,14 @@ static void _MDPrecipFraction (int itemID)
 	int nDays    = MFDateGetMonthLength ();
 
 	if (MFVarTestMissingVal (_MDInPrecipID,     itemID) ||
-		MFVarTestMissingVal (_MDInPrecipFracID, itemID)) { MFVarSetMissingVal (_MDOutPrecipID,itemID); return; }
+		 MFVarTestMissingVal (_MDInPrecipFracID, itemID)) { MFVarSetMissingVal (_MDOutPrecipID,itemID); return; }
 
 	precipIn   = MFVarGetFloat (_MDInPrecipID,     itemID, 0.0);
 	precipFrac = MFVarGetFloat (_MDInPrecipFracID, itemID, 1.0 / nDays);
 
-	precipOut = precipIn *  precipFrac * nDays;
-	if (precipOut < 0.0){ CMmsgPrint (CMmsgUsrError, "Precip negative! itemID=%d precipIn=%f precipFrac =%fprecipFrac", itemID, precipIn, precipFrac);}
-	if (itemID == 9456) CMmsgPrint(CMmsgUsrError, "PrecipOut %f nDays %i precipFrac %f precipIn %f \n",precipOut, nDays,precipFrac,precipIn);
+	precipOut = precipIn *  precipFrac* nDays;
+	if (precipOut <0){printf ("Precip negative! precipIn=%f precipFrac =%f itemID = %i \n", precipIn, precipFrac, itemID);}
+//if (itemID==2)printf("PrecipOut %f nDays %i precipFrac %f precipIn %f \n",precipOut, nDays,precipFrac,precipIn);
 	MFVarSetFloat (_MDOutPrecipID,itemID,precipOut);
 	}
 
@@ -97,7 +98,8 @@ int MDPrecipitationDef ()
 	switch (optID)
 		{
 		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  MFBoundary);
-		    break;
+ 
+		break;
 		case MDwetdays:
 			if (((_MDInWetDaysID    = MDWetDaysDef ()) == CMfailed) ||
 			    ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||

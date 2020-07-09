@@ -1,8 +1,8 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2014, UNH - CCNY/CUNY
+Copyright 1994-2020, UNH - ASRC/CUNY
 
 MDBaseFlow.c
 
@@ -11,6 +11,8 @@ bfekete@gc.cuny.edu
 *******************************************************************************/
 
 #include <stdio.h>
+#include <math.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -85,7 +87,7 @@ static void _MDBaseFlow (int itemID) {
 	grdWater    = grdWater - baseFlow;
 	grdWaterChg = grdWater - grdWaterChg;
 
-	//if ((itemID == 486)) printf("y = %d, m = %d, d = %d, baseFlow = %f, grdWater = %f, grdWaterChg = %f, grdWaterRecharge = %f\n", MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay(), baseFlow, grdWater, grdWaterChg, grdWaterRecharge);	//RJS 071511
+//	if ((itemID == 25014)) printf("m = %d, d = %d, @@@@@@@@@@@@@ baseFlow = %f, grdWater = %f, grdWaterChg = %f, grdWaterRecharge = %f\n", MFDateGetCurrentMonth(), MFDateGetCurrentDay(), baseFlow * 100000, grdWater * 100000, grdWaterChg * 100000, grdWaterRecharge * 100000);	//RJS 071511
 
 //in= irrReturnFlow+grdWaterRecharge;
 //out = irrUptakeGrdWater + grdWaterChg;

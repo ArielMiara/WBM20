@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -11,6 +11,7 @@ bfekete@gc.cuny.edu
 *******************************************************************************/
 
 #include <stdio.h>
+#include <cm.h>
 #include <math.h>
 #include <MF.h>
 #include <MD.h>
@@ -96,9 +97,7 @@ static void _MDSPackChg (int itemID) {
 		MFVarSetFloat(_MDOutSnowDensityID,itemID,sDensity);  
 		MFVarSetFloat(_MDOutSnowDepthID,itemID, sDepth); 
 	//	printf ("Ende SnowPackChange \n");
-
-//		if (itemID == 54914) printf("-- m = %d, d = %d, SF = %f, SM = %f, airT = %f, precip = %f, sPack = %f, sPackChg = %f\n", MFDateGetCurrentMonth(), MFDateGetCurrentDay(), _MDFallThreshold, _MDSnowMeltThreshold, airT, precip, sPack, sPackChg);
-
+	
 }
 
 int MDSPackChgDef () {

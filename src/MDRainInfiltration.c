@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -12,6 +12,7 @@ bfekete@gc.cuny.edu
 
 #include <stdio.h>
 #include <string.h>
+#include <cm.h>
 #include <MF.h>
 #include <MD.h>
 
@@ -38,7 +39,7 @@ static void _MDRainInfiltrationSimple (int itemID) {
 	infiltration = surplus *_MDInfiltrationFrac;
 	MFVarSetFloat (_MDOutRainSurfRunoffID,       itemID, surfRunoff);
 	MFVarSetFloat (_MDOutRainInfiltrationID,     itemID, infiltration);
-//	printf("Gamma = %f, Infiltraction %f surfRunoff %f \n",_MDInfiltrationFrac, infiltration,surfRunoff);
+//	printf("Infiltraction %f surfRunoff %f \n",infiltration,surfRunoff);
 }
 static void _MDRainInfiltrationSaturation (int itemID){
 		MFVarSetFloat (_MDOutRainSurfRunoffID,       itemID, MFVarGetFloat(_MDInSaturationExcessRunoffID, itemID,0.0));
@@ -56,16 +57,16 @@ int MDRainInfiltrationDef () {
 	//printf ("THE framework = greatest time sink ever invented\n");
 	if (_MDOutRainInfiltrationID != MFUnset) return (_MDOutRainInfiltrationID);
 
-	if (((optStr = MFOptionGet (MDParInfiltrationFrac))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDInfiltrationFrac = par;		//RJS 082812, Gamma wasn't read in until this edit
 	
 	const char *soilMoistureOptions [] = { "bucket", "layers", (char *) NULL };
-	int soilMoistureOptionID;
-	//TODO Add baseflow from layered SM to infiltration!
-	if (((optStr = MFOptionGet (MDOptSoilMoisture))  == (char *) NULL) || ((soilMoistureOptionID = CMoptLookup (soilMoistureOptions, optStr, true)) == CMfailed)) {
-		CMmsgPrint(CMmsgUsrError," Soil Moisture mode not specifed! Options = 'bucket' or 'layers'\n");
-		return CMfailed;
-	}
-
+		int soilMoistureOptionID;
+		 //TODO Add baseflow from layered SM to infiltration!
+			if (((optStr = MFOptionGet (MDOptSoilMoisture))  == (char *) NULL) || ((soilMoistureOptionID = CMoptLookup (soilMoistureOptions, optStr, true)) == CMfailed)) {
+						CMmsgPrint(CMmsgUsrError," Soil Moisture mode not specifed! Options = 'bucket' or 'layers'\n");
+						return CMfailed;
+					}
+		
+	
 	MFDefEntering ("Rainfed Infiltration");
 	 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
@@ -97,7 +98,6 @@ int MDRainInfiltrationDef () {
 			break;
 		case MDSpatially:
 			_MDInfiltrationFractionID = MFVarGetID (MDParInfiltrationFracSpatial, "mm", MFInput, MFState, MFBoundary);
-			break;		// RJS 082812
 		case MDsimple:
 		case MDvarying:
 			if ((_MDInRainWaterSurplusID = MDRainWaterSurplusDef ()) == CMfailed) return (CMfailed);

@@ -2,7 +2,7 @@
 
 GHAAS Water Balance/Transport Model V3.0
 Global Hydrologic Archive and Analysis System
-Copyright 1994-2020, UNH - ASRC/CUNY
+Copyright 1994-2011, UNH - CCNY/CUNY
 
 wbm.h
 
@@ -14,4 +14,4 @@ balazs.fekete@unh.edu
 
 #include <cm.h>
 #include <MF.h>
-#include "MD.h"
+#include <MD.h>
