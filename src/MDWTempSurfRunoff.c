@@ -13,7 +13,6 @@ Irrigation inputs are not accounted here.
 
 *******************************************************************************/
 
-#include <stdio.h>
 #include <string.h>
 #include <cm.h>
 #include <MF.h>

@@ -10,7 +10,6 @@ dominik.wisser@unh.edu
 
 *******************************************************************************/
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cm.h>
@@ -83,10 +82,10 @@ static void  printCrops(const MDIrrigatedCrop *);
 static int   getNumGrowingSeasons(float);
 
 static float getIrrGrossWaterDemand(float, float);
-static float irrAreaFrac;
 
 static void _MDIrrGrossDemand (int itemID) {
 //Input
+    float irrAreaFrac;
 	float irrEffeciency;
 	float dailyPrecip    = 0.0;
 	float dailyEffPrecip = 0.0;
