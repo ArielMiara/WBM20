@@ -14,7 +14,7 @@ sagy.cohen@colorado.edu.au
 last update: May 16 2011
 *******************************************************************************/
 
-#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <MF.h>
 #include <MD.h>
@@ -49,7 +49,7 @@ static void _MDQBARTpreprocess (int itemID) {
 	if (itemID > Max_itemID) {
 		Max_itemID=itemID+1;
 		printf("Max_itemID:%d\n",Max_itemID);
-		PixelmaxQ = (float*)malloc(Max_itemID*sizeof(float));
+		PixelmaxQ = (float*) malloc(Max_itemID*sizeof(float));
 		dailyQ = (float**) malloc(Max_itemID*sizeof(float*));
 		for (i = 1; i < Max_itemID+1; i++)
    			dailyQ[i] = (float*) malloc(366*sizeof(float));

@@ -158,7 +158,7 @@ int MDSolarRadDef () {
 		case MDcloud:
 		//	printf ("Option: Cloud!!!");
 			if (((_MDGrossRadID      = MDGrossRadDef ()) == CMfailed) ||
-			    ((_MDInputID         = MFVarGetID (MDVarCloudCover,     "Pro%",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInputID         = MDCloudCoverDef()) == CMfailed) ||
 			    ((_MDOutSolarRadID   = MFVarGetID (MDVarSolarRadiation, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    (MFModelAddFunction (_MDSolarRadiationCloud) == CMfailed)) return (CMfailed);
 			break;
