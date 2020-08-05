@@ -38,7 +38,7 @@ static void _MDDischLevel2 (int itemID) {
 		if (_MDOutIrrUptakeRiverID != MFUnset) {
 		// River uptake is turned on
 			discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
-			if (discharge_mm < 0.0) discharge_mm = 0; // This should not be necessary
+//			if (discharge_mm < 0.0) discharge_mm = 0; // This should not be necessary
 			if (discharge_mm > irrUptakeExt) {
 			// Irrigation is satisfied from the nearby river
 				irrUptakeRiver  = irrUptakeExt;
