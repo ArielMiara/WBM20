@@ -78,8 +78,9 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	C1 = ( 1 + C - D) / (1 + C + D);
 	C2 = ( 1 - C + D) / (1 + C + D);
 
-	// According to Pounce C1 and C2 can be negative but negative values could lead to negative discharge
-	if ((C0 < 0.0) || (C1 < 0.0) || (C2 < 0.0)) { C0 = 1.0; C1 = 0; C2 = 0; }
+	// According to Pounce C1 and C2 can be negative 
+	if (C0 < 0.0) { C0 = 1.0; C1 = 0; C2 = 0; }
+//	if ((C0 < 0.0) || (C1 < 0.0) || (C2 < 0.0)) { C0 = 1.0; C1 = 0; C2 = 0; }
 
 	MFVarSetFloat (_MDOutMuskingumC0ID, itemID, C0);
 	MFVarSetFloat (_MDOutMuskingumC1ID, itemID, C1);
