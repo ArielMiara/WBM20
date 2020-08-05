@@ -38,6 +38,7 @@ static void _MDDischLevel2 (int itemID) {
 		if (_MDOutIrrUptakeRiverID != MFUnset) {
 		// River uptake is turned on
 			discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
+			if (discharge_mm < 0.0) discharge_mm = 0; // This should not be necessary
 			if (discharge_mm > irrUptakeExt) {
 			// Irrigation is satisfied from the nearby river
 				irrUptakeRiver  = irrUptakeExt;
@@ -51,14 +52,15 @@ static void _MDDischLevel2 (int itemID) {
 				discharge_mm    = 0.0;
 			}
 			MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
+			discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
+			MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
 		}
-		else
-		// River uptake is turned off all irrigational demand is from unsustainable sources
+		else {
+			// River uptake is turned off all irrigational demand is from unsustainable sources
 			irrUptakeExcess = irrUptakeExt;
+		}
 		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
-		discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
 	}
-	MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
 }
 
 enum { MDnone, MDcalculate };
