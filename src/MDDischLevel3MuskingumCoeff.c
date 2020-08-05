@@ -50,7 +50,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	vMean     = MFVarGetFloat (_MDInRiverbedVelocityMeanID,  itemID, 0.0);
 	beta      = MFVarGetFloat (_MDInRiverbedShapeExponentID, itemID, 0.0);
 
-	if ((vMean <= 0.0) || (dL    <= 0.0) || (slope <= 0.0) || (yMean <= 0.0) || (wMean <= 0.0) || (beta  <= 0.0)) { 
+	if ((dL    <= 0.0) || (slope <= 0.0) || (yMean <= 0.0) || (wMean <= 0.0) || (vMean <= 0.0) || (beta  <= 0.0)) { 
 	    // Falling back to flow-accumulation
 		C0 = 1.0;
 		C1 = C2 = C = 0.0;
