@@ -50,7 +50,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 	vMean     = MFVarGetFloat (_MDInRiverbedVelocityMeanID,  itemID, 0.0);
 	beta      = MFVarGetFloat (_MDInRiverbedShapeExponentID, itemID, 0.0);
 	if (CMmathEqualValues (vMean,     0.0)) {
-		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 0.0);
+		MFVarSetFloat (_MDOutMuskingumC0ID, itemID, 1.0);
 		MFVarSetFloat (_MDOutMuskingumC1ID, itemID, 0.0);
 		MFVarSetFloat (_MDOutMuskingumC2ID, itemID, 0.0);
 		MFVarSetFloat (_MDOutCourantID,     itemID, 0.0);
