@@ -140,10 +140,11 @@ static float getCropKc(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, in
 static float getCurCropRootingDepth(MDIrrigatedCrop *pIrrCrop, int dayssinceplanted) {
 	float rootDepth;
 	float totalSeasonLenth;
-	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+
+	totalSeasonLenth = getTotalSeasonLength (pIrrCrop);
     rootDepth = pIrrCrop->cropRootingDepth * ( 0.5 + 0.5 * sin(3.03 * (dayssinceplanted / totalSeasonLenth) - 1.47));
  	if (rootDepth <0.15) rootDepth =.15;
-	return rootDepth;
+	return (rootDepth);
 }
 
 static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP) {
@@ -151,22 +152,20 @@ static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP)
 	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
     if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
 	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
-	return cropdeplFactor;
+	return (cropdeplFactor);
 }
 
 static int readCropParameters(const char *filename) {
 	FILE *inputCropFile;
+	char buffer[512];
 	int i = 0, die;
+
 	if ((inputCropFile = fopen(filename, "r")) == (FILE *) NULL) {
 		CMmsgPrint (CMmsgUsrError,"Crop Parameter file could not be opned, filename: %s\n", filename);
 		return CMfailed;
 	}
 	else {
-		char buffer[512];
-		//read headings..
-
-		fgets (buffer,sizeof (buffer),inputCropFile);
-
+		fgets (buffer,sizeof (buffer),inputCropFile); //read headings..
 		while (fgets(buffer, sizeof(buffer), inputCropFile) != NULL) {
 			_MDirrigCropStruct   = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (i + 1) * sizeof (MDIrrigatedCrop));
 			_MDInCropFractionIDs = (int *) realloc (_MDInCropFractionIDs, (i + 1) * sizeof (int));
@@ -196,15 +195,16 @@ static int readCropParameters(const char *filename) {
 		}
 	}
 	_MDNumberOfIrrCrops = i - 1;	
-	return CMsucceeded;
+	return (CMsucceeded);
 }
-static int   getNumGrowingSeasons(float);
 
-static float getIrrGrossWaterDemand(float netIrrDemand, float IrrEfficiency) {
-	if (IrrEfficiency <= 0) { // no data, set to average value		
-		IrrEfficiency=38;
+static int getNumGrowingSeasons(float irrIntensity) { return (ceil(irrIntensity)); }
+
+static float getIrrGrossWaterDemand(float netIrrDemand, float irrEfficiency) {
+	if (irrEfficiency <= 0.0) { // no data, set to average value		
+		irrEfficiency = 38.0;
 	} 
-	return netIrrDemand / (IrrEfficiency/100);
+	return (netIrrDemand * 100.0 / irrEfficiency);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
@@ -598,8 +598,4 @@ int MDIrrReturnFlowDef() {
 	if (ret == MFUnset) return (MFUnset);
 	_MDOutIrrReturnFlowID = MFVarGetID (MDVarIrrReturnFlow,     "mm",   MFInput, MFFlux,  MFBoundary);
     return (_MDOutIrrReturnFlowID);
-}
-
-static int getNumGrowingSeasons(float irrIntensity){
-	return ceil(irrIntensity);
 }
