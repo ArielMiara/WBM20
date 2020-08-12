@@ -87,8 +87,7 @@ static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSea
 	   
 		if (dayssinceplanted  < totalSeasonLenth) ret = dayssinceplanted;
 	}
-	if (ret >totalSeasonLenth)	CMmsgPrint (CMmsgDebug, "dayssinceplantedkorrect ?? %i %i \n",ret, DayOfYearModel);
-	return ret;
+	return (ret);
 }
 
 static int getCropStage(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
@@ -105,35 +104,44 @@ static int getCropStage(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
 	                           + pIrrCrop->cropSeasLength[1]
 	                           + pIrrCrop->cropSeasLength[2]
 	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
-     return stage;
+	return (stage);
 }
 
-static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
-{
+static float getCropKc(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, int curCropStage) {
 	float kc;
 
-   //Returns kc depending on the current stage of the growing season
-	if (curCropStage == 0) kc = 0.0;		//crop is not currently grown
-	if (curCropStage == 1) kc = pIrrCrop->cropKc[0];
-	if (curCropStage == 2) {
-		int daysInStage = (daysSincePlanted - pIrrCrop->cropSeasLength[0]);
-		kc = pIrrCrop->cropKc[0] + (daysInStage /  pIrrCrop->cropSeasLength[1])*(pIrrCrop->cropKc[1]-pIrrCrop->cropKc[0]);
-	} 
-	if (curCropStage == 3) kc = pIrrCrop->cropKc[1];
-	if (curCropStage == 4) {
-		int daysInStage4 = (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]));
-		//kc = pIrrCrop->cropKc[2] -	    (daysInStage4 / pIrrCrop->cropSeasLength[3]) * abs(pIrrCrop->cropKc[3] - pIrrCrop->cropSeasLength[2]);
-		kc=pIrrCrop->cropKc[1]+ daysInStage4/  pIrrCrop->cropSeasLength[3] *(pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1]);
+	//Returns kc depending on the current stage of the growing season
+	switch (curCropStage) {
+		default:
+		case 0: //crop is not currently grown
+			kc = 0.0;
+			break;
+		case 1:
+			kc = pIrrCrop->cropKc[0];
+			break;
+		case 2:
+			int daysInStage = ;
+			kc = pIrrCrop->cropKc[0]
+			   + ((daysSincePlanted - pIrrCrop->cropSeasLength[0])
+			   / pIrrCrop->cropSeasLength[1]) * (pIrrCrop->cropKc[1] - pIrrCrop->cropKc[0]);
+			break;
+		case 3:
+			kc = pIrrCrop->cropKc[1];
+			break;
+		case 4:
+			kc = pIrrCrop->cropKc[1]
+			   + (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]))
+			   / pIrrCrop->cropSeasLength[3] * (pIrrCrop->cropKc[2] - pIrrCrop->cropKc[1]);
+			break;
 	}
-	if (kc >1.5 )	CMmsgPrint (CMmsgDebug, "kc korrect ?? kc stage dayssinceplanted  kc0 kc1 season0length %f %i %i %f %f %f \n",kc, curCropStage, daysSincePlanted, pIrrCrop->cropKc[0],pIrrCrop->cropKc[1], pIrrCrop->cropSeasLength[0]);
- 	return kc;
+ 	return (kc);
 }
-static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {
+
+static float getCurCropRootingDepth(MDIrrigatedCrop *pIrrCrop, int dayssinceplanted) {
 	float rootDepth;
 	float totalSeasonLenth;
-	totalSeasonLenth =pIrrCrop->cropSeasLength[0] +	pIrrCrop->cropSeasLength[1] +	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-    rootDepth= pIrrCrop->cropRootingDepth *( 0.5 + 0.5 * sin(3.03 *   (dayssinceplanted  /  totalSeasonLenth) - 1.47));
-	if (rootDepth > 2)		CMmsgPrint (CMmsgDebug, "RootDepth correct ?? %f \n",rootDepth);
+	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+    rootDepth = pIrrCrop->cropRootingDepth * ( 0.5 + 0.5 * sin(3.03 * (dayssinceplanted / totalSeasonLenth) - 1.47));
  	if (rootDepth <0.15) rootDepth =.15;
 	return rootDepth;
 }
