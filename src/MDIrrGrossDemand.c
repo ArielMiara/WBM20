@@ -120,7 +120,6 @@ static float getCropKc(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, in
 			kc = pIrrCrop->cropKc[0];
 			break;
 		case 2:
-			int daysInStage = ;
 			kc = pIrrCrop->cropKc[0]
 			   + ((daysSincePlanted - pIrrCrop->cropSeasLength[0])
 			   / pIrrCrop->cropSeasLength[1]) * (pIrrCrop->cropKc[1] - pIrrCrop->cropKc[0]);
