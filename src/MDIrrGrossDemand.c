@@ -71,20 +71,16 @@ static bool _MDIntensityDistributed      = true;
  
 static const char *CropParameterFileName;
 
-static int getTotalSeasonLength (const MDIrrigatedCrop * pIrrCrop) {
+static int getTotalSeasonLength (const MDIrrigatedCrop *pIrrCrop) {
 	return (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2] + pIrrCrop->cropSeasLength [3]);
 }
 static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
 	int ret=-888;
-	 
 	float totalSeasonLenth;
-
-	totalSeasonLenth =
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] +
-	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
 	int dayssinceplanted ;	//Default> crop is not grown!
 	int i;
+
+	totalSeasonLenth = getTotalSeasonLength (pIrrCrop);
 	for (i = 0; i < NumGrowingSeasons; i++) {
 		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
 		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel-DayOfYearPlanting[i]);
@@ -95,27 +91,20 @@ static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSea
 	return ret;
 }
 
-static int getCropStage(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted) {
+static int getCropStage(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
 	int stage = 0;
 	float totalSeasonLenth;
-	totalSeasonLenth =
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] +
-	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-    if (daysSincePlanted <= totalSeasonLenth)
-	stage = 4;
 
-    if (daysSincePlanted <=
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
-	stage = 3;
-
-    if ((daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1]))
-	stage = 2;
-
-    if (daysSincePlanted <= pIrrCrop->cropSeasLength[0])
-	stage = 1;
-
+    if      (daysSincePlanted <= pIrrCrop->cropSeasLength[0]) stage = 1;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]) stage = 2;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]
+	                           + pIrrCrop->cropSeasLength[2]) stage = 3;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]
+	                           + pIrrCrop->cropSeasLength[2]
+	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
      return stage;
 }
 
@@ -606,4 +595,3 @@ int MDIrrReturnFlowDef() {
 static int getNumGrowingSeasons(float irrIntensity){
 	return ceil(irrIntensity);
 }
-
