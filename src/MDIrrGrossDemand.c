@@ -277,16 +277,16 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (refETP        <= 0.01) refETP = 0.01;        // TODO - It is unclear, why this is necessary
 
 		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
-		if (snowpackChg >  0.0) dailyPrecip = 0.0; //Snow Accumulation, no liquid precipitation
-		if (snowpackChg <= 0.0) dailyPrecip = dailyPrecip + fabs (snowpackChg); //Add Snowmelt
+		if (snowpackChg >  0.0) dailyPrecip = 0.0; // Snow Accumulation, no liquid precipitation
+		if (snowpackChg <= 0.0) dailyPrecip = dailyPrecip + fabs (snowpackChg); // Add Snowmelt
 
 		dailyEffPrecip = dailyPrecip;
  
 	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
-		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
+		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; }               // TODO - This is arbitrary end should not be necessary BM
+		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; // TODO - I don't understand why this is necessary FBM
 
 		if (irrIntensity > 2.0) irrIntensity = 2.0; // This limits the number of growing seasons to 2 FBM
 		curDepl = 0.0;
