@@ -282,13 +282,8 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
 <<<<<<< HEAD
-<<<<<<< HEAD
 		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; }               // TODO - This is arbitrary end should not be necessary FBM
 		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; // TODO - I don't understand why this is necessary FBM
-=======
-//		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
-//		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
->>>>>>> parent of 6ef4614... Reverting some changes.
 =======
 //		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
 //		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
