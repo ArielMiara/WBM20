@@ -16,28 +16,6 @@ dominik.wisser@unh.edu
 #include <MF.h>
 #include <MD.h>
 
-#define NumStages 4
-#define numSeasons 2
-#define MDParIrrigationCropFileName "CropParameterFileName"
- 
-typedef struct {
-    int   ID;
-    int   DW_ID;
-    char  cropName [80];
-    char  cropDistrFileName [80];
-    int   cropIsRice;
-    float cropSeasLength [NumStages];
-    float cropKc [NumStages - 1];
-    float cropRootingDepth;
-    float cropDepletionFactor;
-    float cropLeachReq;
-} MDIrrigatedCrop;
-
-enum { FAO_ID = 0, IWMI_ID = 1 };
-
-static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
-
-//Input
 static int  _MDInIrrAreaFracID          = MFUnset;
 
 static int  _MDInIrrRefEvapotransID     = MFUnset;
@@ -69,12 +47,34 @@ static int  _MDRicePercolationRateID     = MFUnset;
 static int  _MDIrrigatedAreaMap;
 static bool _MDIntensityDistributed      = true;
  
+#define NumStages 4
+#define MDParIrrigationCropFileName "CropParameterFileName"
+ 
+typedef struct {
+    int   ID;
+    int   DW_ID;
+    char  cropName [80];
+    char  cropDistrFileName [80];
+    int   cropIsRice;
+    float cropSeasLength [4]; // The parameter file has up to four cropping season FBM
+    float cropKc [4 - 1];
+    float cropRootingDepth;
+    float cropDepletionFactor;
+    float cropLeachReq;
+} MDIrrigatedCrop;
+
+enum { FAO_ID = 0, IWMI_ID = 1 };
+
+static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
+
+//Input
 static const char *CropParameterFileName;
 
 static int getTotalSeasonLength (const MDIrrigatedCrop *pIrrCrop) {
 	return (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2] + pIrrCrop->cropSeasLength [3]);
 }
-static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
+
+static int getDaysSincePlanting(int DayOfYearModel, int *dayOfYearPlanting,int NumGrowingSeasons, const MDIrrigatedCrop *pIrrCrop) {
 	int ret=-888;
 	float totalSeasonLenth;
 	int dayssinceplanted ;	//Default> crop is not grown!
@@ -82,8 +82,8 @@ static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSea
 
 	totalSeasonLenth = getTotalSeasonLength (pIrrCrop);
 	for (i = 0; i < NumGrowingSeasons; i++) {
-		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
-		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel-DayOfYearPlanting[i]);
+		dayssinceplanted = DayOfYearModel - dayOfYearPlanting[i];
+		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel - dayOfYearPlanting[i]);
 	   
 		if (dayssinceplanted  < totalSeasonLenth) ret = dayssinceplanted;
 	}
@@ -128,7 +128,7 @@ static float getCropKc(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, in
 			kc = pIrrCrop->cropKc[1];
 			break;
 		case 4:
-			kc = pIrrCrop->cropKc[1]
+			kc = pIrrCrop->cropKc[2]
 			   + (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]))
 			   / pIrrCrop->cropSeasLength[3] * (pIrrCrop->cropKc[2] - pIrrCrop->cropKc[1]);
 			break;
@@ -213,7 +213,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float dailyPrecip    = 0.0;
 	float dailyEffPrecip = 0.0;
 	float refETP;
-	float cropFraction [_MDNumberOfIrrCrops+1];
+	float cropFraction [_MDNumberOfIrrCrops + 1];
 	float snowpackChg = 0;
 	int seasStart[3];
 	float dailyPercolation;
@@ -433,7 +433,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		totGrossDemand = getIrrGrossWaterDemand (totalNetIrrDemand, irrEffeciency);
 
-		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
+		loss = totGrossDemand - totalNetIrrDemand;
 		returnFlow = totalIrrPercolation + loss * 0.1;
 		CropETPlusEPloss = totalCropETP  + loss * 0.9;
 
