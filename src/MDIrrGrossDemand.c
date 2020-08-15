@@ -273,7 +273,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
 		if (irrEffeciency <= 0.01) irrEffeciency = 38.0; // The 0.01 is arbitrary threshold to avoid deviding by zero FBM
-//		if (refETP        <= 0.01) refETP = 0.01;       TODO - I don't think, this is necessary FBM
+		if (refETP        <= 0.01) refETP = 0.01;        // TODO - I don't think, this is necessary FBM
 
 		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
 		dailyEffPrecip = snowpackChg <= 0.0 ? dailyPrecip + fabs (snowpackChg) : 0.0; // Simplified FBM
@@ -281,18 +281,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-<<<<<<< HEAD
-<<<<<<< HEAD
-		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; }               // TODO - This is arbitrary end should not be necessary FBM
 		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; // TODO - I don't understand why this is necessary FBM
-=======
-//		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
-//		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
->>>>>>> parent of 6ef4614... Reverting some changes.
-=======
-//		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
-//		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
->>>>>>> parent of 6ef4614... Reverting some changes.
 
 		if (irrIntensity > 2.0) irrIntensity = 2.0; // This limits the number of growing seasons to 2 FBM
 		curDepl = 0.0;
