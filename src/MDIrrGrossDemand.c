@@ -16,6 +16,28 @@ dominik.wisser@unh.edu
 #include <MF.h>
 #include <MD.h>
 
+#define NumStages 4
+#define numSeasons 2
+#define MDParIrrigationCropFileName "CropParameterFileName"
+
+typedef struct {
+    int   ID;
+    int   DW_ID;
+    char  cropName [80];
+    char  cropDistrFileName [80];
+    int   cropIsRice;
+    float cropSeasLength [NumStages];
+    float cropKc [NumStages - 1];
+    float cropRootingDepth;
+    float cropDepletionFactor;
+    float cropLeachReq;
+} MDIrrigatedCrop;
+
+enum { FAO_ID = 0, IWMI_ID = 1 };
+
+static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
+
+//Input
 static int  _MDInIrrAreaFracID          = MFUnset;
 
 static int  _MDInIrrRefEvapotransID     = MFUnset;
@@ -46,35 +68,13 @@ static int  _MDRicePoindingDepthID      = MFUnset;
 static int  _MDRicePercolationRateID     = MFUnset;
 static int  _MDIrrigatedAreaMap;
 static bool _MDIntensityDistributed      = true;
- 
-#define NumStages 4
-#define MDParIrrigationCropFileName "CropParameterFileName"
- 
-typedef struct {
-    int   ID;
-    int   DW_ID;
-    char  cropName [80];
-    char  cropDistrFileName [80];
-    int   cropIsRice;
-    float cropSeasLength [4]; // The parameter file has up to four cropping season FBM
-    float cropKc [4 - 1];
-    float cropRootingDepth;
-    float cropDepletionFactor;
-    float cropLeachReq;
-} MDIrrigatedCrop;
 
-enum { FAO_ID = 0, IWMI_ID = 1 };
-
-static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
-
-//Input
 static const char *CropParameterFileName;
 
 static int getTotalSeasonLength (const MDIrrigatedCrop *pIrrCrop) {
 	return (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2] + pIrrCrop->cropSeasLength [3]);
 }
-
-static int getDaysSincePlanting(int DayOfYearModel, int *dayOfYearPlanting,int NumGrowingSeasons, const MDIrrigatedCrop *pIrrCrop) {
+static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
 	int ret=-888;
 	float totalSeasonLenth;
 	int dayssinceplanted ;	//Default> crop is not grown!
@@ -82,8 +82,8 @@ static int getDaysSincePlanting(int DayOfYearModel, int *dayOfYearPlanting,int N
 
 	totalSeasonLenth = getTotalSeasonLength (pIrrCrop);
 	for (i = 0; i < NumGrowingSeasons; i++) {
-		dayssinceplanted = DayOfYearModel - dayOfYearPlanting[i];
-		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel - dayOfYearPlanting[i]);
+		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
+		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel-DayOfYearPlanting[i]);
 	   
 		if (dayssinceplanted  < totalSeasonLenth) ret = dayssinceplanted;
 	}
@@ -128,7 +128,7 @@ static float getCropKc(const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, in
 			kc = pIrrCrop->cropKc[1];
 			break;
 		case 4:
-			kc = pIrrCrop->cropKc[2]
+			kc = pIrrCrop->cropKc[1]
 			   + (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]))
 			   / pIrrCrop->cropSeasLength[3] * (pIrrCrop->cropKc[2] - pIrrCrop->cropKc[1]);
 			break;
@@ -213,7 +213,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float dailyPrecip    = 0.0;
 	float dailyEffPrecip = 0.0;
 	float refETP;
-	float cropFraction [_MDNumberOfIrrCrops + 1];
+	float cropFraction [_MDNumberOfIrrCrops+1];
 	float snowpackChg = 0;
 	int seasStart[3];
 	float dailyPercolation;
@@ -267,27 +267,32 @@ static void _MDIrrGrossDemand (int itemID) {
 	
 	seasStart [0]= MFVarGetFloat (_MDGrowingSeason1ID,      itemID, -100);
 	seasStart [1]= MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
+	if ((seasStart[0] < 0) || (seasStart[0]< 0)) CMmsgPrint (CMmsgDebug,"Growing Season! \n");
 
 	if (irrAreaFrac > 0.0) {
 		irrEffeciency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38.0);
 		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
 		if (irrEffeciency <= 0.01) irrEffeciency = 38.0; // The 0.01 is arbitrary threshold to avoid deviding by zero FBM
-		if (refETP        <= 0.01) refETP = 0.01;        // TODO - I don't think, this is necessary FBM
+		if (refETP        <= 0.01) refETP = 0.01;        // TODO - It is unclear, why this is necessary
 
 		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
-		dailyEffPrecip = snowpackChg <= 0.0 ? dailyPrecip + fabs (snowpackChg) : 0.0; // Simplified FBM
+		if (snowpackChg >  0.0) dailyPrecip = 0.0; //Snow Accumulation, no liquid precipitation
+		if (snowpackChg <= 0.0) dailyPrecip = dailyPrecip + fabs (snowpackChg); //Add Snowmelt
+
+		dailyEffPrecip = dailyPrecip;
 
 	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; // TODO - I don't understand why this is necessary FBM
+		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; } // TODO - This is arbitrary end should not be necessary BM
+		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity = 1.0; TODO - I don't understand why this is necessary FBM
 
 		if (irrIntensity > 2.0) irrIntensity = 2.0; // This limits the number of growing seasons to 2 FBM
 		curDepl = 0.0;
-		sumOfCropFractions = 0.0;
+		sumOfCropFractions=0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
-		if (sumOfCropFractions <= 0.0) { // No Cropdata for irrigated cell: default to some cereal crop
+		if (sumOfCropFractions==0) { // No Cropdata for irrigated cell: default to some cereal crop
 			MFVarSetFloat(_MDInCropFractionIDs [2],itemID, 0.3);
 			sumOfCropFractions = 0.3;
 		}
@@ -432,23 +437,25 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		totGrossDemand = getIrrGrossWaterDemand (totalNetIrrDemand, irrEffeciency);
 
-		loss = totGrossDemand - totalNetIrrDemand;
+		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
 		returnFlow = totalIrrPercolation + loss * 0.1;
 		CropETPlusEPloss = totalCropETP  + loss * 0.9;
 
-		MFVarSetFloat(_MDOutIrrSMoistChgID,   itemID, meanSMChange      * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrNetDemandID,   itemID, totalNetIrrDemand * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrGrossDemandID, itemID, totGrossDemand    * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrReturnFlowID,  itemID, returnFlow        * irrAreaFrac);
-		MFVarSetFloat(_MDOutIrrEvapotranspID, itemID, CropETPlusEPloss  * irrAreaFrac);	
+		MFVarSetFloat(_MDInIrrRefEvapotransID, itemID, refETP            * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrNetDemandID,    itemID, totalNetIrrDemand * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
+		MFVarSetFloat(_MDOutIrrEvapotranspID,  itemID, CropETPlusEPloss  * irrAreaFrac);
 	}
 	else { // cell is not irrigated
-		MFVarSetFloat(_MDOutIrrSoilMoistID,   itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrSMoistChgID,   itemID, 0.0);
- 		MFVarSetFloat(_MDOutIrrNetDemandID,   itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrGrossDemandID, itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrReturnFlowID,  itemID, 0.0);
-		MFVarSetFloat(_MDOutIrrEvapotranspID, itemID, 0.0);
+		MFVarSetFloat(_MDInIrrRefEvapotransID, itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrSoilMoistID,    itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrSMoistChgID,    itemID, 0.0);
+ 		MFVarSetFloat(_MDOutIrrNetDemandID,    itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrGrossDemandID,  itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrReturnFlowID,   itemID, 0.0);
+		MFVarSetFloat(_MDOutIrrEvapotranspID,  itemID, 0.0);
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {MFVarSetFloat(_MDOutCropETIDs[i],itemID,0.0);}
 	}
 }
