@@ -16,8 +16,6 @@ dominik.wisser@unh.edu
 #include <MF.h>
 #include <MD.h>
 
-#define NumStages 4
-#define numSeasons 2
 #define MDParIrrigationCropFileName "CropParameterFileName"
  
 typedef struct {
@@ -26,8 +24,8 @@ typedef struct {
     char  cropName [80];
     char  cropDistrFileName [80];
     int   cropIsRice;
-    float cropSeasLength [NumStages];
-    float cropKc [NumStages - 1];
+    float cropSeasLength [4];
+    float cropKc [4 - 1];
     float cropRootingDepth;
     float cropDepletionFactor;
     float cropLeachReq;
@@ -71,40 +69,36 @@ static bool _MDIntensityDistributed      = true;
  
 static const char *CropParameterFileName;
 
-static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
-	int ret=-888;
+static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int numGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
+	int i, ret = -888;
+	int   daysSincePlanted ;	// Default> crop is not grown!
 	float totalSeasonLenth;
 
 	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-	int dayssinceplanted ;	// Default> crop is not grown!
-	int i;
-	for (i = 0; i < NumGrowingSeasons; i++) {
-		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
-		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel-DayOfYearPlanting[i]);
-	   
-		if (dayssinceplanted  < totalSeasonLenth) ret = dayssinceplanted;
+	for (i = 0; i < numGrowingSeasons; i++) {
+		daysSincePlanted = dayOfYearModel - dayOfYearPlanting[i];
+		if (daysSincePlanted < 0)  daysSincePlanted = 365 + (dayOfYearModel - dayOfYearPlanting[i]);
+
+		if (daysSincePlanted  < totalSeasonLenth) ret = daysSincePlanted;
 	}
-	if (ret >totalSeasonLenth)	CMmsgPrint (CMmsgDebug, "dayssinceplantedkorrect ?? %i %i \n",ret, DayOfYearModel);
-	return ret;
+	return (ret);
 }
 
-static int getCropStage(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted) {
+static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
 	int stage = 0;
 	float totalSeasonLenth;
-	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-    if (daysSincePlanted <= totalSeasonLenth)
-	stage = 4;
 
-    if (daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
-	stage = 3;
-
-    if ((daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1]))
-	stage = 2;
-
-    if (daysSincePlanted <= pIrrCrop->cropSeasLength[0])
-	stage = 1;
-
-    return stage;
+    if      (daysSincePlanted <= pIrrCrop->cropSeasLength[0]) stage = 1;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]) stage = 2;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]
+	                           + pIrrCrop->cropSeasLength[2]) stage = 3;
+    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	                           + pIrrCrop->cropSeasLength[1]
+	                           + pIrrCrop->cropSeasLength[2]
+	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
+    return (stage);
 }
 
 static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
