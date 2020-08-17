@@ -86,18 +86,17 @@ static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int 
 
 static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
 	int stage = 0;
-	float totalSeasonLenth;
 
-    if      (daysSincePlanted <= pIrrCrop->cropSeasLength [0]) stage = 1;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
-	                           + pIrrCrop->cropSeasLength [1]) stage = 2;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
-	                           + pIrrCrop->cropSeasLength [1]
-	                           + pIrrCrop->cropSeasLength [2]) stage = 3;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
-	                           + pIrrCrop->cropSeasLength [1]
-	                           + pIrrCrop->cropSeasLength [2]
-	                           + pIrrCrop->cropSeasLength [3]) stage = 4;
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
+                          + pIrrCrop->cropSeasLength [1]
+                          + pIrrCrop->cropSeasLength [2]
+                          + pIrrCrop->cropSeasLength [3]) stage = 4;
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
+                          + pIrrCrop->cropSeasLength [1]
+                          + pIrrCrop->cropSeasLength [2]) stage = 3;
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]
+                          + pIrrCrop->cropSeasLength [1]) stage = 2;
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength [0]) stage = 1;
 	return (stage);
 }
 
