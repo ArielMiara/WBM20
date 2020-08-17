@@ -71,19 +71,12 @@ static bool _MDIntensityDistributed      = true;
  
 static const char *CropParameterFileName;
 
-static int getTotalSeasonLength (const MDIrrigatedCrop * pIrrCrop) {
-	return (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2] + pIrrCrop->cropSeasLength [3]);
-}
 static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
 	int ret=-888;
-	 
 	float totalSeasonLenth;
 
-	totalSeasonLenth =
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] +
-	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-	int dayssinceplanted ;	//Default> crop is not grown!
+	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+	int dayssinceplanted ;	// Default> crop is not grown!
 	int i;
 	for (i = 0; i < NumGrowingSeasons; i++) {
 		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
@@ -98,16 +91,11 @@ static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSea
 static int getCropStage(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted) {
 	int stage = 0;
 	float totalSeasonLenth;
-	totalSeasonLenth =
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] +
-	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
     if (daysSincePlanted <= totalSeasonLenth)
 	stage = 4;
 
-    if (daysSincePlanted <=
-	pIrrCrop->cropSeasLength[0] +
-	pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
 	stage = 3;
 
     if ((daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1]))
@@ -116,7 +104,7 @@ static int getCropStage(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted) 
     if (daysSincePlanted <= pIrrCrop->cropSeasLength[0])
 	stage = 1;
 
-     return stage;
+    return stage;
 }
 
 static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
@@ -142,7 +130,7 @@ static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, i
 static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {
 	float rootDepth;
 	float totalSeasonLenth;
-	totalSeasonLenth =pIrrCrop->cropSeasLength[0] +	pIrrCrop->cropSeasLength[1] +	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
     rootDepth= pIrrCrop->cropRootingDepth *( 0.5 + 0.5 * sin(3.03 *   (dayssinceplanted  /  totalSeasonLenth) - 1.47));
 	if (rootDepth > 2)		CMmsgPrint (CMmsgDebug, "RootDepth correct ?? %f \n",rootDepth);
  	if (rootDepth <0.15) rootDepth =.15;
@@ -166,8 +154,7 @@ static int readCropParameters(const char *filename) {
 	}
 	else {
 		char buffer[512];
-		//read headings..
-
+		// read headings..
 		fgets (buffer,sizeof (buffer),inputCropFile);
 
 		while (fgets(buffer, sizeof(buffer), inputCropFile) != NULL) {
@@ -201,7 +188,10 @@ static int readCropParameters(const char *filename) {
 	_MDNumberOfIrrCrops = i - 1;	
 	return CMsucceeded;
 }
-static int   getNumGrowingSeasons(float);
+
+static int getNumGrowingSeasons(float irrIntensity){
+    return ceil(irrIntensity);
+}
 
 static float getIrrGrossWaterDemand(float netIrrDemand, float IrrEfficiency) {
 	if (IrrEfficiency <= 0) { // no data, set to average value		
@@ -602,8 +592,3 @@ int MDIrrReturnFlowDef() {
 	_MDOutIrrReturnFlowID = MFVarGetID (MDVarIrrReturnFlow,     "mm",   MFInput, MFFlux,  MFBoundary);
     return (_MDOutIrrReturnFlowID);
 }
-
-static int getNumGrowingSeasons(float irrIntensity){
-	return ceil(irrIntensity);
-}
-
