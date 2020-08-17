@@ -16,6 +16,8 @@ dominik.wisser@unh.edu
 #include <MF.h>
 #include <MD.h>
 
+#define NumStages 4
+#define numSeasons 2
 #define MDParIrrigationCropFileName "CropParameterFileName"
  
 typedef struct {
@@ -24,8 +26,8 @@ typedef struct {
     char  cropName [80];
     char  cropDistrFileName [80];
     int   cropIsRice;
-    float cropSeasLength [4];
-    float cropKc [4 - 1];
+    float cropSeasLength [NumStages];
+    float cropKc [NumStages - 1];
     float cropRootingDepth;
     float cropDepletionFactor;
     float cropLeachReq;
@@ -69,129 +71,18 @@ static bool _MDIntensityDistributed      = true;
  
 static const char *CropParameterFileName;
 
-static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int numGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
-	int i, ret = -888;
-	int   daysSincePlanted ;	// Default> crop is not grown!
-	float totalSeasonLenth;
+static int   getTotalSeasonLength(const MDIrrigatedCrop *);
+static int   getDaysSincePlanting(int, int [],int,const MDIrrigatedCrop *);
+static int   getCropStage(const MDIrrigatedCrop *, int);
+static float getCropKc(const MDIrrigatedCrop *, int, int);
+static float getCurCropRootingDepth(MDIrrigatedCrop *, int);
+static float getCorrDeplFactor(const MDIrrigatedCrop *, float);
+static int   readCropParameters(const char *);
+static void  printCrops(const MDIrrigatedCrop *);
+static int   getNumGrowingSeasons(float);
 
-	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-	for (i = 0; i < numGrowingSeasons; i++) {
-		daysSincePlanted = dayOfYearModel - dayOfYearPlanting[i];
-		if (daysSincePlanted < 0)  daysSincePlanted = 365 + (dayOfYearModel - dayOfYearPlanting[i]);
-
-		if (daysSincePlanted  < totalSeasonLenth) ret = daysSincePlanted;
-	}
-	return (ret);
-}
-
-static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
-	int stage = 0;
-
-    if      (daysSincePlanted <= pIrrCrop->cropSeasLength[0]) stage = 1;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
-	                           + pIrrCrop->cropSeasLength[1]) stage = 2;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
-	                           + pIrrCrop->cropSeasLength[1]
-	                           + pIrrCrop->cropSeasLength[2]) stage = 3;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
-	                           + pIrrCrop->cropSeasLength[1]
-	                           + pIrrCrop->cropSeasLength[2]
-	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
-    return (stage);
-}
-
-static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
-{
-	float kc;
-
-   //Returns kc depending on the current stage of the growing season
-	if (curCropStage == 0) kc = 0.0;		//crop is not currently grown
-	if (curCropStage == 1) kc = pIrrCrop->cropKc[0];
-	if (curCropStage == 2) {
-		int daysInStage = (daysSincePlanted - pIrrCrop->cropSeasLength[0]);
-		kc = pIrrCrop->cropKc[0] + (daysInStage /  pIrrCrop->cropSeasLength[1])*(pIrrCrop->cropKc[1]-pIrrCrop->cropKc[0]);
-	}
-	if (curCropStage == 3) kc = pIrrCrop->cropKc[1];
-	if (curCropStage == 4) {
-		int daysInStage4 = (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]));
-		//kc = pIrrCrop->cropKc[2] -	    (daysInStage4 / pIrrCrop->cropSeasLength[3]) * abs(pIrrCrop->cropKc[3] - pIrrCrop->cropSeasLength[2]);
-		kc=pIrrCrop->cropKc[1]+ daysInStage4/  pIrrCrop->cropSeasLength[3] *(pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1]);
-	}
-	if (kc >1.5 )	CMmsgPrint (CMmsgDebug, "kc korrect ?? kc stage dayssinceplanted  kc0 kc1 season0length %f %i %i %f %f %f \n",kc, curCropStage, daysSincePlanted, pIrrCrop->cropKc[0],pIrrCrop->cropKc[1], pIrrCrop->cropSeasLength[0]);
- 	return kc;
-}
-static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {
-	float rootDepth;
-	float totalSeasonLenth;
-	totalSeasonLenth = pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
-    rootDepth= pIrrCrop->cropRootingDepth *( 0.5 + 0.5 * sin(3.03 *   (dayssinceplanted  /  totalSeasonLenth) - 1.47));
-	if (rootDepth > 2)		CMmsgPrint (CMmsgDebug, "RootDepth correct ?? %f \n",rootDepth);
- 	if (rootDepth <0.15) rootDepth =.15;
-	return rootDepth;
-}
-
-static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP) {
- 
-	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
-    if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
-	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
-	return cropdeplFactor;
-}
-
-static int readCropParameters(const char *filename) {
-	FILE *inputCropFile;
-	int i = 0, die;
-	if ((inputCropFile = fopen(filename, "r")) == (FILE *) NULL) {
-		CMmsgPrint (CMmsgUsrError,"Crop Parameter file could not be opned, filename: %s\n", filename);
-		return CMfailed;
-	}
-	else {
-		char buffer[512];
-		// read headings..
-		fgets (buffer,sizeof (buffer),inputCropFile);
-
-		while (fgets(buffer, sizeof(buffer), inputCropFile) != NULL) {
-			_MDirrigCropStruct   = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (i + 1) * sizeof (MDIrrigatedCrop));
-			_MDInCropFractionIDs = (int *) realloc (_MDInCropFractionIDs, (i + 1) * sizeof (int));
-			_MDOutCropDeficitIDs = (int *) realloc (_MDOutCropDeficitIDs, (i + 1) * sizeof (int));
-			_MDOutCropETIDs      = (int *) realloc (_MDOutCropETIDs,      (i + 1) * sizeof (int));
-			_MDOutCropGrossDemandIDs=(int *) realloc (_MDOutCropGrossDemandIDs,      (i + 1) * sizeof (int));
-			_MDInCropFractionIDs [i] =_MDOutCropETIDs[i]= _MDOutCropDeficitIDs [i] = _MDOutCropGrossDemandIDs[i]=MFUnset;
-			sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
-		       &(_MDirrigCropStruct [i].ID),
-		       &(_MDirrigCropStruct [i].DW_ID),
-		         _MDirrigCropStruct [i].cropName,
-		         _MDirrigCropStruct [i].cropDistrFileName,
-		       &(_MDirrigCropStruct [i].cropKc [0]),
-		       &(_MDirrigCropStruct [i].cropKc [1]),
-		       &(_MDirrigCropStruct [i].cropKc [2]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [0]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [1]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
-		       &(_MDirrigCropStruct [i].cropRootingDepth),
-		       &(_MDirrigCropStruct [i].cropDepletionFactor));
-				
-			die = strcmp (_MDirrigCropStruct [i].cropName , "Rice");
-			_MDirrigCropStruct[i].cropIsRice = 0;
-			if (die == 0) _MDirrigCropStruct [i].cropIsRice = 1;
-			i += 1;
-		}
-	}
-	_MDNumberOfIrrCrops = i - 1;	
-	return CMsucceeded;
-}
-
-static int getNumGrowingSeasons(float irrIntensity){
-    return ceil(irrIntensity);
-}
-
-static float getIrrGrossWaterDemand(float netIrrDemand, float IrrEfficiency) {
-	if (IrrEfficiency <= 0) { // no data, set to average value		
-		IrrEfficiency=38;
-	} 
-	return netIrrDemand / (IrrEfficiency/100);
-}
+static float getIrrGrossWaterDemand(float, float);
+//static float irrAreaFrac; moving this to inside the module - first line below - ariel july 6 2020
 
 static void _MDIrrGrossDemand (int itemID) {
 //Input
@@ -291,11 +182,15 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (irrIntensity > 2.0) irrIntensity=2.0;
 		curDepl=0;
 		sumOfCropFractions=0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
+			sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);
+		}
 		if (sumOfCropFractions==0) { // No Cropdata for irrigated cell: default to some cereal crop
 			MFVarSetFloat(_MDInCropFractionIDs [2],itemID, 0.3);
-			sumOfCropFractions = 0.3;
 		}
+
+		sumOfCropFractions=0;
+	  	for (i = 0; i < _MDNumberOfIrrCrops; i++) {sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
 
 		meanSMChange=0;totalCropETP=0;
 
@@ -424,6 +319,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			if (curDepl < 0) {	
 				curDepl = 0;	
 				deepPercolation=dailyEffPrecip - prevSoilMstDepl -cropWR;
+
 			}
 			if (curDepl >= totAvlWater) {
 				cropWR = totAvlWater - prevSoilMstDepl + dailyEffPrecip;
@@ -433,6 +329,7 @@ static void _MDIrrGrossDemand (int itemID) {
  			smChange = prevSoilMstDepl - curDepl;
 			bareSoilBalance=dailyEffPrecip -smChange- cropWR - netIrrDemand -deepPercolation;
   			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, curDepl);	
+
 		}
 		else {
 			cropWR          = 0.0;
@@ -540,7 +437,7 @@ int MDIrrGrossDemandDef () {
 			    ((_MDGrowingSeason1ID        = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDGrowingSeason2ID        = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
 				((_MDNonIrrFractionID        = MFVarGetID (MDNonIrrigatedFraction, "-",  MFOutput ,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDRicePercolationRateID   = MFVarGetID (MDVarIrrDailyRicePerolationRate, "mm/day",  MFInput ,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDRicePercolationRateID = MFVarGetID (MDVarIrrDailyRicePerolationRate, "mm/day",  MFInput ,  MFState, MFBoundary)) == CMfailed) ||
 				((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,          "-",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,         "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,          "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
@@ -584,4 +481,167 @@ int MDIrrReturnFlowDef() {
 	if (ret == MFUnset) return (MFUnset);
 	_MDOutIrrReturnFlowID = MFVarGetID (MDVarIrrReturnFlow,     "mm",   MFInput, MFFlux,  MFBoundary);
     return (_MDOutIrrReturnFlowID);
+}
+
+static int getNumGrowingSeasons(float irrIntensity){
+	return ceil(irrIntensity);
+}
+
+static float getIrrGrossWaterDemand(float netIrrDemand, float IrrEfficiency) {
+	if (IrrEfficiency <= 0) { // no data, set to average value
+		IrrEfficiency=38;
+	}
+	return netIrrDemand / (IrrEfficiency/100);
+}
+
+static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP) {
+
+	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
+    if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
+	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
+	return cropdeplFactor;
+}
+
+static float getCurCropRootingDepth(MDIrrigatedCrop * pIrrCrop, int dayssinceplanted) {
+	float rootDepth;
+	float totalSeasonLenth;
+	totalSeasonLenth =pIrrCrop->cropSeasLength[0] +	pIrrCrop->cropSeasLength[1] +	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+    rootDepth= pIrrCrop->cropRootingDepth *( 0.5 + 0.5 * sin(3.03 *   (dayssinceplanted  /  totalSeasonLenth) - 1.47));
+	if (rootDepth > 2)		CMmsgPrint (CMmsgDebug, "RootDepth correct ?? %f \n",rootDepth);
+ 	if (rootDepth <0.15) rootDepth =.15;
+	return rootDepth;
+}
+
+static int getCropStage(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted) {
+	int stage = 0;
+	float totalSeasonLenth;
+	totalSeasonLenth =
+	pIrrCrop->cropSeasLength[0] +
+	pIrrCrop->cropSeasLength[1] +
+	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+    if (daysSincePlanted <= totalSeasonLenth)
+	stage = 4;
+
+    if (daysSincePlanted <=
+	pIrrCrop->cropSeasLength[0] +
+	pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
+	stage = 3;
+
+    if ((daysSincePlanted <= pIrrCrop->cropSeasLength[0] + pIrrCrop->cropSeasLength[1]))
+	stage = 2;
+
+    if (daysSincePlanted <= pIrrCrop->cropSeasLength[0])
+	stage = 1;
+
+     return stage;
+}
+
+static float getCropKc(const MDIrrigatedCrop * pIrrCrop, int daysSincePlanted, int curCropStage)
+{
+	float kc;
+
+   //Returns kc depending on the current stage of the growing season
+	if (curCropStage == 0) kc = 0.0;		//crop is not currently grown
+	if (curCropStage == 1) kc = pIrrCrop->cropKc[0];
+	if (curCropStage == 2) {
+		int daysInStage = (daysSincePlanted - pIrrCrop->cropSeasLength[0]);
+		kc = pIrrCrop->cropKc[0] + (daysInStage /  pIrrCrop->cropSeasLength[1])*(pIrrCrop->cropKc[1]-pIrrCrop->cropKc[0]);
+	}
+	if (curCropStage == 3) kc = pIrrCrop->cropKc[1];
+	if (curCropStage == 4) {
+		int daysInStage4 = (daysSincePlanted - (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]));
+		//kc = pIrrCrop->cropKc[2] -	    (daysInStage4 / pIrrCrop->cropSeasLength[3]) * abs(pIrrCrop->cropKc[3] - pIrrCrop->cropSeasLength[2]);
+		kc=pIrrCrop->cropKc[1]+ daysInStage4/  pIrrCrop->cropSeasLength[3] *(pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1]);
+	}
+	if (kc >1.5 )	CMmsgPrint (CMmsgDebug, "kc korrect ?? kc stage dayssinceplanted  kc0 kc1 season0length %f %i %i %f %f %f \n",kc, curCropStage, daysSincePlanted, pIrrCrop->cropKc[0],pIrrCrop->cropKc[1], pIrrCrop->cropSeasLength[0]);
+ 	return kc;
+}
+
+static int getDaysSincePlanting(int DayOfYearModel, int DayOfYearPlanting[numSeasons],int NumGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
+	int ret=-888;
+
+	float totalSeasonLenth;
+
+	totalSeasonLenth =
+	pIrrCrop->cropSeasLength[0] +
+	pIrrCrop->cropSeasLength[1] +
+	pIrrCrop->cropSeasLength[2] + pIrrCrop->cropSeasLength[3];
+	int dayssinceplanted ;	//Default> crop is not grown!
+	int i;
+	for (i = 0; i < NumGrowingSeasons; i++) {
+		dayssinceplanted = DayOfYearModel - DayOfYearPlanting[i];
+		if (dayssinceplanted < 0)  dayssinceplanted = 365 + (DayOfYearModel-DayOfYearPlanting[i]);
+
+		if (dayssinceplanted  < totalSeasonLenth) ret = dayssinceplanted;
+	}
+	if (ret >totalSeasonLenth)	CMmsgPrint (CMmsgDebug, "dayssinceplantedkorrect ?? %i %i \n",ret, DayOfYearModel);
+	return ret;
+}
+
+static int readCropParameters(const char *filename) {
+	FILE *inputCropFile;
+	int i = 0, die;
+	if ((inputCropFile = fopen(filename, "r")) == (FILE *) NULL) {
+		CMmsgPrint (CMmsgUsrError,"Crop Parameter file could not be opned, filename: %s\n", filename);
+		return CMfailed;
+	}
+	else {
+		char buffer[512];
+		//read headings..
+
+		fgets (buffer,sizeof (buffer),inputCropFile);
+
+		while (fgets(buffer, sizeof(buffer), inputCropFile) != NULL) {
+			_MDirrigCropStruct   = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (i + 1) * sizeof (MDIrrigatedCrop));
+			_MDInCropFractionIDs = (int *) realloc (_MDInCropFractionIDs, (i + 1) * sizeof (int));
+			_MDOutCropDeficitIDs = (int *) realloc (_MDOutCropDeficitIDs, (i + 1) * sizeof (int));
+			_MDOutCropETIDs      = (int *) realloc (_MDOutCropETIDs,      (i + 1) * sizeof (int));
+			_MDOutCropGrossDemandIDs=(int *) realloc (_MDOutCropGrossDemandIDs,      (i + 1) * sizeof (int));
+			_MDInCropFractionIDs [i] =_MDOutCropETIDs[i]= _MDOutCropDeficitIDs [i] = _MDOutCropGrossDemandIDs[i]=MFUnset;
+			sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
+		       &(_MDirrigCropStruct [i].ID),
+		       &(_MDirrigCropStruct [i].DW_ID),
+		         _MDirrigCropStruct [i].cropName,
+		         _MDirrigCropStruct [i].cropDistrFileName,
+		       &(_MDirrigCropStruct [i].cropKc [0]),
+		       &(_MDirrigCropStruct [i].cropKc [1]),
+		       &(_MDirrigCropStruct [i].cropKc [2]),
+		       &(_MDirrigCropStruct [i].cropSeasLength [0]),
+		       &(_MDirrigCropStruct [i].cropSeasLength [1]),
+		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
+		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
+		       &(_MDirrigCropStruct [i].cropRootingDepth),
+		       &(_MDirrigCropStruct [i].cropDepletionFactor));
+
+			die = strcmp (_MDirrigCropStruct [i].cropName , "Rice");
+			_MDirrigCropStruct[i].cropIsRice = 0;
+			if (die == 0) _MDirrigCropStruct [i].cropIsRice = 1;
+			printCrops (&_MDirrigCropStruct [i]);
+			i += 1;
+		}
+	}
+	//CMmsgPrint(CMmsgDebug,"Number of crops read: %i \n", i - 1);
+	_MDNumberOfIrrCrops = i - 1;
+	return CMsucceeded;
+}
+
+static void printCrops(const MDIrrigatedCrop * curCrop) {
+	CMmsgPrint(CMmsgDebug,"==++++++++++================  %s ===========================", curCrop->cropName);
+	CMmsgPrint(CMmsgDebug,"CurrentCropID %i \n", curCrop->ID);
+	CMmsgPrint(CMmsgDebug,"CropName %s	\n ", curCrop->cropName);
+	CMmsgPrint(CMmsgDebug,"kc  %f %f %f \n",  curCrop->cropKc [0], curCrop->cropKc [1], curCrop->cropKc [2]);
+	CMmsgPrint(CMmsgDebug,"Length./Total . %f %f %f %f %i \n",
+			curCrop->cropSeasLength [0],
+			curCrop->cropSeasLength [1],
+			curCrop->cropSeasLength [2],
+			curCrop->cropSeasLength [3],
+			getTotalSeasonLength(curCrop));
+	CMmsgPrint(CMmsgDebug,"RootingDepth %f \n", curCrop->cropRootingDepth);
+	CMmsgPrint(CMmsgDebug,"DepleationFactors %f \n", curCrop->cropDepletionFactor);
+	CMmsgPrint(CMmsgDebug,"IsRice %i \n", curCrop->cropIsRice);
+	fflush(stdout);
+}
+
+static int getTotalSeasonLength (const MDIrrigatedCrop * pIrrCrop) {
+	return (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2] + pIrrCrop->cropSeasLength [3]);
 }
