@@ -112,15 +112,14 @@ static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, i
 		case 0: kc = 0.0; break; //crop is not currently grown
 		case 1: kc = pIrrCrop->cropKc [0]; break;
 		case 2:
-			kc = pIrrCrop->cropKc[0] + ((daysSincePlanted - pIrrCrop->cropSeasLength[0])
-			                            / pIrrCrop->cropSeasLength[1])
-									 * (pIrrCrop->cropKc[1] - pIrrCrop->cropKc[0]);
+			kc = pIrrCrop->cropKc[0] + (pIrrCrop->cropKc[1] - pIrrCrop->cropKc[0])
+			                         * ((daysSincePlanted - pIrrCrop->cropSeasLength[0]) / pIrrCrop->cropSeasLength[1]);
 			break;
 		case 3: kc = pIrrCrop->cropKc[1]; break;
 		case 4:
-			kc=pIrrCrop->cropKc[1] + (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2]))
+			kc = pIrrCrop->cropKc[1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
+			                         * (pIrrCrop->cropSeasLength[0] +  pIrrCrop->cropSeasLength[1] + pIrrCrop->cropSeasLength[2])
 			                         /  pIrrCrop->cropSeasLength[3]
-								   * (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1]);
 			break;
 	}
  	return (kc);
