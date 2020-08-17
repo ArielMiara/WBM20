@@ -93,11 +93,11 @@ static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) 
     else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
 	                           + pIrrCrop->cropSeasLength[1]
 	                           + pIrrCrop->cropSeasLength[2]) stage = 3;
-    else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+/*   else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
 	                           + pIrrCrop->cropSeasLength[1]
 	                           + pIrrCrop->cropSeasLength[2]
 	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
-    return (stage);
+*/   return (stage);
 }
 
 static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, int curCropStage)
@@ -113,11 +113,11 @@ static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, i
 		                                 * (daysSincePlanted - pIrrCrop->cropSeasLength [0])
 										 /  pIrrCrop->cropSeasLength [1];
 			break;
-		case 3: kc = pIrrCrop->cropKc [1]; break;
-		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
+ 		case 3: kc = pIrrCrop->cropKc [1]; break;
+/*		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
 		                                  * (daysSincePlanted - (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2]))
 										  / pIrrCrop->cropSeasLength[3];
-   }
+ */ }
  	return (kc);
 }
 
@@ -130,7 +130,7 @@ static float getCurCropRootingDepth (MDIrrigatedCrop *pIrrCrop, int dayssincepla
 	return (rootDepth);
 }
 
-static float getCorrDeplFactor(const MDIrrigatedCrop * pIrrCrop, float dailyETP) {
+static float getCorrDeplFactor(const MDIrrigatedCrop *pIrrCrop, float dailyETP) {
 
 	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
     if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
