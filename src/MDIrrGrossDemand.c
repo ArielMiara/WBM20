@@ -249,8 +249,8 @@ static void _MDIrrGrossDemand (int itemID) {
 	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
 	
 	switch (_MDIrrigatedAreaMap) {
-	case FAO_ID:  irrIntensity = MFVarGetFloat (_MDInIrrIntensityID, itemID, 100.0) / 100.0; break;
-	case IWMI_ID: irrIntensity = 1.0; _MDIntensityDistributed = true; break;
+		case FAO_ID:  irrIntensity = MFVarGetFloat (_MDInIrrIntensityID, itemID, 100.0) / 100.0; break;
+		case IWMI_ID: irrIntensity = 1.0; _MDIntensityDistributed = true; break;
 	}
 	
 	seasStart [0]= MFVarGetFloat (_MDGrowingSeason1ID,      itemID, -100);
@@ -276,26 +276,24 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	dailyPercolation = MFVarGetFloat(_MDRicePercolationRateID,itemID,3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-		if (fldCap == 0.0) {
-			fldCap=0.35;
-			wltPnt=0.2;
-		}
+		if (fldCap <= 0.0) { fldCap=0.35; wltPnt=0.2; }
+
 		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity=1.0;
 		if (irrIntensity > 2.0) irrIntensity = 2.0;
+
 		curDepl = sumOfCropFractions = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
 		if (sumOfCropFractions <= 0.0) { // No Cropdata for irrigated cell: default to some cereal crop
-			MFVarSetFloat(_MDInCropFractionIDs [2],itemID, 0.3);
+			MFVarSetFloat(_MDInCropFractionIDs [2], itemID, 0.3);
 			sumOfCropFractions = 0.3;
 		}
 
 		meanSMChange = totalCropETP = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			numGrowingSeasons = 2; // getNumGrowingSeasons (irrIntensity);
-			if (_MDIrrigatedAreaMap == 0.0) numGrowingSeasons=getNumGrowingSeasons(irrIntensity); //FAO MAP
-			curCropFraction = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
-			if (curCropFraction > 0.0) {relCropFraction = curCropFraction / sumOfCropFractions; } else { relCropFraction = 0.0; }
-			daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, &_MDirrigCropStruct [i]);
+		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
+			numGrowingSeasons = _MDIrrigatedAreaMap = 0 ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
+			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
+			relCropFraction   = curCropFraction > 0.0 ? curCropFraction / sumOfCropFractions : 0.0;
+			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, &_MDirrigCropStruct [i]);
 
 			if (_MDIntensityDistributed) {
 				if (daysSincePlanted > 0.0) {
