@@ -198,9 +198,9 @@ static void _MDIrrGrossDemand (int itemID) {
 	float dailyPrecip    = 0.0;
 	float dailyEffPrecip = 0.0;
 	float refETP;
-	float cropFraction [_MDNumberOfIrrCrops+1];
-	float snowpackChg = 0;
-	int seasStart[3];
+	float cropFraction [_MDNumberOfIrrCrops + 1];
+	float snowpackChg = 0.0;
+	int seasStart [3];
 	float dailyPercolation;
 	float wltPnt;
 	float fldCap;
@@ -243,10 +243,10 @@ static void _MDIrrGrossDemand (int itemID) {
 	int stage;
 	int curDay;
 	
-	curDay = MFDateGetDayOfYear();
+	curDay = MFDateGetDayOfYear ();
 
-	reqPondingDepth=MFVarGetFloat(_MDRicePoindingDepthID,itemID,2.0);
-	irrAreaFrac = MFVarGetFloat(_MDInIrrAreaFracID, itemID, 0.0);
+	reqPondingDepth  =MFVarGetFloat (_MDRicePoindingDepthID, itemID, 2.0);
+	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
 	
 	switch (_MDIrrigatedAreaMap) {
 	case FAO_ID:  irrIntensity = MFVarGetFloat (_MDInIrrIntensityID, itemID, 100.0) / 100.0; break;
