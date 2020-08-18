@@ -309,7 +309,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					if (curDay < seasStart [1] || (daysSincePlanted > seasStart[1] - seasStart[0])) // First or perennial growing season
 						addBareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
 					else  // second crop
-						addBareSoil = 1.0 < itIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
+						addBareSoil = 1.0 < irrIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
 					if (0.0 > relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
 					cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
 				}
