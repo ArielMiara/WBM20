@@ -274,7 +274,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-		if (fldCap <= 0.0) { fldCap=0.35; wltPnt=0.2; }
+		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; }
 
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0;
@@ -290,13 +290,13 @@ static void _MDIrrGrossDemand (int itemID) {
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
 			numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
 			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
-			relCropFraction   = 0.0 > curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
+			relCropFraction   = 0.0 < curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, &_MDirrigCropStruct [i]);
 
 			if (_MDIntensityDistributed) {
 				if (0 < daysSincePlanted) {
 					addBareSoil = relCropFraction - irrIntensity / ceil(irrIntensity) * relCropFraction;
-					if (relCropFraction > 0.0) cropFraction [i] = relCropFraction - addBareSoil;
+					if (0.0 < relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
 					cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
 			 	}
 				else {
@@ -310,7 +310,7 @@ static void _MDIrrGrossDemand (int itemID) {
 						addBareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
 					else  // second crop
 						addBareSoil = 1.0 < irrIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
-					if (0.0 > relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
+					if (0.0 < relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
 					cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
 				}
 				else { //  Non-growing season
@@ -337,7 +337,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					cropWR    = refETP * cropCoeff;
 					rootDepth = getCurCropRootingDepth (_MDirrigCropStruct + i,daysSincePlanted);
 					rootDepth = 400; // TODO
-				    cropDepletionFactor=getCorrDeplFactor(_MDirrigCropStruct + i, cropWR);
+				    cropDepletionFactor = getCorrDeplFactor (_MDirrigCropStruct + i, cropWR);
 					if (_MDirrigCropStruct [i].cropIsRice==1) {
 					    pondingDepth = prevSoilMstDepl + dailyEffPrecip - cropWR - dailyPercolation;
 						if (pondingDepth >= reqPondingDepth) {
@@ -386,8 +386,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		// Add Water Balance for bare soil
 		cropWR = curDepl = 0.0;
 		relCropFraction = cropFraction [_MDNumberOfIrrCrops];
+		netIrrDemand    = 0.0;
 		if (0.0 < relCropFraction) { //Crop is not currently grown. ET from bare soil is equal to ET (initial)
-			netIrrDemand = 0.0;
 			cropWR = 0.2 * refETP;
 			
 			prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops],itemID, 0.0);
@@ -408,7 +408,6 @@ static void _MDIrrGrossDemand (int itemID) {
 			cropWR          = 0.0;
 			smChange        = 0.0;
 			deepPercolation = 0.0;
-			netIrrDemand    = 0.0;
 			curDepl         = 0.0;
 		}
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
