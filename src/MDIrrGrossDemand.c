@@ -93,11 +93,11 @@ static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) 
     else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
 	                           + pIrrCrop->cropSeasLength[1]
 	                           + pIrrCrop->cropSeasLength[2]) stage = 3;
-/*   else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
+	else if (daysSincePlanted <= pIrrCrop->cropSeasLength[0]
 	                           + pIrrCrop->cropSeasLength[1]
 	                           + pIrrCrop->cropSeasLength[2]
 	                           + pIrrCrop->cropSeasLength[3]) stage = 4;
-*/   return (stage);
+	return (stage);
 }
 
 static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, int curCropStage)
@@ -114,10 +114,10 @@ static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, i
 										 /  pIrrCrop->cropSeasLength [1];
 			break;
  		case 3: kc = pIrrCrop->cropKc [1]; break;
-/*		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
+		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
 		                                  * (daysSincePlanted - (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2]))
 										  / pIrrCrop->cropSeasLength[3];
- */ }
+	}
  	return (kc);
 }
 
