@@ -1,6 +1,6 @@
 /******************************************************************************
 
-GHAAS Water Balance/Transport Model V3.0
+GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
@@ -548,19 +548,18 @@ int MDIrrGrossDemandDef () {
 
 			for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 				sprintf (varname, "CropFraction_%02d", i + 1); // Input Fraction of crop type per cell
-				if ((_MDInCropFractionIDs [i] = MFVarGetID (varname, "mm", MFInput,  MFState, MFBoundary)) == CMfailed) {
+				if ((_MDInCropFractionIDs [i] = MFVarGetID (varname, "mm", MFInput, MFState, MFBoundary)) == CMfailed) {
 					CMmsgPrint (CMmsgUsrError, "CMfailed in MDInCropFractionID \n");
 					return CMfailed;
 				}
 			}
 			for (i = 0; i < _MDNumberOfIrrCrops + 1;i++) {
-				sprintf (cropETName, "CropET%02d", i + 1);  // Keep track of crop ET for each crop seperately z
-				sprintf (cropGrossDemandName, "CropGrossDemand%02d", i + 1);  // Keep track of crop ET for each crop seperately z
-				sprintf (varname, "CropSMDeficiency%02d", i + 1);  // Output Soil Moisture Deficit, crop ET and WithDrawal per croptype
-			    if ((_MDOutCropETIDs[i]     = MFVarGetID (cropETName,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;
-			    if ((_MDOutCropGrossDemandIDs[i]     = MFVarGetID (cropGrossDemandName,  "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed)return CMfailed;
-			    
-			    if ((_MDOutCropDeficitIDs [i] = MFVarGetID (varname, "mm", MFOutput, MFState, MFInitial))  == CMfailed) return CMfailed;	
+				sprintf (cropETName,          "CropET%02d",           i + 1);  // Keep track of crop ET for each crop seperately z
+				sprintf (cropGrossDemandName, "CropGrossDemand%02d",  i + 1);  // Keep track of crop ET for each crop seperately z
+				sprintf (varname,             "CropSMDeficiency%02d", i + 1);  // Output Soil Moisture Deficit, crop ET and WithDrawal per croptype
+			    if ((_MDOutCropETIDs [i]          = MFVarGetID (cropETName,          "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+			    if ((_MDOutCropGrossDemandIDs [i] = MFVarGetID (cropGrossDemandName, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
+			    if ((_MDOutCropDeficitIDs [i]     = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed) return (CMfailed);
 			}
 			if (MFModelAddFunction (_MDIrrGrossDemand) == CMfailed) return (CMfailed);
 			break;
