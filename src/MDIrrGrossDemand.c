@@ -129,7 +129,7 @@ static float getCurCropRootingDepth (MDIrrigatedCrop *pIrrCrop, int dayssincepla
 					       + pIrrCrop->cropSeasLength [2]
 					       + pIrrCrop->cropSeasLength [3];
     rootDepth = pIrrCrop->cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (dayssinceplanted  /  totalSeasonLenth) - 1.47));
- 	if (rootDepth < 0.15) rootDepth = 0.15;
+ 	if (0.15 > rootDepth) rootDepth = 0.15;
 	return (rootDepth);
 }
 
@@ -137,8 +137,8 @@ static float getCorrDeplFactor (const MDIrrigatedCrop *pIrrCrop, float dailyETP)
 
 	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
 
-    if (cropdeplFactor <= 0.1) cropdeplFactor = 0.1;
-	if (cropdeplFactor >= 0.8) cropdeplFactor = 0.8;
+    if (0.1 >= cropdeplFactor) cropdeplFactor = 0.1;
+	if (0.8 <= cropdeplFactor) cropdeplFactor = 0.8;
 	return (cropdeplFactor);
 }
 
@@ -187,8 +187,8 @@ static int readCropParameters (const char *filename) {
 static int getNumGrowingSeasons(float irrIntensity) { return ceil (irrIntensity); }
 
 static float getIrrGrossWaterDemand(float netIrrDemand, float IrrEfficiency) {
-	if (IrrEfficiency <= 0.0) IrrEfficiency = 38.0; // no data, set to average value
-	return netIrrDemand / (IrrEfficiency / 100);
+	if (0.0 >= IrrEfficiency) IrrEfficiency = 38.0; // no data, set to average value
+	return (netIrrDemand * 100.0 / IrrEfficiency);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
@@ -200,7 +200,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float refETP;
 	float cropFraction [_MDNumberOfIrrCrops + 1];
 	float snowpackChg = 0.0;
-	int seasStart [3];
+	int   seasStart [3];
 	float dailyPercolation;
 	float wltPnt;
 	float fldCap;
@@ -208,14 +208,14 @@ static void _MDIrrGrossDemand (int itemID) {
 	float totalNetIrrDemand   = 0.0;
 	float totalIrrPercolation = 0.0;
 // Local
-	int i;
+	int   i;
 	float reqPondingDepth ;
 	float pondingDepth;
     float irrIntensity;
 	float cropDepletionFactor;
 	float meanSMChange;
 	float meanSMoist;
-	int daysSincePlanted;
+	int   daysSincePlanted;
 	float totAvlWater, readAvlWater, curDepl, prevSoilMstDepl;
 	float addBareSoil        = 0.0;
 	float bareSoilBalance    = 0.0;
@@ -238,10 +238,8 @@ static void _MDIrrGrossDemand (int itemID) {
 	float returnFlow;
 	float cropETPlusEPloss;
 	float debug = 0.0;
-	float OUT;
-	float IN;
-	int stage;
-	int curDay;
+	int   stage;
+	int   curDay;
 	
 	curDay = MFDateGetDayOfYear ();
 
@@ -257,7 +255,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	seasStart [1]= MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
 	if ((seasStart[0] < 0) || (seasStart[0]< 0)) CMmsgPrint (CMmsgDebug,"Growing Season! \n");
 
-	if (irrAreaFrac > 0.0) {
+	if (0.0 < irrAreaFrac) {
 		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
 		for (i = 0;i < _MDNumberOfIrrCrops;     ++i) {
 			if (MFVarTestMissingVal (_MDInCropFractionIDs [i],itemID)) {
@@ -267,23 +265,23 @@ static void _MDIrrGrossDemand (int itemID) {
 		irrEffeciency   = MFVarGetFloat(_MDInIrrEfficiencyID,    itemID, 38);
 		dailyPrecip     = MFVarGetFloat(_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat(_MDInIrrRefEvapotransID, itemID, 0.0);
-		if (irrEffeciency == 0) irrEffeciency = 38.0;
-		if (refETP == 0.0)             refETP = 0.01;
+		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
+		if (0.0 >= refETP)               refETP = 0.01;
 
 		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
-		dailyEffPrecip = snowpackChg <= 0.0 ? dailyPrecip + fabs (snowpackChg) : 0.0;
+		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
  
-	 	dailyPercolation = MFVarGetFloat(_MDRicePercolationRateID,itemID,3.0);
+	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
 		if (fldCap <= 0.0) { fldCap=0.35; wltPnt=0.2; }
 
-		if (irrIntensity < 1.2 && irrIntensity > 1.0) irrIntensity=1.0;
-		if (irrIntensity > 2.0) irrIntensity = 2.0;
+		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
+		if (2.0 < irrIntensity)                       irrIntensity = 2.0;
 
 		curDepl = sumOfCropFractions = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
-		if (sumOfCropFractions <= 0.0) { // No Cropdata for irrigated cell: default to some cereal crop
+		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
 			MFVarSetFloat(_MDInCropFractionIDs [2], itemID, 0.3);
 			sumOfCropFractions = 0.3;
 		}
@@ -292,11 +290,11 @@ static void _MDIrrGrossDemand (int itemID) {
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
 			numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
 			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
-			relCropFraction   = curCropFraction > 0.0 ? curCropFraction / sumOfCropFractions : 0.0;
+			relCropFraction   = 0.0 > curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, &_MDirrigCropStruct [i]);
 
 			if (_MDIntensityDistributed) {
-				if (daysSincePlanted > 0.0) {
+				if (0 < daysSincePlanted) {
 					addBareSoil = relCropFraction - irrIntensity / ceil(irrIntensity) * relCropFraction;
 					if (relCropFraction > 0.0) cropFraction [i] = relCropFraction - addBareSoil;
 					cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
@@ -307,16 +305,12 @@ static void _MDIrrGrossDemand (int itemID) {
 				}
 			}
 			else { // try to grow all crops in Growing Season 1 (always assumed to be the first season!)
-				if (daysSincePlanted > 0.0) { // Growing season
-					if (curDay < seasStart [1] || (daysSincePlanted > seasStart[1]-seasStart[0])) { // First or perennial growing season
-						if (irrIntensity < 1.0) addBareSoil = relCropFraction * (1.0 - irrIntensity);
-						else                    addBareSoil = 0.0;
-					}
-					else { // second crop
-						if (irrIntensity > 1.0) addBareSoil = relCropFraction - (irrIntensity - 1.0) * relCropFraction;
-						else if (irrIntensity < 1.0) addBareSoil = relCropFraction;
-					}
-					if (relCropFraction > 0.0) cropFraction [i] = relCropFraction - addBareSoil;
+				if (0 < daysSincePlanted) { // Growing season
+					if (curDay < seasStart [1] || (daysSincePlanted > seasStart[1] - seasStart[0])) // First or perennial growing season
+						addBareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
+					else  // second crop
+						addBareSoil = 1.0 < itIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
+					if (0.0 > relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
 					cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
 				}
 				else { //  Non-growing season
@@ -332,12 +326,11 @@ static void _MDIrrGrossDemand (int itemID) {
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = deepPercolation = smChange=0.0;
 			relCropFraction = cropFraction [i];
-			if (_MDIrrigatedAreaMap == 0) numGrowingSeasons = getNumGrowingSeasons (irrIntensity); //FAO MAP
-			else numGrowingSeasons = 2; //getNumGrowingSeasons (irrIntensity);
-			if (relCropFraction > 0) {
-				netIrrDemand=0;
+			numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
+			if (0.0 < relCropFraction) {
+				netIrrDemand = 0.0;
 			 	daysSincePlanted = getDaysSincePlanting(curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
-			 	if (daysSincePlanted > 0) {
+			 	if (0 < daysSincePlanted) {
 					prevSoilMstDepl = MFVarGetFloat(_MDOutCropDeficitIDs [i],itemID, 0.0);
 					stage     = getCropStage (_MDirrigCropStruct + i, daysSincePlanted);
 					cropCoeff = getCropKc    (_MDirrigCropStruct + i, daysSincePlanted, stage);
@@ -366,10 +359,7 @@ static void _MDIrrGrossDemand (int itemID) {
 						readAvlWater = totAvlWater * cropDepletionFactor;
 					 
 						curDepl  = prevSoilMstDepl - dailyEffPrecip + cropWR;
-						if (curDepl < 0) {
-							curDepl = 0;
-							deepPercolation = dailyEffPrecip - prevSoilMstDepl -cropWR;
-						}
+						if (0.0 > curDepl) { curDepl = 0; deepPercolation = dailyEffPrecip - prevSoilMstDepl -cropWR; }
 						if (curDepl >= totAvlWater) {
 							curDepl =totAvlWater;
 						}
@@ -394,21 +384,17 @@ static void _MDIrrGrossDemand (int itemID) {
 			MFVarSetFloat (_MDOutCropGrossDemandIDs[i],itemID,netIrrDemand * relCropFraction * irrAreaFrac/(irrEffeciency/100));
 		} //for all crops
 		// Add Water Balance for bare soil
-		cropWR = 0.0;
+		cropWR = curDepl = 0.0;
 		relCropFraction = cropFraction [_MDNumberOfIrrCrops];
-		curDepl=0;
-		if (relCropFraction > 0.0) { //Crop is not currently grown. ET from bare soil is equal to ET (initial)
+		if (0.0 < relCropFraction) { //Crop is not currently grown. ET from bare soil is equal to ET (initial)
 			netIrrDemand = 0.0;
-			cropWR = 0.2*refETP;
+			cropWR = 0.2 * refETP;
 			
 			prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops],itemID, 0.0);
 			totAvlWater = (fldCap - wltPnt) * 250;	//assumed RD = 0.25 m
 			deepPercolation = 0.0;
 			curDepl  = prevSoilMstDepl - dailyEffPrecip + cropWR;
-			if (curDepl < 0) {	
-				curDepl = 0;	
-				deepPercolation=dailyEffPrecip - prevSoilMstDepl -cropWR;
-			}
+			if (0.0 > curDepl) { curDepl = 0; deepPercolation=dailyEffPrecip - prevSoilMstDepl - cropWR; }
 			if (curDepl >= totAvlWater) {
 				cropWR = totAvlWater - prevSoilMstDepl + dailyEffPrecip;
 				deepPercolation = 0.0;
