@@ -290,7 +290,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			numGrowingSeasons = _MDIrrigatedAreaMap = 0 ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
+			numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons(irrIntensity) : 2; // FAO MAP or IWMI
 			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
 			relCropFraction   = curCropFraction > 0.0 ? curCropFraction / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, &_MDirrigCropStruct [i]);
