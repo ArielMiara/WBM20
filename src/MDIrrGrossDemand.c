@@ -274,7 +274,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
-		if (fldCap <= 0.0) { fldCap = 0.35; wltPnt = 0.2; }
+		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0;
