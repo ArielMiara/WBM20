@@ -247,18 +247,15 @@ static void _MDIrrGrossDemand (int itemID) {
 		seasStart [0]   = MFVarGetFloat (_MDGrowingSeason1ID,    itemID, 0);
 		seasStart [1]   = MFVarGetFloat (_MDGrowingSeason2ID,    itemID, 0);
 
-		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
+		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction [i] = 0.0; }
 
 		irrEfficiency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38.0);
-		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
-		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
-		if (0.0 >= irrEfficiency) irrEfficiency = 38.0;
-		if (0.0 >= refETP)               refETP = 0.01;
-
-		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
+		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID,  0.0);
+		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID,  0.0);
+		snowpackChg     = MFVarGetFloat (_MDInSPackChgID,         itemID,  0.0);
 		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
  
-	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.00);
+	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 0.00);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID,           itemID, 0.25);
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
