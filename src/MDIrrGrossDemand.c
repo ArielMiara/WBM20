@@ -70,8 +70,8 @@ static bool _MDIntensityDistributed      = true;
 static const char *CropParameterFileName;
 
 static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int numGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
-	int i;
-	int daysSincePlanted // Default -> crop is not grown!
+	int i, ret = 0;
+	int daysSincePlanted; // Default -> crop is not grown!
 
 	for (i = 0; i < numGrowingSeasons; i++) {
 		daysSincePlanted = dayOfYearModel - dayOfYearPlanting [i];
@@ -81,7 +81,7 @@ static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int 
 							 + pIrrCrop->cropSeasLength[2]
 							 + pIrrCrop->cropSeasLength[3]) ret = daysSincePlanted;
 	}
-	return (0);
+	return (ret);
 }
 
 static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
@@ -113,7 +113,7 @@ static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, i
 										  /  pIrrCrop->cropSeasLength [1];
 			break;
  		case 3: kc = pIrrCrop->cropKc [1]; break;
-		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropK [2] - pIrrCrop->cropKc [1])
+		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc [2] - pIrrCrop->cropKc [1])
 		                                  * (daysSincePlanted - (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2]))
 										  / pIrrCrop->cropSeasLength [3];
 			break;
