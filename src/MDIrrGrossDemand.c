@@ -65,7 +65,6 @@ static int  _MDRicePoindingDepthID      = MFUnset;
 
 static int  _MDRicePercolationRateID    = MFUnset;
 static int  _MDIrrigatedAreaMap;
-static bool _MDIntensityDistributed     = true;
  
 static const char *CropParameterFileName;
 
@@ -424,7 +423,6 @@ int MDIrrGrossDemandDef () {
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 	const char *mapOptions   [] = { "FAO", "IWMI", (char *) NULL };
-	const char *distrOptions [] = { "FirstSeason","Distributed", (char *) NULL };
 	int i;
 	char varname [20];
 	char cropETName [20];
@@ -446,28 +444,12 @@ int MDIrrGrossDemandDef () {
 				return (CMfailed);
 			break;
 		case MDcalculate:		
-			if (((optStr = MFOptionGet (MDOptIrrIntensity)) == (char *) NULL) || ((irrDistribuedID = CMoptLookup (distrOptions, optStr, true)) == CMfailed)) {
-				CMmsgPrint(CMmsgUsrError,"Irrigation Distribution not specifed! Options = 'Distributed' or 'FirstSeason'\n");
-				return (CMfailed);
-			}
 			if (((optStr = MFOptionGet (MDOptIrrigatedAreaMap))  == (char *) NULL) || ((mapOptionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
 				CMmsgPrint(CMmsgUsrError,"Typ of Irr Area not specifed! Options = 'FAO' or 'IWMI'\n");
 				return (CMfailed);
 			}
-			_MDIrrigatedAreaMap=mapOptionID;
-	
-			if (_MDIrrigatedAreaMap == 1) { //read irrArea for both seasons from IWMI data; Irr Intensity not needed!
-				_MDIntensityDistributed = true; //Distributed ; 					
-			}
-			else { // FAO irrigated Area Map; read Irr Area and Intensity
-				if (((optStr = MFOptionGet (MDOptIrrIntensity)) == (char *) NULL) || ((irrDistribuedID = CMoptLookup (distrOptions, optStr, true)) == CMfailed)) {
-					CMmsgPrint(CMmsgUsrError,"Irrigation Distribution not specifed! Options = 'Distributed' or 'FirstSeason'\n");
-					return CMfailed;
-				}
-				_MDIntensityDistributed = irrDistribuedID == 0 ? false : true;
+			_MDIrrigatedAreaMap = mapOptionID;
 
-				if (((_MDInIrrIntensityID = MFVarGetID (MDVarIrrIntensity,           "-",    MFInput,  MFState, MFBoundary)) == CMfailed)) return (CMfailed);
-			}
 			if ((optStr = MFOptionGet (MDParIrrigationCropFileName)) != (char *) NULL) CropParameterFileName = optStr;
 			if (readCropParameters (CropParameterFileName) == CMfailed) {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", CropParameterFileName);
@@ -477,6 +459,7 @@ int MDIrrGrossDemandDef () {
 			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
 			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) ||
+				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               "-",      MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDGrowingSeason1ID        = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
