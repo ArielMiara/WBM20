@@ -70,8 +70,8 @@ static bool _MDIntensityDistributed      = true;
 static const char *CropParameterFileName;
 
 static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int numGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
-	int i, ret = -888;
-	int   daysSincePlanted ;	// Default> crop is not grown!
+	int i;
+	int daysSincePlanted // Default -> crop is not grown!
 
 	for (i = 0; i < numGrowingSeasons; i++) {
 		daysSincePlanted = dayOfYearModel - dayOfYearPlanting [i];
@@ -81,7 +81,7 @@ static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int 
 							 + pIrrCrop->cropSeasLength[2]
 							 + pIrrCrop->cropSeasLength[3]) ret = daysSincePlanted;
 	}
-	return (ret);
+	return (0);
 }
 
 static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
@@ -100,8 +100,7 @@ static int getCropStage (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) 
 	return (stage);
 }
 
-static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, int curCropStage)
-{
+static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, int curCropStage) {
 	float kc;
 
    //Returns kc depending on the current stage of the growing season
@@ -114,43 +113,44 @@ static float getCropKc (const MDIrrigatedCrop *pIrrCrop, int daysSincePlanted, i
 										  /  pIrrCrop->cropSeasLength [1];
 			break;
  		case 3: kc = pIrrCrop->cropKc [1]; break;
-		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropKc[2]-pIrrCrop->cropKc[1])
+		case 4: kc = pIrrCrop->cropKc [1] + (pIrrCrop->cropK [2] - pIrrCrop->cropKc [1])
 		                                  * (daysSincePlanted - (pIrrCrop->cropSeasLength [0] + pIrrCrop->cropSeasLength [1] + pIrrCrop->cropSeasLength [2]))
-										  / pIrrCrop->cropSeasLength[3];
+										  / pIrrCrop->cropSeasLength [3];
 			break;
 	}
  	return (kc);
 }
 
-static float getCurCropRootingDepth (MDIrrigatedCrop *pIrrCrop, int dayssinceplanted) {
+static float getCurCropRootingDepth (MDIrrigatedCrop *pIrrCrop, int daysSincePlanted) {
 	float rootDepth;
 	float totalSeasonLenth = pIrrCrop->cropSeasLength [0]
 	                       + pIrrCrop->cropSeasLength [1]
 					       + pIrrCrop->cropSeasLength [2]
 					       + pIrrCrop->cropSeasLength [3];
-    rootDepth = pIrrCrop->cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (dayssinceplanted  /  totalSeasonLenth) - 1.47));
+
+    rootDepth = pIrrCrop->cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
  	if (0.15 > rootDepth) rootDepth = 0.15;
 	return (rootDepth);
 }
 
 static float getCorrDeplFactor (const MDIrrigatedCrop *pIrrCrop, float dailyETP) {
+	float cropDeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
 
-	float cropdeplFactor = pIrrCrop->cropDepletionFactor + 0.04 * (5 - dailyETP);
-
-    if (0.1 >= cropdeplFactor) cropdeplFactor = 0.1;
-	if (0.8 <= cropdeplFactor) cropdeplFactor = 0.8;
-	return (cropdeplFactor);
+    if (0.1 >= cropDeplFactor) cropDeplFactor = 0.1;
+	if (0.8 <= cropDeplFactor) cropDeplFactor = 0.8;
+	return (cropDeplFactor);
 }
 
 static int readCropParameters (const char *filename) {
 	FILE *inputCropFile;
-	int i = 0, die;
+	char buffer [512];
+	int  i = 0;
+
 	if ((inputCropFile = fopen (filename, "r")) == (FILE *) NULL) {
 		CMmsgPrint (CMmsgUsrError,"Crop Parameter file could not be opned, filename: %s\n", filename);
 		return (CMfailed);
 	}
 	else {
-		char buffer[512];
 		// read headings..
 		fgets (buffer,sizeof (buffer),inputCropFile);
 
@@ -257,11 +257,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 	if (0.0 < irrAreaFrac) {
 		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
-		for (i = 0;i < _MDNumberOfIrrCrops;     ++i) {
-			if (MFVarTestMissingVal (_MDInCropFractionIDs [i],itemID)) {
-				MFVarSetFloat(_MDInCropFractionIDs [i],itemID,0.0);
-			}
-		}
+
 		irrEffeciency   = MFVarGetFloat(_MDInIrrEfficiencyID,    itemID, 38);
 		dailyPrecip     = MFVarGetFloat(_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat(_MDInIrrRefEvapotransID, itemID, 0.0);
@@ -277,7 +273,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
-		if (2.0 < irrIntensity)                       irrIntensity = 2.0;
+		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 
 		curDepl = sumOfCropFractions = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat(_MDInCropFractionIDs [i],itemID, 0.0);	}
