@@ -214,7 +214,6 @@ static void _MDIrrGrossDemand (int itemID) {
 	float addBareSoil        = 0.0;
 	float bareSoilBalance    = 0.0;
 	float cropCoeff;
-	float croppedArea        = 0.0;
 	float cropWR             = 0.0;
 	float deepPercolation    = 0.0;
 	float loss               = 0.0;
@@ -238,41 +237,37 @@ static void _MDIrrGrossDemand (int itemID) {
 
 	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
 	if (0.0 < irrAreaFrac) {
-		switch (_MDIrrigatedAreaMap) {
-			case FAO_ID:  irrIntensity = MFVarGetFloat (_MDInIrrIntensityID, itemID, 100.0) / 100.0; break;
-			case IWMI_ID: irrIntensity = 1.0; break;
+		sumOfCropFractions = 0.0;
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
+			cropFraction [i] = MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);
+			sumOfCropFractions += cropFraction [i];
+		}
+		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
+			MFVarSetFloat (_MDInCropFractionIDs [0], itemID, irrAreaFrac);
+			sumOfCropFractions = irrAreaFrac;
 		}
 
-		reqPondingDepth = MFVarGetFloat (_MDRicePoindingDepthID, itemID, 2.0);
-		seasStart [0]   = MFVarGetFloat (_MDGrowingSeason1ID,    itemID, 0);
-		seasStart [1]   = MFVarGetFloat (_MDGrowingSeason2ID,    itemID, 0);
-
-		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction [i] = 0.0; }
-
-		irrEfficiency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38.0);
-		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID,  0.0);
-		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID,  0.0);
-		snowpackChg     = MFVarGetFloat (_MDInSPackChgID,         itemID,  0.0);
-		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
- 
-	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 0.00);
+		reqPondingDepth  = MFVarGetFloat (_MDRicePoindingDepthID,   itemID,  2.0);
+		seasStart [0]    = MFVarGetFloat (_MDGrowingSeason1ID,      itemID,    0);
+		seasStart [1]    = MFVarGetFloat (_MDGrowingSeason2ID,      itemID,    0);
+		dailyPrecip      = MFVarGetFloat (_MDInPrecipID,            itemID,  0.0);
+		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID,  0.0);
+		refETP           = MFVarGetFloat (_MDInIrrRefEvapotransID,  itemID,  0.0);
+		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
+		irrEfficiency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38.0);
+	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.00);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
 		fldCap           = MFVarGetFloat (_MDInFldCapaID,           itemID, 0.25);
+		if (0.0 >= irrEfficiency) irrEfficiency = 38.0;
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
+		numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons (irrIntensity) : 2; // FAO MAP or IWMI
 
-		curDepl = sumOfCropFractions = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);	}
-		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
-			MFVarSetFloat (_MDInCropFractionIDs [2], itemID, 0.3);
-			sumOfCropFractions = 0.3;
-		}
+		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
 
-		meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			numGrowingSeasons = 0 == _MDIrrigatedAreaMap ? getNumGrowingSeasons (irrIntensity) : 2; // FAO MAP or IWMI
 			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
 			relCropFraction   = 0.0 < curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
@@ -291,10 +286,8 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [_MDNumberOfIrrCrops] += relCropFraction;
 			}
 		}
-		croppedArea = 0.0;
 
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) croppedArea += cropFraction [i];
-
+		curDepl = meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 			relCropFraction = cropFraction [i];
