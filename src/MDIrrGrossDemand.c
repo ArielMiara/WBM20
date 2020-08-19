@@ -251,7 +251,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	if (0.0 < irrAreaFrac) {
 		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
 
-		irrEfficiency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38);
+		irrEfficiency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38.0);
 		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
 		if (0.0 >= irrEfficiency) irrEfficiency = 38.0;
@@ -405,7 +405,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		meanSMChange        += smChange        * relCropFraction;
 		totalIrrPercolation += deepPercolation * relCropFraction;
 
-		totGrossDemand = netIrrDemand * 100.0 / irrEfficiency;
+		totGrossDemand = totalNetIrrDemand * 100.0 / irrEfficiency;
 
 		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
 		returnFlow = totalIrrPercolation + loss * 0.1;
