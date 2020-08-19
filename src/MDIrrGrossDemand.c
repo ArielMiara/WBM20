@@ -186,15 +186,10 @@ static int readCropParameters (const char *filename) {
 
 static int getNumGrowingSeasons (float irrIntensity) { return (ceil (irrIntensity)); }
 
-static float getIrrGrossWaterDemand (float netIrrDemand, float IrrEfficiency) {
-	if (0.0 >= IrrEfficiency) IrrEfficiency = 38.0; // no data, set to average value
-	return (netIrrDemand * 100.0 / IrrEfficiency);
-}
-
 static void _MDIrrGrossDemand (int itemID) {
 //Input
 	float irrAreaFrac;
-	float irrEffeciency;
+	float irrEfficiency;
 	float dailyPrecip    = 0.0;
 	float dailyEffPrecip = 0.0;
 	float refETP;
@@ -256,10 +251,10 @@ static void _MDIrrGrossDemand (int itemID) {
 	if (0.0 < irrAreaFrac) {
 		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
 
-		irrEffeciency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38);
+		irrEfficiency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38);
 		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
-		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
+		if (0.0 >= irrEfficiency) irrEfficiency = 38.0;
 		if (0.0 >= refETP)               refETP = 0.01;
 
 		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
@@ -375,7 +370,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				totalIrrPercolation += deepPercolation * relCropFraction;
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, netIrrDemand * relCropFraction * irrAreaFrac); 		
-			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * relCropFraction * irrAreaFrac * 100.0 / irrEffeciency);
+			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * relCropFraction * irrAreaFrac * 100.0 / irrEfficiency);
 		} // for all crops
 		// Add Water Balance for bare soil
 		cropWR = curDepl = netIrrDemand = 0.0;
@@ -410,7 +405,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		meanSMChange        += smChange        * relCropFraction;
 		totalIrrPercolation += deepPercolation * relCropFraction;
 
-		totGrossDemand = getIrrGrossWaterDemand (totalNetIrrDemand, irrEffeciency);
+		totGrossDemand = netIrrDemand * 100.0 / irrEfficiency;
 
 		loss = (totGrossDemand - totalNetIrrDemand) + (dailyPrecip - dailyEffPrecip);
 		returnFlow = totalIrrPercolation + loss * 0.1;
