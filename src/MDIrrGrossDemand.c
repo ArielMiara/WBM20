@@ -62,8 +62,7 @@ static int  _MDNonIrrFractionID         = MFUnset;
 static int  _MDRicePoindingDepthID      = MFUnset;
 
 static int  _MDRicePercolationRateID     = MFUnset;
-static bool _MDIntensityDistributed      = true;
- 
+
 static int getDaysSincePlanting (int dayOfYearModel, int *dayOfYearPlanting,int numGrowingSeasons,const MDIrrigatedCrop * pIrrCrop) {
 	int i, ret = 0;
 	int daysSincePlanted; // Default -> crop is not grown!
@@ -237,45 +236,46 @@ static void _MDIrrGrossDemand (int itemID) {
 	
 	curDay = MFDateGetDayOfYear ();
 
-	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0);
+	reqPondingDepth = MFVarGetFloat (_MDRicePoindingDepthID, itemID, 2.0);
+	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
 	
+	irrIntensity = MFVarGetFloat (_MDInIrrIntensityID, itemID, 100.0) / 100.0;
+	
+	seasStart [0] = MFVarGetFloat (_MDGrowingSeason1ID,      itemID, -100);
+	seasStart [1] = MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
 
 	if (0.0 < irrAreaFrac) {
-		sumOfCropFractions = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
-			cropFraction [i] = MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);
-			sumOfCropFractions += cropFraction [i];
-		}
-		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
-			MFVarSetFloat (_MDInCropFractionIDs [0], itemID, irrAreaFrac);
-			sumOfCropFractions = irrAreaFrac;
-		}
+		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
 
-		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
-		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38.0);
-		reqPondingDepth  = MFVarGetFloat (_MDRicePoindingDepthID,   itemID, 2.0);
-		seasStart [0]    = MFVarGetFloat (_MDGrowingSeason1ID,      itemID, -100);
-		seasStart [1]    = MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
-		dailyPrecip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
-		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
-		refETP           = MFVarGetFloat (_MDInIrrRefEvapotransID,  itemID, 0.0);
-	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
-	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
-		fldCap           = MFVarGetFloat (_MDInFldCapaID,           itemID, 0.25);
-		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
- 
-		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
+		irrEffeciency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38);
+		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
+		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
 		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
 		if (0.0 >= refETP)               refETP = 0.01;
+
+		snowpackChg = MFVarGetFloat (_MDInSPackChgID, itemID, 0.0);
+		dailyEffPrecip = 0.0 >= snowpackChg ? dailyPrecip + fabs (snowpackChg) : 0.0;
+ 
+	 	dailyPercolation = MFVarGetFloat (_MDRicePercolationRateID, itemID, 3.0);
+	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,  itemID, 0.15);
+		fldCap           = MFVarGetFloat (_MDInFldCapaID, itemID, 0.25);
+		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 
-		numGrowingSeasons = getNumGrowingSeasons (irrIntensity); // FAO MAP or IWMI
+		curDepl = sumOfCropFractions = 0.0;
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);	}
+		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
+			MFVarSetFloat (_MDInCropFractionIDs [2], itemID, 0.3);
+			sumOfCropFractions = 0.3;
+		}
 
-		curDepl = meanSMChange = totalCropETP = 0.0;
+		meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			relCropFraction   = 0.0 < cropFraction [i] ? cropFraction [i] / sumOfCropFractions : 0.0;
+			numGrowingSeasons = getNumGrowingSeasons (irrIntensity); // FAO MAP or IWMI
+			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
+			relCropFraction   = 0.0 < curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
@@ -294,10 +294,14 @@ static void _MDIrrGrossDemand (int itemID) {
 		}
 		croppedArea = 0.0;
 
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) croppedArea += cropFraction [i];
+
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 			relCropFraction = cropFraction [i];
+			numGrowingSeasons = getNumGrowingSeasons (irrIntensity);
 			if (0.0 < relCropFraction) {
+				netIrrDemand = 0.0;
 			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			 	if (0 < daysSincePlanted) {
 					prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
@@ -344,7 +348,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
 				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, curDepl);
 				}
-				totalNetIrrDemand   += netIrrDemand    * relCropFraction;
+				totalNetIrrDemand += netIrrDemand      * relCropFraction;
 				totalCropETP        += cropWR          * relCropFraction;
 				meanSMChange        += smChange        * relCropFraction;
 				totalIrrPercolation += deepPercolation * relCropFraction;
@@ -416,11 +420,13 @@ int MDIrrGrossDemandDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
+	const char *mapOptions   [] = { "FAO", "IWMI", (char *) NULL };
+	const char *distrOptions [] = { "FirstSeason","Distributed", (char *) NULL };
 	const char *cropParameterFileName;
 	int i;
 	char varname [20];
 	char cropETName [20];
-	char cropGrossDemandName[20];
+	char cropGrossDemandName [20];
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
