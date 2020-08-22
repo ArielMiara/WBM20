@@ -245,8 +245,15 @@ static void _MDIrrGrossDemand (int itemID) {
 	seasStart [1] = MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
 
 	if (0.0 < irrAreaFrac) {
-		for (i = 0;i < _MDNumberOfIrrCrops + 1; ++i) { cropFraction[i] = 0.0; }
-
+		sumOfCropFractions = 0.0;
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
+			cropFraction [i] =  MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);
+			sumOfCropFractions += cropFraction[i];
+		}
+		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
+			MFVarSetFloat (_MDInCropFractionIDs [0], itemID, irrAreaFrac);
+			sumOfCropFractions = irrAreaFrac;
+		}
 		irrEffeciency   = MFVarGetFloat (_MDInIrrEfficiencyID,    itemID, 38);
 		dailyPrecip     = MFVarGetFloat (_MDInPrecipID,           itemID, 0.0);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
@@ -264,18 +271,10 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 
-		curDepl = sumOfCropFractions = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) { sumOfCropFractions += MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);	}
-		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
-			MFVarSetFloat (_MDInCropFractionIDs [2], itemID, 0.3);
-			sumOfCropFractions = 0.3;
-		}
-
-		meanSMChange = totalCropETP = 0.0;
+		numGrowingSeasons = getNumGrowingSeasons (irrIntensity); // FAO MAP or IWMI
+		curDepl = meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			numGrowingSeasons = getNumGrowingSeasons (irrIntensity); // FAO MAP or IWMI
-			curCropFraction   = MFVarGetFloat (_MDInCropFractionIDs [i], itemID, 0.0);
-			relCropFraction   = 0.0 < curCropFraction ? curCropFraction / sumOfCropFractions : 0.0;
+			relCropFraction   = 0.0 < cropFraction [i] ? cropFraction [i] / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
@@ -292,14 +291,9 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [_MDNumberOfIrrCrops] += relCropFraction;
 			}
 		}
-		croppedArea = 0.0;
-
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) croppedArea += cropFraction [i];
-
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 			relCropFraction = cropFraction [i];
-			numGrowingSeasons = getNumGrowingSeasons (irrIntensity);
 			if (0.0 < relCropFraction) {
 				netIrrDemand = 0.0;
 			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
