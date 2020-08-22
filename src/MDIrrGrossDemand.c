@@ -211,10 +211,9 @@ static void _MDIrrGrossDemand (int itemID) {
 	float meanSMoist;
 	int   daysSincePlanted;
 	float totAvlWater, readAvlWater, curDepl, prevSoilMstDepl;
-	float addBareSoil        = 0.0;
+	float bareSoil           = 0.0;
 	float bareSoilBalance    = 0.0;
 	float cropCoeff;
-	float croppedArea        = 0.0;
 	float cropWR             = 0.0;
 	float deepPercolation    = 0.0;
 	float loss               = 0.0;
@@ -270,17 +269,17 @@ static void _MDIrrGrossDemand (int itemID) {
 		numGrowingSeasons = getNumGrowingSeasons (irrIntensity); // FAO MAP or IWMI
 		curDepl = meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			relCropFraction   = 0.0 < cropFraction [i] ? cropFraction [i] / sumOfCropFractions : 0.0;
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
+			relCropFraction   = cropFraction [i] / sumOfCropFractions;
 
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
 			if (0 < daysSincePlanted) { // Growing season
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First or perennial growing season
-					addBareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
+					bareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
 				else  // second crop
-					addBareSoil = 1.0 < irrIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
-				if (0.0 < relCropFraction) cropFraction [i] = relCropFraction - addBareSoil;
-				cropFraction [_MDNumberOfIrrCrops] += addBareSoil;
+					bareSoil = 1.0 < irrIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
+				if (0.0 < relCropFraction) cropFraction [i] = relCropFraction - bareSoil;
+				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
 			}
 			else { //  Non-growing season
 				cropFraction [i] = 0.0;
