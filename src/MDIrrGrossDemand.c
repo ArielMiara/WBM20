@@ -235,6 +235,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			cropFraction [i] =  MFVarGetFloat (_MDInCropFractionIDs [i],itemID, 0.0);
 			sumOfCropFractions += cropFraction[i];
 		}
+		cropFraction [i] = 0.0;
 		if (0.0 >= sumOfCropFractions) { // No Cropdata for irrigated cell: default to some cereal crop
 			MFVarSetFloat (_MDInCropFractionIDs [0], itemID, 1.0);
 			sumOfCropFractions = irrAreaFrac;
@@ -261,8 +262,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		numGrowingSeasons = ceil (irrIntensity);
 
 		curDepl = meanSMChange = totalCropETP = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
+		for (i = 0; i <= _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
+			daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			cropFraction [i] = cropFraction [i] / sumOfCropFractions;
 
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
