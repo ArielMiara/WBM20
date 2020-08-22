@@ -270,15 +270,15 @@ static void _MDIrrGrossDemand (int itemID) {
 		curDepl = meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
 			daysSincePlanted  = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
-			relCropFraction   = cropFraction [i] / sumOfCropFractions;
+			cropFraction [i] = cropFraction [i] / sumOfCropFractions;
 
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
 			if (0 < daysSincePlanted) { // Growing season
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First or perennial growing season
-					bareSoil = 1.0 > irrIntensity  ? relCropFraction * (1.0 - irrIntensity) : 0.0;
+					bareSoil = 1.0 > irrIntensity ? cropFraction [i] * (1.0 - irrIntensity) : 0.0;
 				else  // second crop
-					bareSoil = 1.0 < irrIntensity ? relCropFraction - (irrIntensity - 1.0) * relCropFraction : relCropFraction;
-				if (0.0 < relCropFraction) cropFraction [i] = relCropFraction - bareSoil;
+					bareSoil = 1.0 < irrIntensity ? cropFraction [i] * (2.0 - irrIntensity) : 0.0;
+				cropFraction [i] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
 			}
 			else { //  Non-growing season
