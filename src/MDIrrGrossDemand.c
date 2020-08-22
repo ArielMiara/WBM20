@@ -337,7 +337,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
 		} // for all crops
 		// Add Water Balance for bare soil
-		cropWR = curDepl = netIrrDemand = 0.0;
+		netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 		if (0.0 < cropFraction [_MDNumberOfIrrCrops]) { // Crop is not currently grown. ET from bare soil is equal to ET (initial)
 			cropWR = 0.2 * refETP;
 			prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, 0.0);
@@ -353,12 +353,6 @@ static void _MDIrrGrossDemand (int itemID) {
  			smChange = prevSoilMstDepl - curDepl;
 			bareSoilBalance = dailyEffPrecip - smChange - cropWR - netIrrDemand - deepPercolation;
   			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, curDepl);
-		}
-		else {
-			cropWR          = 0.0;
-			smChange        = 0.0;
-			deepPercolation = 0.0;
-			curDepl         = 0.0;
 		}
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
   		MFVarSetFloat (_MDNonIrrFractionID, itemID, cropFraction [_MDNumberOfIrrCrops]);
