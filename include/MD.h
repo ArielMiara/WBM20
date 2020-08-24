@@ -218,6 +218,7 @@ extern "C" {
 #define MDVarIrrIntensity                    "IrrigationIntensity"
 #define MDVarIrrNetWaterDemand               "IrrNetWaterDemand"
 #define MDVarIrrRefEvapotrans                "IrrReferenceETP"
+#define MDVarIrrPercolation                  "IrrPercolation"
 #define MDVarIrrReturnFlow                   "IrrReturnFlow"
 #define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
 #define MDVarIrrSoilMoistChange              "IrrSoilMoistChange"
