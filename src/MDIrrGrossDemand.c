@@ -154,7 +154,7 @@ static int readCropParameters (const char *filename) {
 			_MDOutCropETIDs          = (int *) realloc (_MDOutCropETIDs,          (i + 1) * sizeof (int));
 			_MDOutCropGrossDemandIDs = (int *) realloc (_MDOutCropGrossDemandIDs, (i + 1) * sizeof (int));
 			_MDInCropFractionIDs [i] = _MDOutCropETIDs[i] =  _MDOutCropDeficitIDs [i] = _MDOutCropGrossDemandIDs[i] = MFUnset;
-			sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
+			if (sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
 		       &(_MDirrigCropStruct [i].ID),
 		       &(_MDirrigCropStruct [i].DW_ID),
 		         _MDirrigCropStruct [i].cropName,
@@ -167,7 +167,10 @@ static int readCropParameters (const char *filename) {
 		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
 		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
 		       &(_MDirrigCropStruct [i].cropRootingDepth),
-		       &(_MDirrigCropStruct [i].cropDepletionFactor));
+		       &(_MDirrigCropStruct [i].cropDepletionFactor)) != 13) {
+			    CMmsgPrint (CMmsgUsrError,"Crop Parameter file reading error.");
+			    return (CMfailed);
+			}
 
 			_MDirrigCropStruct [i].cropIsRice = strcmp (_MDirrigCropStruct [i].cropName , "Rice") == 0 ? 1 : 0;
 			i += 1;
@@ -409,11 +412,11 @@ int MDIrrGrossDemandDef () {
 			break;
 		case MDcalculate:
 			if ((optStr = MFOptionGet (MDParIrrigationCropFileName)) != (char *) NULL) cropParameterFileName = optStr;
-			if (_MDNumberOfIrrCrops = readCropParameters (cropParameterFileName) == CMfailed) {
+			if ((_MDNumberOfIrrCrops = readCropParameters (cropParameterFileName)) == CMfailed) {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", cropParameterFileName);
 				return CMfailed;
 			}
-			else _MDNumberOfIrrCrops += 1; // adding bare soil
+			else _MDNumberOfIrrCrops -= 1; // adding bare soil
 			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 
 			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
