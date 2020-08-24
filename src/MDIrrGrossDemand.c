@@ -278,10 +278,10 @@ static void _MDIrrGrossDemand (int itemID) {
 		}
 		for (i = 0; i < _MDInNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = irrPercolation = smChange = 0.0;
+			prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
 			if (0.0 < cropFraction [i]) {
 			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			 	if (0 < daysSincePlanted) {
-					prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
 					stage     = getCropStage (_MDirrigCropStruct + i, daysSincePlanted);
 					cropCoeff = getCropKc    (_MDirrigCropStruct + i, daysSincePlanted, stage);
 					cropWR    = refETP * cropCoeff;
@@ -320,6 +320,9 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
 				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, curCropDeficit);
 				}
+				else
+					MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, prevCropDeficit);
+
 				totNetIrrDemand   += netIrrDemand    * cropFraction [i];
 				totCropETP        += cropWR          * cropFraction [i];
 				meanSMChange        += smChange        * cropFraction [i];
@@ -327,7 +330,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac); 		
 			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
-		} // for all crops
+		}
 		// Add Water Balance for bare soil
 		netIrrDemand = cropWR = irrPercolation = smChange = 0.0;
 		if (0.0 < cropFraction [_MDInNumberOfIrrCrops]) { // Crop is not currently grown. ET from bare soil is equal to ET (initial)
@@ -414,7 +417,7 @@ int MDIrrGrossDemandDef () {
 			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 
 			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
-			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ())==  CMfailed) ||
+			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ()) == CMfailed) ||
 				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               "-",      MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
