@@ -173,8 +173,7 @@ static int readCropParameters (const char *filename) {
 			i += 1;
 		}
 	}
-	_MDNumberOfIrrCrops = i - 1;
-	return (CMsucceeded);
+	return (i);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
@@ -223,7 +222,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	
 	curDay = MFDateGetDayOfYear ();
 
-	irrAreaFrac     = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
+	irrAreaFrac = MFVarGetFloat (_MDInIrrAreaFracID,     itemID, 0.0);
 	
 	if (0.0 < irrAreaFrac) {
 		sumOfCropFractions = 0.0;
@@ -241,7 +240,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		seasStart [1]    = MFVarGetFloat (_MDGrowingSeason2ID,      itemID, -100);
 		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.00) / 100.0;
 		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID,  38.00);
-		precip      = MFVarGetFloat (_MDInPrecipID,            itemID,  0.00);
+		precip           = MFVarGetFloat (_MDInPrecipID,            itemID,  0.00);
 		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID,  0.00);
 	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID,  3.00);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID,  0.150);
@@ -410,10 +409,11 @@ int MDIrrGrossDemandDef () {
 			break;
 		case MDcalculate:
 			if ((optStr = MFOptionGet (MDParIrrigationCropFileName)) != (char *) NULL) cropParameterFileName = optStr;
-			if (readCropParameters (cropParameterFileName) == CMfailed) {
+			if (_MDNumberOfIrrCrops = readCropParameters (cropParameterFileName) == CMfailed) {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file   : %s \n", cropParameterFileName);
 				return CMfailed;
 			}
+			else _MDNumberOfIrrCrops += 1; // adding bare soil
 			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||	 
 			    ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
