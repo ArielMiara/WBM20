@@ -214,7 +214,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float netIrrDemand;
 	float rootDepth;
 	float sumOfCropFractions;
-	float totIrrPercolation;
+	float totalIrrPercolation;
 	float totalCropETP;
 	float smChange;
 	int   numGrowingSeasons;
@@ -295,7 +295,7 @@ static void _MDIrrGrossDemand (int itemID) {
 							pondingDepth = reqPondingDepth;
 						}
 						if (pondingDepth < reqPondingDepth) {
-							netIrrDemand = reqPondingDepth - pondingDepth;
+							netIrrDemand = reqPondingDepth-pondingDepth;
 							pondingDepth = reqPondingDepth;
 						}
 						curCropDeficit  = pondingDepth; //so that current ponding depth gets set..		
@@ -321,10 +321,10 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
 				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, curCropDeficit);
 				}
-				totNetIrrDemand   += netIrrDemand * cropFraction [i];
-				totalCropETP      += cropWR       * cropFraction [i];
-				meanSMChange      += smChange     * cropFraction [i];
-				totIrrPercolation += percolation  * cropFraction [i];
+				totNetIrrDemand   += netIrrDemand    * cropFraction [i];
+				totalCropETP        += cropWR          * cropFraction [i];
+				meanSMChange        += smChange        * cropFraction [i];
+				totalIrrPercolation += percolation * cropFraction [i];
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac); 		
 			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
@@ -349,22 +349,22 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
   		MFVarSetFloat (_MDOutNonIrrFractionID, itemID, cropFraction [_MDNumberOfIrrCrops]);
 		totNetIrrDemand   += netIrrDemand    * cropFraction [_MDNumberOfIrrCrops];
-		totalCropETP      += cropWR          * cropFraction [_MDNumberOfIrrCrops];
-		meanSMoist        += curCropDeficit  * cropFraction [_MDNumberOfIrrCrops];
-		meanSMChange      += smChange        * cropFraction [_MDNumberOfIrrCrops];
-		totIrrPercolation += percolation     * cropFraction [_MDNumberOfIrrCrops];
+		totalCropETP        += cropWR          * cropFraction [_MDNumberOfIrrCrops];
+		meanSMoist          += curCropDeficit         * cropFraction [_MDNumberOfIrrCrops];
+		meanSMChange        += smChange        * cropFraction [_MDNumberOfIrrCrops];
+		totalIrrPercolation += percolation * cropFraction [_MDNumberOfIrrCrops];
 
 		totGrossDemand = totNetIrrDemand * 100.0 / irrEffeciency;
 
 		loss = (totGrossDemand - totNetIrrDemand) + (precip - effPrecip);
-		returnFlow = totIrrPercolation + loss * 0.1;
+		returnFlow = totalIrrPercolation + loss * 0.1;
 		cropETPlusEPloss = totalCropETP  + loss * 0.9;
 
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP            * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totNetIrrDemand * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totIrrPercolation * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totalIrrPercolation * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, cropETPlusEPloss  * irrAreaFrac);	
 	}
@@ -374,6 +374,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, 0.0);
+        MFVarSetFloat (_MDOutIrrPercolationID,  itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, 0.0);
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { MFVarSetFloat (_MDOutCropETIDs [i], itemID, 0.0); }
