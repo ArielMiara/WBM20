@@ -179,39 +179,46 @@ static void _MDIrrGrossDemand (int itemID) {
 //Input
 	float precip, effPrecip;
 	float snowpackChg;
+	float refETP;
 	float ricePercolation;
 	float wltPnt;
 	float fldCap;
 	float irrAreaFrac;
 	float cropFraction [_MDNumberOfIrrCrops + 1];
 	int   seasStart [2];
-	float reqPondingDepth;
 	float irrEffeciency;
     float irrIntensity;
 //Output:
-	float totGrossDemand;
-	float cropETPlusEPloss;
-	float totNetIrrDemand;
-	float totIrrPercolation;
-	float returnFlow;
+	float totGrossDemand     = 0.0;
+	float totalCropETP       = 0.0;
+	float totalNetIrrDemand   = 0.0;
+	float totalIrrPercolation = 0.0;
 // Local
-	int   i, curDay, numGrowingSeasons, daysSincePlanted, stage;
+	int   i;
+	float reqPondingDepth ;
 	float pondingDepth;
 	float cropDepletionFactor;
-	float smChange, meanSMChange;
-	float totAvlWater, readAvlWater;
-	float cropDeficit, prevCropDeficit;
-	float bareSoil;
-	float bareSoilBalance;
+	float meanSMChange;
+	float meanSMoist;
+	int   daysSincePlanted;
+	float totAvlWater, readAvlWater, curDepl, prevSoilMstDepl;
+	float bareSoil           = 0.0;
+	float bareSoilBalance    = 0.0;
 	float cropCoeff;
-	float cropWR;
-	float deepPercolation;
-	float loss;
-	float netIrrDemand;
+	float cropWR             = 0.0;
+	float deepPercolation    = 0.0;
+	float loss               = 0.0;
+	float netIrrDemand       = 0.0;
 	float rootDepth;
-	float sumOfCropFractions;
+	float sumOfCropFractions = 0.0;
+	float nonRiceWaterBalance;
+	float smChange;
+	int   numGrowingSeasons;
 	float curCropFraction;
-	float refETP, totCropETP;
+	float returnFlow;
+	float cropETPlusEPloss;
+	int   stage;
+	int   curDay;
 	
 	curDay = MFDateGetDayOfYear ();
 
@@ -231,24 +238,25 @@ static void _MDIrrGrossDemand (int itemID) {
 		reqPondingDepth  = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID, 2.0);
 		seasStart [0]    = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
 		seasStart [1]    = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
-		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,        itemID, 100.0) / 100.0;
-		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID, 38);
-		precip           = MFVarGetFloat (_MDInPrecipID,              itemID, 0.0);
-		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,            itemID, 0.0);
-	 	ricePercolation  = MFVarGetFloat (_MDInRicePercolationRateID, itemID, 3.0);
-	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,              itemID, 0.15);
-		fldCap           = MFVarGetFloat (_MDInFldCapaID,             itemID, 0.25);
-		refETP           = MFVarGetFloat (_MDInIrrRefEvapotransID,    itemID, 0.0);
+		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
+		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38);
+		precip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
+		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
+	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID, 3.0);
+	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
+		fldCap           = MFVarGetFloat (_MDInFldCapaID,           itemID, 0.25);
+		refETP           = MFVarGetFloat (_MDInIrrRefEvapotransID,  itemID, 0.0);
 		if (0.0 >= refETP)               refETP = 0.01;
 		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
-		if (2.0 < irrIntensity)    irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
+		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
+		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		effPrecip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
 
 		numGrowingSeasons = ceil (irrIntensity);
 
-		cropDeficit = meanSMChange = totCropETP = 0.0;
+		curDepl = meanSMChange = totalCropETP = 0.0;
 		for (i = 0; i <= _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
 			daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			cropFraction [i] = cropFraction [i] / sumOfCropFractions;
@@ -272,7 +280,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			if (0.0 < cropFraction [i]) {
 			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			 	if (0 < daysSincePlanted) {
-					prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
+					prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
 					stage     = getCropStage (_MDirrigCropStruct + i, daysSincePlanted);
 					cropCoeff = getCropKc    (_MDirrigCropStruct + i, daysSincePlanted, stage);
 					cropWR    = refETP * cropCoeff;
@@ -280,7 +288,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					rootDepth = 400; // TODO
 				    cropDepletionFactor = getCorrDeplFactor (_MDirrigCropStruct + i, cropWR);
 					if (_MDirrigCropStruct [i].cropIsRice==1) {
-					    pondingDepth = prevCropDeficit + effPrecip - cropWR - ricePercolation;
+					    pondingDepth = prevSoilMstDepl + effPrecip - cropWR - ricePercolation;
 						if (pondingDepth >= reqPondingDepth) {
 							deepPercolation = pondingDepth - reqPondingDepth;
 							pondingDepth = reqPondingDepth;
@@ -289,8 +297,8 @@ static void _MDIrrGrossDemand (int itemID) {
 							netIrrDemand = reqPondingDepth-pondingDepth;
 							pondingDepth = reqPondingDepth;
 						}
-						cropDeficit  = pondingDepth; //so that current ponding depth gets set..
-						smChange = cropDeficit - prevCropDeficit;
+						curDepl  = pondingDepth; //so that current ponding depth gets set..
+						smChange = curDepl - prevSoilMstDepl;
 						deepPercolation += ricePercolation;
 					}
 					else {
@@ -298,24 +306,27 @@ static void _MDIrrGrossDemand (int itemID) {
 						 
 						readAvlWater = totAvlWater * cropDepletionFactor;
 					 
-						cropDeficit  = prevCropDeficit - effPrecip + cropWR;
-						if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = effPrecip - prevCropDeficit -cropWR; }
-						if (cropDeficit >= totAvlWater) {
-							cropDeficit =totAvlWater;
+						curDepl  = prevSoilMstDepl - effPrecip + cropWR;
+						if (0.0 > curDepl) { curDepl = 0; deepPercolation = effPrecip - prevSoilMstDepl -cropWR; }
+						if (curDepl >= totAvlWater) {
+							curDepl =totAvlWater;
 						}
-						if (cropDeficit >= readAvlWater) {
-							netIrrDemand = cropDeficit;
-							netIrrDemand = cropDeficit;
-							cropDeficit = prevCropDeficit - netIrrDemand-effPrecip+cropWR;
+						if (curDepl >= readAvlWater) {
+							netIrrDemand = curDepl;
+							netIrrDemand = curDepl;
+							curDepl = prevSoilMstDepl - netIrrDemand-effPrecip+cropWR;
 						}
-						smChange = prevCropDeficit - cropDeficit;
+						smChange = prevSoilMstDepl - curDepl;
+
+						nonRiceWaterBalance = effPrecip + netIrrDemand - cropWR - deepPercolation - smChange;
+						smChange = effPrecip + netIrrDemand - cropWR - deepPercolation - nonRiceWaterBalance;
 					}
-				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, cropDeficit);
+				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, curDepl);
 				}
-				totNetIrrDemand   += netIrrDemand    * cropFraction [i];
-				totCropETP        += cropWR          * cropFraction [i];
+				totalNetIrrDemand   += netIrrDemand    * cropFraction [i];
+				totalCropETP        += cropWR          * cropFraction [i];
 				meanSMChange        += smChange        * cropFraction [i];
-				totIrrPercolation += deepPercolation * cropFraction [i];
+				totalIrrPercolation += deepPercolation * cropFraction [i];
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac); 		
 			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
@@ -324,38 +335,38 @@ static void _MDIrrGrossDemand (int itemID) {
 		netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 		if (0.0 < cropFraction [_MDNumberOfIrrCrops]) { // Crop is not currently grown. ET from bare soil is equal to ET (initial)
 			cropWR = 0.2 * refETP;
-			prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, 0.0);
+			prevSoilMstDepl = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, 0.0);
 			totAvlWater = (fldCap - wltPnt) * 250; // assumed RD = 0.25 m
 			deepPercolation = 0.0;
-			cropDeficit  = prevCropDeficit - effPrecip + cropWR;
-			if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = effPrecip - prevCropDeficit - cropWR; }
-			if (cropDeficit >= totAvlWater) {
-				cropWR = totAvlWater - prevCropDeficit + effPrecip;
+			curDepl  = prevSoilMstDepl - effPrecip + cropWR;
+			if (0.0 > curDepl) { curDepl = 0; deepPercolation = effPrecip - prevSoilMstDepl - cropWR; }
+			if (curDepl >= totAvlWater) {
+				cropWR = totAvlWater - prevSoilMstDepl + effPrecip;
 				deepPercolation = 0.0;
-				cropDeficit = totAvlWater;
+				curDepl = totAvlWater;
 			}
- 			smChange = prevCropDeficit - cropDeficit;
+ 			smChange = prevSoilMstDepl - curDepl;
 			bareSoilBalance = effPrecip - smChange - cropWR - netIrrDemand - deepPercolation;
-  			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, cropDeficit);
+  			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, curDepl);
 		}
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
   		MFVarSetFloat (_MDOutNonIrrFractionID, itemID, cropFraction [_MDNumberOfIrrCrops]);
-		totNetIrrDemand   += netIrrDemand    * cropFraction [_MDNumberOfIrrCrops];
-		totCropETP        += cropWR          * cropFraction [_MDNumberOfIrrCrops];
+		totalNetIrrDemand   += netIrrDemand    * cropFraction [_MDNumberOfIrrCrops];
+		totalCropETP        += cropWR          * cropFraction [_MDNumberOfIrrCrops];
+		meanSMoist          += curDepl         * cropFraction [_MDNumberOfIrrCrops];
 		meanSMChange        += smChange        * cropFraction [_MDNumberOfIrrCrops];
-		totIrrPercolation += deepPercolation * cropFraction [_MDNumberOfIrrCrops];
+		totalIrrPercolation += deepPercolation * cropFraction [_MDNumberOfIrrCrops];
 
-		totGrossDemand = totNetIrrDemand * 100.0 / irrEffeciency;
+		totGrossDemand = totalNetIrrDemand * 100.0 / irrEffeciency;
 
-		loss = (totGrossDemand - totNetIrrDemand) + (precip - effPrecip);
-		returnFlow = totIrrPercolation + loss * 0.1;
-		cropETPlusEPloss = totCropETP  + loss * 0.9;
+		loss = (totGrossDemand - totalNetIrrDemand) + (precip - effPrecip);
+		returnFlow = totalIrrPercolation + loss * 0.1;
+		cropETPlusEPloss = totalCropETP  + loss * 0.9;
 
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP            * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totNetIrrDemand   * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totalNetIrrDemand * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totIrrPercolation * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, cropETPlusEPloss  * irrAreaFrac);	
 	}
@@ -411,19 +422,18 @@ int MDIrrGrossDemandDef () {
 				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               "-",      MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInRicePoindingDepthID   = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
-				((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrDailyRicePerolationRate, "mm/day", MFInput ,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason1ID        = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason2ID        = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
+				((_MDOutNonIrrFractionID        = MFVarGetID (MDNonIrrigatedFraction,          "-",      MFOutput,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDInRicePercolationRateID   = MFVarGetID (MDVarIrrDailyRicePerolationRate, "mm/day", MFInput ,  MFState, MFBoundary)) == CMfailed) ||
 				((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,              "-",      MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrEvapotranspiration,      "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,          "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,             "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrPercolationID     = MFVarGetID (MDVarIrrPercolation,             "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,              "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,          "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrSoilMoistID       = MFVarGetID (MDVarIrrSoilMoisture,            "mm",     MFOutput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInRicePoindingDepthID     = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,         "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				((_MDOutNonIrrFractionID     = MFVarGetID (MDNonIrrigatedFraction,          "-",      MFOutput,  MFState, MFBoundary)) == CMfailed))
+			    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrEvapotranspiration,      "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 
 			for (i = 0; i < _MDNumberOfIrrCrops; i++) {
