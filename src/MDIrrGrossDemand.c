@@ -293,11 +293,11 @@ static void _MDIrrGrossDemand (int itemID) {
 						cropCurRootingDepth  = getCurCropRootingDepth (_MDirrigCropStruct + i, daysSincePlanted);
 						cropPrevActSMoist   += (cropPrevSMoist - cropPrevActSMoist) * (cropCurRootingDepth - cropPrevRootingDepth) / (cropMaxRootingDepth - cropPrevRootingDepth);
 
-						cropAvlWater    = (fldCap - wltPnt) * cropCurRootingDepth;
-						cropMinSMoist   = cropAvlWater * getCorrDeplFactor (_MDirrigCropStruct + i, cropETP);
+						cropAvlWater  = (fldCap - wltPnt) * cropCurRootingDepth;
+						cropMinSMoist = cropAvlWater * getCorrDeplFactor (_MDirrigCropStruct + i, cropETP);
 						if (0.0 > precip + cropPrevSMoist - cropETP - cropMinSMoist) {
-							cropActSMoist   = cropMinSMoist < cropPrevSMoist + precip - cropETP ? cropMinSMoist : cropPrevSMoist + precip - cropETP;
-							if (cropActSMoist > cropAvlWater) = cropActSMoist = cropAvlWater;
+							cropActSMoist = cropMinSMoist < cropPrevSMoist + precip - cropETP ? cropMinSMoist : cropPrevSMoist + precip - cropETP;
+							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropPercolation = precip - cropETP - cropActSMoist - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand = 0.0;
 						}
