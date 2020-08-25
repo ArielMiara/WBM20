@@ -151,7 +151,8 @@ static int readCropParameters (const char *filename) {
 		while (fgets(buffer, sizeof (buffer), inputCropFile) != NULL) {
 			_MDirrigCropStruct = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (i + 1) * sizeof (MDIrrigatedCrop));
 			_MDInCropFractionIDs     = (int *) realloc (_MDInCropFractionIDs,     (i + 1) * sizeof (int));
-			_MDOutCropSMoistIDs     = (int *) realloc (_MDOutCropSMoistIDs,     (i + 1) * sizeof (int));
+			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
+			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
 			_MDOutCropETIDs          = (int *) realloc (_MDOutCropETIDs,          (i + 1) * sizeof (int));
 			_MDOutCropGrossDemandIDs = (int *) realloc (_MDOutCropGrossDemandIDs, (i + 1) * sizeof (int));
 			_MDInCropFractionIDs [i] = _MDOutCropETIDs[i] =  _MDOutCropSMoistIDs [i] = _MDOutCropGrossDemandIDs[i] = MFUnset;
@@ -433,14 +434,14 @@ int MDIrrGrossDemandDef () {
 				}
 			}
 			for (i = 0; i < _MDNumberOfIrrCrops + 1;i++) {
-				sprintf (cropETName,          "CropET%02d",              i + 1);  // Keep track of crop ET for each crop seperately z
-				sprintf (cropGrossDemandName, "CropGrossDemand%02d",     i + 1);  // Keep track of crop ET for each crop seperately z
-				sprintf (varname,             "CropActSoilMoisture%02d", i + 1);  // Output Soil Moisture
+				sprintf (cropETName,          "CropET%02d",              i + 1);  // Keep track of crop ET for each crop
+				sprintf (cropGrossDemandName, "CropGrossDemand%02d",     i + 1);  // Keep track of gross demand
 				sprintf (varname,             "CropSoilMoisture%02d",    i + 1);  // Output Soil Moisture
-			    if ((_MDOutCropETIDs [i]          = MFVarGetID (cropETName,          "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-			    if ((_MDOutCropGrossDemandIDs [i] = MFVarGetID (cropGrossDemandName, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return (CMfailed);
-			    if ((_MDOutCropSMoistIDs [i]      = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed) return (CMfailed);
-			    if ((_MDOutCropActSMoistIDs [i]   = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed) return (CMfailed);
+				sprintf (varname,             "CropActSoilMoisture%02d", i + 1);  // Output Active Soil Moisture
+			    if (((_MDOutCropETIDs [i]          = MFVarGetID (cropETName,          "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			        ((_MDOutCropGrossDemandIDs [i] = MFVarGetID (cropGrossDemandName, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+			        ((_MDOutCropSMoistIDs [i]      = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
+			        ((_MDOutCropActSMoistIDs [i]   = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed)) return (CMfailed);
 			}
 			if (MFModelAddFunction (_MDIrrGrossDemand) == CMfailed) return (CMfailed);
 			break;
