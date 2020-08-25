@@ -241,9 +241,10 @@ static void _MDIrrGrossDemand (int itemID) {
 	 	wltPnt          = MFVarGetFloat (_MDInWltPntID,              itemID,   0.15);
 		fldCap          = MFVarGetFloat (_MDInFldCapaID,             itemID,   0.25);
 		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID,    itemID,   0.00);
-		if (0.0 >= refETP)               refETP = 0.00;
+		if (0.0 >= refETP)               refETP =  0.0;
 		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
-		if (2.0 < irrIntensity)    irrIntensity =  2.0; // irrigation intensity dictates cropping seasons that is limits it to 2 here
+		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
+		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		effPrecip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
