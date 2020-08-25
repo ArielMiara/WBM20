@@ -251,14 +251,11 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		numGrowingSeasons = ceil (irrIntensity);
 
-		for (i = 0; i <= _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
-		}
-
 		cropDeficit = meanSMChange = totCropETP = 0.0;
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
-			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
+		for (i = 0; i <= _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
 			daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			cropFraction [i] = cropFraction [i] / sumOfCropFractions;
+
 			// try to grow all crops in Growing Season 1 (always assumed to be the first season!)
 			if (0 < daysSincePlanted) { // Growing season
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First or perennial growing season
@@ -272,7 +269,11 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [_MDNumberOfIrrCrops] += cropFraction [i];
 				cropFraction [i] = 0.0;
 			}
+		}
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
+			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 			if (0.0 < cropFraction [i]) {
+			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			 	if (0 < daysSincePlanted) {
 					prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
 					stage     = getCropStage (_MDirrigCropStruct + i, daysSincePlanted);
@@ -298,6 +299,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					else {
 						totAvlWater  = (fldCap - wltPnt) * rootDepth;
 						readAvlWater = totAvlWater * cropDepletionFactor;
+
 						cropDeficit  = prevCropDeficit - precip + cropWR;
 						if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = precip - prevCropDeficit -cropWR; }
 						if (cropDeficit >= totAvlWater) {
@@ -306,7 +308,7 @@ static void _MDIrrGrossDemand (int itemID) {
 						if (cropDeficit >= readAvlWater) {
 							netIrrDemand = cropDeficit;
 							netIrrDemand = cropDeficit;
-							cropDeficit = prevCropDeficit - netIrrDemand-precip+cropWR;
+							cropDeficit = prevCropDeficit - netIrrDemand - precip + cropWR;
 						}
 						smChange = prevCropDeficit - cropDeficit;
 
