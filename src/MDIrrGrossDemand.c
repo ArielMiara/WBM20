@@ -230,21 +230,20 @@ static void _MDIrrGrossDemand (int itemID) {
 			MFVarSetFloat (_MDInCropFractionIDs [0], itemID, 1.0);
 			sumOfCropFractions = irrAreaFrac;
 		}
-		reqPondingDepth  = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID, 2.0);
-		seasStart [0]    = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
-		seasStart [1]    = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
-		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
-		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38);
-		precip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
-		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
-	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID, 3.0);
-	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
-		fldCap           = MFVarGetFloat (_MDInFldCapaID,           itemID, 0.25);
-		refETP           = MFVarGetFloat (_MDInIrrRefEvapotransID,  itemID, 0.0);
-		if (0.0 >= refETP)               refETP = 0.01;
+		reqPondingDepth = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID,   2.00);
+		seasStart [0]   = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
+		seasStart [1]   = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
+		irrIntensity    = MFVarGetFloat (_MDInIrrIntensityID,        itemID, 100.00) / 100.0;
+		irrEffeciency   = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID,  38.00);
+		precip          = MFVarGetFloat (_MDInPrecipID,              itemID,   0.00);
+		snowpackChg     = MFVarGetFloat (_MDInSPackChgID,            itemID,   0.00);
+	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID,   3.00);
+	 	wltPnt          = MFVarGetFloat (_MDInWltPntID,              itemID,   0.15);
+		fldCap          = MFVarGetFloat (_MDInFldCapaID,             itemID,   0.25);
+		refETP          = MFVarGetFloat (_MDInIrrRefEvapotransID,    itemID,   0.00);
+		if (0.0 >= refETP)               refETP = 0.00;
 		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
-		if (1.2 > irrIntensity && 1.0 < irrIntensity) irrIntensity = 1.0;
-		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
+		if (2.0 < irrIntensity)    irrIntensity =  2.0; // irrigation intensity dictates cropping seasons that is limits it to 2 here
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
 		effPrecip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
