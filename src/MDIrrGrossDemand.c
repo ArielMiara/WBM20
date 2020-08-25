@@ -173,7 +173,7 @@ static int readCropParameters (const char *filename) {
 			i += 1;
 		}
 	}
-	return (i - 1);
+	return (i);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
