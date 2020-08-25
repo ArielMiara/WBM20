@@ -202,17 +202,17 @@ static void _MDIrrGrossDemand (int itemID) {
 	float totAvlWater, readAvlWater, curDepl, prevSoilMstDepl;
 	float bareSoil;
 	float cropCoeff;
-	float cropWR;
-	float deepPercolation;
-	float loss;
-	float netIrrDemand;
+	float cropWR             = 0.0;
+	float deepPercolation    = 0.0;
+	float loss               = 0.0;
+	float netIrrDemand       = 0.0;
 	float rootDepth;
-	float sumOfCropFractions;
+	float sumOfCropFractions = 0.0;
 	float nonRiceWaterBalance;
 	float smChange;
 	float curCropFraction;
 	float returnFlow;
-	float refETP, totalCropETP;
+	float refETP, totalCropETP       = 0.0;
 	
 	curDay = MFDateGetDayOfYear ();
 
@@ -234,7 +234,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		seasStart [1]    = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
 		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
 		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38);
-		precip           = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
+		precip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
 		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
 	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
@@ -360,7 +360,6 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totalNetIrrDemand * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totalIrrPercolation * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, cropETPlusEPloss  * irrAreaFrac);	
 	}
@@ -370,7 +369,6 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, 0.0);
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { MFVarSetFloat (_MDOutCropETIDs [i], itemID, 0.0); }
