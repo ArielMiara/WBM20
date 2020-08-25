@@ -251,7 +251,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		numGrowingSeasons = ceil (irrIntensity);
 
 		cropDeficit = meanSMChange = totCropETP = 0.0;
-		for (i = 0; i <= _MDNumberOfIrrCrops; ++i) { // cropFraction[_MDNumberOfIrrCrops] is bare soil Area!
+		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			cropFraction [i] = cropFraction [i] / sumOfCropFractions;
 
@@ -268,11 +268,8 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [_MDNumberOfIrrCrops] += cropFraction [i];
 				cropFraction [i] = 0.0;
 			}
-		}
-		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			netIrrDemand = cropWR = deepPercolation = smChange = 0.0;
 			if (0.0 < cropFraction [i]) {
-			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
 			 	if (0 < daysSincePlanted) {
 					prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [i],itemID, 0.0);
 					stage     = getCropStage (_MDirrigCropStruct + i, daysSincePlanted);
