@@ -320,7 +320,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				}
 				totNetIrrDemand   += netIrrDemand    * cropFraction [i];
 				totCropETP        += cropWR          * cropFraction [i];
-				meanSMChange        += smChange        * cropFraction [i];
+				meanSMChange      += smChange        * cropFraction [i];
 				totIrrPercolation += deepPercolation * cropFraction [i];
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, netIrrDemand * cropFraction [i] * irrAreaFrac); 		
@@ -353,7 +353,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		totGrossDemand = totNetIrrDemand * 100.0 / irrEffeciency;
 
-		loss = (totGrossDemand - totNetIrrDemand) + (precip - effPrecip);
+		loss = totGrossDemand - totNetIrrDemand;
 		returnFlow = totIrrPercolation + loss * 0.1;
 		totCropETP += loss * 0.9;
 
