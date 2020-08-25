@@ -177,7 +177,7 @@ static int readCropParameters (const char *filename) {
 
 static void _MDIrrGrossDemand (int itemID) {
 //Input
-	float precip;
+	float precip, effPrecip;
 	float snowpackChg;
 	float ricePercolation;
 	float wltPnt;
@@ -247,7 +247,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		if (2.0 < irrIntensity)                       irrIntensity = 2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
-		precip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
+		effPrecip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
 
 		numGrowingSeasons = ceil (irrIntensity);
 
@@ -282,8 +282,8 @@ static void _MDIrrGrossDemand (int itemID) {
 					rootDepth = getCurCropRootingDepth (_MDirrigCropStruct + i,daysSincePlanted);
 					rootDepth = 400; // TODO
 				    cropDepletionFactor = getCorrDeplFactor (_MDirrigCropStruct + i, cropWR);
-					if (_MDirrigCropStruct [i].cropIsRice == 1) {
-					    pondingDepth = prevCropDeficit + precip - cropWR - ricePercolation;
+					if (_MDirrigCropStruct [i].cropIsRice==1) {
+					    pondingDepth = prevCropDeficit + effPrecip - cropWR - ricePercolation;
 						if (pondingDepth >= reqPondingDepth) {
 							deepPercolation = pondingDepth - reqPondingDepth;
 							pondingDepth = reqPondingDepth;
@@ -298,22 +298,23 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
 					else {
 						totAvlWater  = (fldCap - wltPnt) * rootDepth;
+
 						readAvlWater = totAvlWater * cropDepletionFactor;
 
-						cropDeficit  = prevCropDeficit - precip + cropWR;
-						if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = precip - prevCropDeficit -cropWR; }
+						cropDeficit  = prevCropDeficit - effPrecip + cropWR;
+						if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = effPrecip - prevCropDeficit -cropWR; }
 						if (cropDeficit >= totAvlWater) {
 							cropDeficit =totAvlWater;
 						}
 						if (cropDeficit >= readAvlWater) {
 							netIrrDemand = cropDeficit;
 							netIrrDemand = cropDeficit;
-							cropDeficit = prevCropDeficit - netIrrDemand - precip + cropWR;
+							cropDeficit = prevCropDeficit - netIrrDemand-effPrecip+cropWR;
 						}
 						smChange = prevCropDeficit - cropDeficit;
 
-						nonRiceWaterBalance = precip + netIrrDemand - cropWR - deepPercolation - smChange;
-						smChange = precip + netIrrDemand - cropWR - deepPercolation - nonRiceWaterBalance;
+						nonRiceWaterBalance = effPrecip + netIrrDemand - cropWR - deepPercolation - smChange;
+						smChange = effPrecip + netIrrDemand - cropWR - deepPercolation - nonRiceWaterBalance;
 					}
 				 	MFVarSetFloat (_MDOutCropDeficitIDs [i], itemID, cropDeficit);
 				}
@@ -332,10 +333,10 @@ static void _MDIrrGrossDemand (int itemID) {
 			prevCropDeficit = MFVarGetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, 0.0);
 			totAvlWater = (fldCap - wltPnt) * 250; // assumed RD = 0.25 m
 			deepPercolation = 0.0;
-			cropDeficit  = prevCropDeficit - precip + cropWR;
-			if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = precip - prevCropDeficit - cropWR; }
+			cropDeficit  = prevCropDeficit - effPrecip + cropWR;
+			if (0.0 > cropDeficit) { cropDeficit = 0; deepPercolation = effPrecip - prevCropDeficit - cropWR; }
 			if (cropDeficit >= totAvlWater) {
-				cropWR = totAvlWater - prevCropDeficit + precip;
+				cropWR = totAvlWater - prevCropDeficit + effPrecip;
 				deepPercolation = 0.0;
 				cropDeficit = totAvlWater;
 			}
@@ -358,7 +359,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP            * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totNetIrrDemand   * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totNetIrrDemand * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totIrrPercolation * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
