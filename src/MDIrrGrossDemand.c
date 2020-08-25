@@ -380,9 +380,9 @@ int MDIrrGrossDemandDef () {
 	const char *distrOptions [] = { "FirstSeason","Distributed", (char *) NULL };
 	const char *cropParameterFileName;
 	int i;
-	char varname [20];
-	char cropETName [20];
-	char cropGrossDemandName [20];
+	char varname [32];
+	char cropETName [32];
+	char cropGrossDemandName [32];
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
