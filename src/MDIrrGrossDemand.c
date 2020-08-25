@@ -295,10 +295,11 @@ static void _MDIrrGrossDemand (int itemID) {
 
 						cropAvlWater    = (fldCap - wltPnt) * cropCurRootingDepth;
 						cropMinSMoist   = cropAvlWater * getCorrDeplFactor (_MDirrigCropStruct + i, cropETP);
-						if (0.0 > precip + cropPrevSMoist - cropETP / irrEfficiency - cropMinSMoist) {
+						if (0.0 > precip + cropPrevSMoist - cropETP - cropMinSMoist) {
 							cropActSMoist   = cropMinSMoist < cropPrevSMoist + precip - cropETP ? cropMinSMoist : cropPrevSMoist + precip - cropETP;
+							if (cropActSMoist > cropAvlWater) = cropActSMoist = cropAvlWater;
 							cropPercolation = precip - cropETP - cropActSMoist - cropPrevActSMoist;
-							cropGrossDemand  = cropNetDemand = 0.0;
+							cropGrossDemand = cropNetDemand = 0.0;
 						}
 						else {
 							cropActSMoist   = cropMinSMoist;
