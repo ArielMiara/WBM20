@@ -320,7 +320,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, cropNetDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
 		} // for all crops
 		// Add Water Balance for bare soil
-		cropNetDemand = cropPercolation = cropSMoistChg = 0.0;
+/*		cropNetDemand = cropPercolation = cropSMoistChg = 0.0;
 		if (0.0 < cropFraction [_MDNumberOfIrrCrops]) { // Crop is not currently grown. ET from bare soil is equal to ET (initial)
 			cropETP = 0.2 * refETP;
 			cropPrevSMoist = MFVarGetFloat (_MDOutCropSMoistIDs [_MDNumberOfIrrCrops], itemID, 0.0);
@@ -343,11 +343,11 @@ static void _MDIrrGrossDemand (int itemID) {
 		irrSMoist      += cropSMoist      * cropFraction [_MDNumberOfIrrCrops];
 		irrSMoistChg   += cropSMoistChg   * cropFraction [_MDNumberOfIrrCrops];
 		irrPercolation += cropPercolation * cropFraction [_MDNumberOfIrrCrops];
+*/
+//		irrGrossDemand = irrNetDemand * 100.0 / irrEffeciency;
 
-		irrGrossDemand = irrNetDemand * 100.0 / irrEffeciency;
-
-		loss = irrGrossDemand - irrNetDemand;
-		irrReturnFlow = irrPercolation + loss * 0.1;
+//		loss = irrGrossDemand - irrNetDemand;
+//		irrReturnFlow = irrPercolation + loss * 0.1;
 //		irrCropETP += loss * 0.9;
 
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP         * irrAreaFrac);
