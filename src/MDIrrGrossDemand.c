@@ -234,7 +234,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		seasStart [1]    = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
 		irrIntensity     = MFVarGetFloat (_MDInIrrIntensityID,      itemID, 100.0) / 100.0;
 		irrEffeciency    = MFVarGetFloat (_MDInIrrEfficiencyID,     itemID, 38);
-		precip      = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
+		precip           = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
 		snowpackChg      = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
 	 	ricePercolation = MFVarGetFloat (_MDInRicePercolationRateID, itemID, 3.0);
 	 	wltPnt           = MFVarGetFloat (_MDInWltPntID,            itemID, 0.15);
@@ -360,6 +360,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, meanSMChange      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, totalNetIrrDemand * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, totGrossDemand    * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, totalIrrPercolation * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, returnFlow        * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, cropETPlusEPloss  * irrAreaFrac);	
 	}
@@ -369,6 +370,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrPercolationID,  itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, 0.0);
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) { MFVarSetFloat (_MDOutCropETIDs [i], itemID, 0.0); }
