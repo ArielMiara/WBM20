@@ -177,7 +177,7 @@ static int readCropParameters (const char *filename) {
 
 static void _MDIrrGrossDemand (int itemID) {
 //Input
-	float precip, precip;
+	float precip;
 	float snowpackChg;
 	float ricePercolation;
 	float wltPnt;
