@@ -179,46 +179,40 @@ static void _MDIrrGrossDemand (int itemID) {
 //Input
 	float precip, effPrecip;
 	float snowpackChg;
-	float refETP;
 	float ricePercolation;
 	float wltPnt;
 	float fldCap;
 	float irrAreaFrac;
 	float cropFraction [_MDNumberOfIrrCrops + 1];
 	int   seasStart [2];
+	float reqPondingDepth;
 	float irrEffeciency;
     float irrIntensity;
 //Output:
-	float totGrossDemand     = 0.0;
-	float totalCropETP       = 0.0;
-	float totalNetIrrDemand   = 0.0;
-	float totalIrrPercolation = 0.0;
+	float totGrossDemand;
+	float cropETPlusEPloss;
+	float totalNetIrrDemand;
+	float totalIrrPercolation;
 // Local
-	int   i;
-	float reqPondingDepth ;
+	int   i, curDay, numGrowingSeasons, daysSincePlanted, stage;
 	float pondingDepth;
 	float cropDepletionFactor;
 	float meanSMChange;
 	float meanSMoist;
-	int   daysSincePlanted;
 	float totAvlWater, readAvlWater, curDepl, prevSoilMstDepl;
-	float bareSoil           = 0.0;
-	float bareSoilBalance    = 0.0;
+	float bareSoil;
 	float cropCoeff;
-	float cropWR             = 0.0;
-	float deepPercolation    = 0.0;
-	float loss               = 0.0;
-	float netIrrDemand       = 0.0;
+	float cropWR;
+	float deepPercolation;
+	float loss;
+	float netIrrDemand;
 	float rootDepth;
-	float sumOfCropFractions = 0.0;
+	float sumOfCropFractions;
 	float nonRiceWaterBalance;
 	float smChange;
-	int   numGrowingSeasons;
 	float curCropFraction;
 	float returnFlow;
-	float cropETPlusEPloss;
-	int   stage;
-	int   curDay;
+	float refETP, totalCropETP;
 	
 	curDay = MFDateGetDayOfYear ();
 
@@ -346,7 +340,6 @@ static void _MDIrrGrossDemand (int itemID) {
 				curDepl = totAvlWater;
 			}
  			smChange = prevSoilMstDepl - curDepl;
-			bareSoilBalance = effPrecip - smChange - cropWR - netIrrDemand - deepPercolation;
   			MFVarSetFloat (_MDOutCropDeficitIDs [_MDNumberOfIrrCrops], itemID, curDepl);
 		}
 		MFVarSetFloat (_MDOutCropETIDs [_MDNumberOfIrrCrops], itemID, cropWR);
