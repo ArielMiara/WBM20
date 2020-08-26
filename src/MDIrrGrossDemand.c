@@ -96,7 +96,7 @@ static int getCropStage (int daysSincePlanted, int crop) {
 }
 
 static float getCropKc (int daysSincePlanted, int crop) {
-	float kc = 0.2;
+	float kc = 0.0;
 
    //Returns kc depending on the current stage of the growing season
 	if (crop >= _MDNumberOfIrrCrops) return (kc); // Bare soil
@@ -106,7 +106,8 @@ static float getCropKc (int daysSincePlanted, int crop) {
 		case 1: kc = _MDirrigCropStruct [crop].cropKc [0]; break;
 		case 2: kc = _MDirrigCropStruct [crop].cropKc [0]
 		           + (_MDirrigCropStruct [crop].cropKc [1] - _MDirrigCropStruct [crop].cropKc [0])
-		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0]) / _MDirrigCropStruct [crop].cropSeasLength [1];
+		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0])
+		           / _MDirrigCropStruct [crop].cropSeasLength [1];
 			break;
  		case 3: kc = _MDirrigCropStruct [crop].cropKc [1]; break;
 		case 4: kc = _MDirrigCropStruct [crop].cropKc [1]
@@ -130,7 +131,7 @@ static float getCurCropRootingDepth (int daysSincePlanted, int crop) {
 	                 + _MDirrigCropStruct [crop].cropSeasLength [3];
 
     cropRootingDepth = _MDirrigCropStruct [crop].cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
- 	if (0.15 > cropRootingDepth) cropRootingDepth = 0.15;
+ 	if (0.15 > cropRootingDepth) cropRootingDepth = 0.15; // TODO
 	return (cropRootingDepth);
 }
 
@@ -234,6 +235,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		}
 		// default to bare soil when there is no irrigated crop in grid cell
 		cropFraction [cropID] = 0.0 < sumOfCropFractions ? 0.0 : irrAreaFrac;
+		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID)
+			cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 
 		riceReqPondingDepth = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID,   2.00);
 		seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
@@ -257,7 +260,6 @@ static void _MDIrrGrossDemand (int itemID) {
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = getDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
 			if (0 < daysSincePlanted) { // Growing season
-				cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First growing season
 					bareSoil = 1.0 > irrIntensity ? cropFraction [cropID] * (1.0 - irrIntensity) : 0.0;
 				else  // Second growing season
