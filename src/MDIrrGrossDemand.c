@@ -302,36 +302,14 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
-/* Nothing */	} else {
-				    cropETP         = 5.0;
-					cropNetDemand   =
-					cropGrossDemand =
-					cropReturnFlow  =
-					cropSMoist      =
-					cropSMoistChg   = 0.0;
-				}
-/* Bare */	} else {
-				if (0.0 < cropFraction [cropID]) {
-					cropETP = 5.0; // precip < refETP ? precip : refETP;
-					cropNetDemand  = cropGrossDemand = 0.0;
-					cropReturnFlow = precip - cropETP;
-					cropSMoist    = 0.0;
-					cropSMoistChg = 0.0;
-				} else {
-                    cropETP         = 5.0;
-                    cropNetDemand   =
-                    cropGrossDemand =
-                    cropReturnFlow  =
-                    cropSMoist      =
-                    cropSMoistChg   = 0.0;
-				}
-			}
-			irrCropETP     += cropETP         * cropFraction [cropID];
-			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
-			irrGrossDemand += cropGrossDemand * cropFraction [cropID];
-			irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
-			irrSMoist      += cropSMoist      * cropFraction [cropID];
-			irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
+                    irrCropETP     += cropETP         * cropFraction [cropID];
+                    irrNetDemand   += cropNetDemand   * cropFraction [cropID];
+                    irrGrossDemand += cropGrossDemand * cropFraction [cropID];
+                    irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
+                    irrSMoist      += cropSMoist      * cropFraction [cropID];
+                    irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
+                }
+            }
 		}
  		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP         * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, irrCropETP     * irrAreaFrac);
@@ -340,7 +318,6 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistID,       itemID, irrSMoist      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, irrSMoistChg   * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, irrReturnFlow  * irrAreaFrac);
-        MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, 0.0);
 	}
 	else { // cell is not irrigated
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
