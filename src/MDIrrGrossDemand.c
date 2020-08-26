@@ -140,43 +140,44 @@ static float _MDIrrCorrDeplFactor (float cropETP, int crop) {
 }
 
 static int _MDIrrReadCropParameters (const char *filename) {
-	FILE *inputCropFile;
+	FILE *cropFILE;
 	char buffer [512];
-	int  i = 0;
+	int  cropID = 0;
 
-	if ((inputCropFile = fopen (filename, "r")) == (FILE *) NULL) {
+	if ((cropFILE = fopen (filename, "r")) == (FILE *) NULL) {
 		CMmsgPrint (CMmsgUsrError,"Crop Parameter file could not be opned, filename: %s\n", filename);
 		return (CMfailed);
 	}
 	else {
 		// read headings..
-		fgets (buffer,sizeof (buffer),inputCropFile);
+		fgets (buffer,sizeof (buffer),cropFILE);
 
-		while (fgets(buffer, sizeof (buffer), inputCropFile) != NULL) {
-			_MDirrigCropStruct = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (i + 1) * sizeof (MDIrrigatedCrop));
-			_MDInCropFractionIDs     = (int *) realloc (_MDInCropFractionIDs,     (i + 1) * sizeof (int));
-			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
-			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
-			_MDInCropFractionIDs [i] =  _MDOutCropSMoistIDs [i] = _MDOutCropActSMoistIDs [i] = MFUnset;
+		while (fgets(buffer, sizeof (buffer), cropFILE) != NULL) {
+			_MDirrigCropStruct = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (cropID + 1) * sizeof (MDIrrigatedCrop));
+			_MDInCropFractionIDs     = (int *) realloc (_MDInCropFractionIDs,     (cropID + 1) * sizeof (int));
+			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
+			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
+			_MDInCropFractionIDs [cropID] =  _MDOutCropSMoistIDs [cropID] = _MDOutCropActSMoistIDs [cropID]] = MFUnset;
 			if (sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
-		       &(_MDirrigCropStruct [i].ID),
-		       &(_MDirrigCropStruct [i].DW_ID),
-		         _MDirrigCropStruct [i].cropName,
-		         _MDirrigCropStruct [i].cropDistrFileName,
-		       &(_MDirrigCropStruct [i].cropKc [0]),
-		       &(_MDirrigCropStruct [i].cropKc [1]),
-		       &(_MDirrigCropStruct [i].cropKc [2]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [0]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [1]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
-		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
-		       &(_MDirrigCropStruct [i].cropRootingDepth),
-		       &(_MDirrigCropStruct [i].cropDepletionFactor)) != 13) return (CMfailed);
-			_MDirrigCropStruct [i].cropIsRice = strcmp (_MDirrigCropStruct [i].cropName , "Rice") == 0 ? 1 : 0;
-			i += 1;
+		       &(_MDirrigCropStruct [cropID].ID),
+		       &(_MDirrigCropStruct [cropID].DW_ID),
+		         _MDirrigCropStruct [cropID].cropName,
+		         _MDirrigCropStruct [cropID].cropDistrFileName,
+		       &(_MDirrigCropStruct [cropID].cropKc [0]),
+		       &(_MDirrigCropStruct [cropID].cropKc [1]),
+		       &(_MDirrigCropStruct [cropID].cropKc [2]),
+		       &(_MDirrigCropStruct [cropID].cropSeasLength [0]),
+		       &(_MDirrigCropStruct [cropID].cropSeasLength [1]),
+		       &(_MDirrigCropStruct [cropID].cropSeasLength [2]),
+		       &(_MDirrigCropStruct [cropID].cropSeasLength [3]),
+		       &(_MDirrigCropStruct [cropID].cropRootingDepth),
+		       &(_MDirrigCropStruct [cropID].cropDepletionFactor)) != 13) return (CMfailed);
+			_MDirrigCropStruct [cropID].cropIsRice = strcmp (_MDirrigCropStruct [cropID].cropName , "Rice") == 0 ? 1 : 0;
+			cropID += 1;
 		}
 	}
-	return (i);
+	fclose (cropFILE);
+	return (cropID - 1);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
@@ -407,9 +408,9 @@ int MDIrrGrossDemandDef () {
 				sprintf (cropFractionName,  "CropFraction_%s",     _MDirrigCropStruct [cropID].cropName); // Input Fraction of crop type per cell
 				sprintf (cropSMoistName,    "CropSoilMoist_%s",    _MDirrigCropStruct [cropID].cropName); // Output Soil Moisture
 				sprintf (cropActSMoistName, "CropActSoilMoist_%s", _MDirrigCropStruct [cropID].cropName); // Output Active Soil Moisture
-			    if (((_MDInCropFractionIDs   [cropID] = MFVarGetID (cropFractionName,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			        ((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial)) == CMfailed) ||
-			        ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial)) == CMfailed)) return (CMfailed);
+			    if (((_MDInCropFractionIDs   [cropID] = MFVarGetID (cropFractionName,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			        ((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+			        ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 			}
 			if (MFModelAddFunction (_MDIrrGrossDemand) == CMfailed) return (CMfailed);
 			break;
