@@ -234,7 +234,10 @@ static void _MDIrrGrossDemand (int itemID) {
 			sumOfCropFractions += cropFraction [cropID];
 		}
 		// default to bare soil when there is no irrigated crop in grid cell
-		cropFraction [cropID] = 0.0 < sumOfCropFractions ? 0.0 : irrAreaFrac;
+		if (0.0 >= sumOfCropFractions) cropFraction [cropID] = 0.0;
+		else cropFraction [cropID] = sumOfCropFractions = irrAreaFrac;
+
+		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 
 		riceReqPondingDepth = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID,   2.00);
 		seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
@@ -258,7 +261,6 @@ static void _MDIrrGrossDemand (int itemID) {
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = getDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
 			if (0 < daysSincePlanted) { // Growing season
-				cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First growing season
 					bareSoil = 1.0 > irrIntensity ? cropFraction [cropID] * (1.0 - irrIntensity) : 0.0;
 				else  // Second growing season
