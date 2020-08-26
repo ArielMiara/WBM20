@@ -198,8 +198,8 @@ static void _MDIrrGrossDemand (int itemID) {
 	float irrNetDemand;
 	float irrCropETP;
 	float irrReturnFlow;
+    float irrSMoist;
 	float irrSMoistChg;
-	float irrSMoist;
 // Local
 	int   cropID, curDay, numGrowingSeasons, daysSincePlanted;
 	float cropAvlWater, cropMinSMoist;
@@ -249,7 +249,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		precip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
 		numGrowingSeasons = ceil (irrIntensity);
-		irrNetDemand = irrGrossDemand irrSMoist = irrSMoistChg = = irrReturnFlow = irrCropETP = 0.0;
+		irrNetDemand = irrGrossDemand = irrSMoist = irrSMoistChg = irrReturnFlow = irrCropETP = 0.0;
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = _MDIrrDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
 			if (0 < daysSincePlanted) { // Growing season
