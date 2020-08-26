@@ -262,7 +262,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				if (0.0 < cropFraction [cropID]) {
 					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
-	/* Rainfed */		if (precip - cropETP - ricePercolation >= 0.0) {
+	/* Rainfed */		if (precip >= cropETP + ricePercolation) {
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip - cropETP; // actual percolation can be higher then the rice percolation input
 						}
@@ -286,8 +286,8 @@ static void _MDIrrGrossDemand (int itemID) {
 
 						cropAvlWater  = (fldCap - wltPnt) * cropCurRootingDepth;
 						cropMinSMoist = cropAvlWater * _MDIrrCorrDeplFactor (cropETP, cropID);
-	/* Rainfed */		if (0.0 > precip + cropPrevActSMoist - cropETP - cropMinSMoist) {
-							cropActSMoist = cropPrevActSMoist + precip - cropETP > cropMinSMoist? cropPrevSMoist + precip - cropETP : cropMinSMoist;
+	/* Rainfed */		if (precip + cropPrevActSMoist > cropETP + cropMinSMoist) {
+							cropActSMoist = cropPrevActSMoist + precip - cropETP > cropMinSMoist ? cropPrevSMoist + precip - cropETP : cropMinSMoist;
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
