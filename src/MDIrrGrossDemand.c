@@ -157,7 +157,7 @@ static int _MDIrrReadCropParameters (const char *filename) {
 			_MDInCropFractionIDs     = (int *) realloc (_MDInCropFractionIDs,     (cropID + 1) * sizeof (int));
 			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
 			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
-			_MDInCropFractionIDs [cropID] =  _MDOutCropSMoistIDs [cropID] = _MDOutCropActSMoistIDs [cropID]] = MFUnset;
+			_MDInCropFractionIDs [cropID] =  _MDOutCropSMoistIDs [cropID] = _MDOutCropActSMoistIDs [cropID] = MFUnset;
 			if (sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
 		       &(_MDirrigCropStruct [cropID].ID),
 		       &(_MDirrigCropStruct [cropID].DW_ID),
