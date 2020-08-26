@@ -296,7 +296,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
-							cropGrossDemand = cropNetDemand / irrEfficiency;
+							cropGrossDemand = cropNetDemand * 100.0 / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
                             if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %f %f %f %d\n",irrEfficiency, cropGrossDemand, cropNetDemand, __LINE__);
 						}
