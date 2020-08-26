@@ -298,6 +298,7 @@ static void _MDIrrGrossDemand (int itemID) {
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
+                            if (cropNetDemand  < 0.0) CMmsgPrint(CMmsgWarning,"Net demand flow in %d",__LINE__);
                             if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
 						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
