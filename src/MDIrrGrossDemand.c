@@ -309,9 +309,8 @@ static void _MDIrrGrossDemand (int itemID) {
                     cropGrossDemand =
                     cropSMoist      =
                     cropSMoistChg   = 0.0;
-                    cropReturnFlow  = precip - cropETP;
-				}
-			}
+                    cropReturnFlow  = precip - refETP >= 0.0 ? precip - refETP : 0.0;
+            }
 			irrCropETP     += cropETP         * cropFraction [cropID];
 			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
 			irrGrossDemand += cropGrossDemand * cropFraction [cropID];
