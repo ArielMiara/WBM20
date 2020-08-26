@@ -6,7 +6,7 @@ Copyright 1994-2020, UNH - ASRC/CUNY
 
 MDIrrigation.c
 
-bfekete@gc.cuny.edu
+dominik.wisser@unh.edu
 
 *******************************************************************************/
 
@@ -26,7 +26,7 @@ typedef struct {
     int   cropIsRice;
     float cropSeasLength [4];
     float cropKc [4 - 1];
-    float cropRootingDepth;
+    float cropCurRootingDepth;
     float cropDepletionFactor;
     float cropLeachReq;
 } MDIrrigatedCrop;
@@ -122,7 +122,7 @@ static float getCurCropRootingDepth (MDIrrigatedCrop *pIrrCrop, int daysSincePla
 					       + pIrrCrop->cropSeasLength [2]
 					       + pIrrCrop->cropSeasLength [3];
 
-    cropCurRootingDepth = pIrrCrop->cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
+    cropCurRootingDepth = pIrrCrop->cropCurRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
  	if (0.15 > cropCurRootingDepth) cropCurRootingDepth = 0.15;
 	return (cropCurRootingDepth);
 }
@@ -168,7 +168,7 @@ static int readCropParameters (const char *filename) {
 		       &(_MDirrigCropStruct [i].cropSeasLength [1]),
 		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
 		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
-		       &(_MDirrigCropStruct [i].cropRootingDepth),
+		       &(_MDirrigCropStruct [i].cropCurRootingDepth),
 		       &(_MDirrigCropStruct [i].cropDepletionFactor)) != 13) return (CMfailed);
 			_MDirrigCropStruct [i].cropIsRice = strcmp (_MDirrigCropStruct [i].cropName , "Rice") == 0 ? 1 : 0;
 			i += 1;
@@ -189,7 +189,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float ricePercolation;
 	float riceReqPondingDepth;
     float irrIntensity;
-	float irrEfficiency;
+	float irrEffeciency;
 //Output:
 	float irrGrossDemand;
 	float irrNetDemand;
@@ -204,7 +204,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float cropAvlWater, cropMinSMoist;
 	float cropETP;
 	float cropPercolation;
-	float cropNetDemand, cropGrossDemand;
+	float cropNetDemand;
 	float cropCurRootingDepth, cropPrevRootingDepth, cropMaxRootingDepth;
 	float cropSMoist, cropActSMoist, cropPrevSMoist, cropPrevActSMoist;
 	float cropSMoistChg;
@@ -233,7 +233,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
 		seasStart [1]       = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
 		irrIntensity        = MFVarGetFloat (_MDInIrrIntensityID,        itemID, 100.00) / 100.0;
-		irrEfficiency       = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID,  38.00);
+		irrEffeciency       = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID,  38.00);
 		precip              = MFVarGetFloat (_MDInPrecipID,              itemID,   0.00);
 		snowpackChg         = MFVarGetFloat (_MDInSPackChgID,            itemID,   0.00);
 	 	ricePercolation     = MFVarGetFloat (_MDInRicePercolationRateID, itemID,   3.00);
@@ -241,7 +241,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		fldCap              = MFVarGetFloat (_MDInFldCapaID,             itemID,   0.25);
 		refETP              = MFVarGetFloat (_MDInIrrRefEvapotransID,    itemID,   0.00);
 		if (0.0 >= refETP)               refETP =  0.0;
-		if (0.0 >= irrEfficiency) irrEfficiency = 38.0;
+		if (0.0 >= irrEffeciency) irrEffeciency = 38.0;
 		if (2.0 < irrIntensity)    irrIntensity =  2.0; // TODO irrIntensity dictates cropping seasons this limits it to 2
 		if (0.0 >= fldCap) { fldCap = 0.35; wltPnt = 0.2; }
 
@@ -267,7 +267,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [i] = 0.0;
 			}
 		}
-		irrGrossDemand = irrNetDemand = irrPercolation = irrSMoistChg = irrCropETP = 0.0;
+		irrPercolation = irrSMoistChg = irrCropETP = 0.0;
 		for (i = 0; i < _MDNumberOfIrrCrops; i++) {
 			if (0.0 < cropFraction [i]) {
 			 	daysSincePlanted = getDaysSincePlanting (curDay, seasStart, numGrowingSeasons, _MDirrigCropStruct + i);
@@ -275,11 +275,11 @@ static void _MDIrrGrossDemand (int itemID) {
 					cropETP = refETP * getCropKc (_MDirrigCropStruct + i, daysSincePlanted);
 					if (_MDirrigCropStruct [i].cropIsRice == 1) {
 						if (precip - cropETP - ricePercolation >= 0.0) {
-							cropGrossDemand = cropNetDemand = 0.0;
+							cropNetDemand   = 0.0;
 							cropPercolation = precip - cropETP; // actual percolation can be higher then the rice percolation input 
 						}
 						else {
-							cropGrossDemand = cropNetDemand = cropETP + ricePercolation - precip;
+							cropNetDemand   = cropETP + ricePercolation - precip;
 							cropPercolation = ricePercolation;
 						}
 						cropActSMoist = cropSMoist = ricePondingDepth;
@@ -288,7 +288,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					else {
 						cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs [i],    itemID, 0.0);
 						cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [i], itemID, 0.0);
-						cropMaxRootingDepth  = _MDirrigCropStruct [i].cropRootingDepth;
+						cropMaxRootingDepth  = _MDirrigCropStruct [i].cropCurRootingDepth;
 						cropPrevRootingDepth = getCurCropRootingDepth (_MDirrigCropStruct + i, daysSincePlanted - 1);
 						cropCurRootingDepth  = getCurCropRootingDepth (_MDirrigCropStruct + i, daysSincePlanted);
 						cropPrevActSMoist   += (cropPrevSMoist - cropPrevActSMoist) * (cropCurRootingDepth - cropPrevRootingDepth) / (cropMaxRootingDepth - cropPrevRootingDepth);
@@ -296,16 +296,14 @@ static void _MDIrrGrossDemand (int itemID) {
 						cropAvlWater  = (fldCap - wltPnt) * cropCurRootingDepth;
 						cropMinSMoist = cropAvlWater * getCorrDeplFactor (_MDirrigCropStruct + i, cropETP);
 						if (0.0 > precip + cropPrevSMoist - cropETP - cropMinSMoist) {
-							cropActSMoist = cropMinSMoist < cropPrevSMoist + precip - cropETP ? cropMinSMoist : cropPrevSMoist + precip - cropETP;
-							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
+							cropActSMoist   = cropMinSMoist < cropPrevSMoist + precip - cropETP ? cropMinSMoist : cropPrevSMoist + precip - cropETP;
 							cropPercolation = precip - cropETP - cropActSMoist - cropPrevActSMoist;
-							cropGrossDemand = cropNetDemand = 0.0;
+							cropNetDemand   = 0.0;
 						}
 						else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
-							cropGrossDemand = cropNetDemand / irrEfficiency;
-							cropPercolation = cropGrossDemand - cropNetDemand;
+							cropPercolation = 0.0;
 						}
 						cropSMoist    = cropActSMoist + (cropPrevSMoist - cropPrevActSMoist) * (cropMaxRootingDepth - cropCurRootingDepth) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
@@ -319,7 +317,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				irrPercolation += cropPercolation * cropFraction [i];
 	 		}
 			MFVarSetFloat (_MDOutCropETIDs [i], itemID, cropNetDemand * cropFraction [i] * irrAreaFrac); 		
-			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, cropNetDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEfficiency);
+			MFVarSetFloat (_MDOutCropGrossDemandIDs [i], itemID, cropNetDemand * cropFraction [i] * irrAreaFrac * 100.0 / irrEffeciency);
 		} // for all crops
 		// Add Water Balance for bare soil
 /*		cropNetDemand = cropPercolation = cropSMoistChg = 0.0;
@@ -346,7 +344,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		irrSMoistChg   += cropSMoistChg   * cropFraction [_MDNumberOfIrrCrops];
 		irrPercolation += cropPercolation * cropFraction [_MDNumberOfIrrCrops];
 */
-		irrGrossDemand = irrNetDemand * 100.0 / irrEfficiency;
+//		irrGrossDemand = irrNetDemand * 100.0 / irrEffeciency;
 
 //		loss = irrGrossDemand - irrNetDemand;
 //		irrReturnFlow = irrPercolation + loss * 0.1;
