@@ -177,7 +177,7 @@ static int _MDIrrReadCropParameters (const char *filename) {
 		}
 	}
 	fclose (cropFILE);
-	return (cropID - 1);
+	return (cropID);
 }
 
 static void _MDIrrGrossDemand (int itemID) {
@@ -300,8 +300,8 @@ static void _MDIrrGrossDemand (int itemID) {
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
 					}
+                    MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
-				 	MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 /* Nothing */	} else {
 					cropNetDemand   =
 					cropGrossDemand =
@@ -314,9 +314,8 @@ static void _MDIrrGrossDemand (int itemID) {
 					cropETP = precip < refETP ? precip : refETP;
 					cropNetDemand  = cropGrossDemand = 0.0;
 					cropReturnFlow = precip - cropETP;
-					cropSMoist = MFVarGetFloat (_MDOutCropSMoistIDs [cropID], itemID, 0.0);
+					cropSMoist    = 0.0;
 					cropSMoistChg = 0.0;
-				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 				}
 			}
 			irrCropETP     += cropETP         * cropFraction [cropID];
@@ -384,8 +383,8 @@ int MDIrrGrossDemandDef () {
 			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ()) == CMfailed) ||
 				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
                 ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,              MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
@@ -403,7 +402,7 @@ int MDIrrGrossDemandDef () {
 				CMmsgPrint(CMmsgUsrError,"Error reading crop parameter file");
 				return (CMfailed);
 			}
-			for (cropID = 0; cropID < _MDNumberOfIrrCrops + 1; ++cropID) {
+			for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
 				sprintf (cropFractionName,  "CropFraction_%s",     _MDirrigCropStruct [cropID].cropName); // Input Fraction of crop type per cell
 				sprintf (cropSMoistName,    "CropSoilMoist_%s",    _MDirrigCropStruct [cropID].cropName); // Output Soil Moisture
 				sprintf (cropActSMoistName, "CropActSoilMoist_%s", _MDirrigCropStruct [cropID].cropName); // Output Active Soil Moisture
