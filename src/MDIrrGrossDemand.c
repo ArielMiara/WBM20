@@ -265,10 +265,11 @@ static void _MDIrrGrossDemand (int itemID) {
 	/* Rainfed */		if (precip >= cropETP + ricePercolation) {
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip - cropETP; // actual percolation can be higher then the rice percolation input
-						}
-	/* Irrigated */		else {
+							if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
+    /* Irrigated */	    } else {
 							cropNetDemand  = cropGrossDemand = cropETP + ricePercolation - precip;
 							cropReturnFlow = ricePercolation;
+                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
 						}
 						cropActSMoist = cropSMoist = ricePondingDepth;
 						cropSMoistChg = 0.0;
@@ -291,11 +292,13 @@ static void _MDIrrGrossDemand (int itemID) {
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
+                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
 	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
+                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
 						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
@@ -307,6 +310,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
 			    cropReturnFlow  = precip - cropETP;
+                if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
             }
 			irrCropETP     += cropETP         * cropFraction [cropID];
 			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
