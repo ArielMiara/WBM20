@@ -260,7 +260,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [cropID] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
 				if (0.0 < cropFraction [cropID]) {
-					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
+					cropETP = refETP; // * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
 	/* Rainfed */		if (precip - cropETP - ricePercolation >= 0.0) {
 							cropNetDemand  = cropGrossDemand = 0.0;
