@@ -111,9 +111,9 @@ static float getCropKc (int daysSincePlanted, int crop) {
  		case 3: kc = _MDirrigCropStruct [crop].cropKc [1]; break;
 		case 4: kc = _MDirrigCropStruct [crop].cropKc [1]
 		           + (_MDirrigCropStruct [crop].cropKc [2] - _MDirrigCropStruct [crop].cropKc [1])
-		           * (daysSincePlanted - (_MDirrigCropStruct [crop].cropSeasLength [0] +
-				                          _MDirrigCropStruct [crop].cropSeasLength [1] +
-				                          _MDirrigCropStruct [crop].cropSeasLength [2]) / _MDirrigCropStruct [crop].cropSeasLength [3]);
+		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0]
+		                               - _MDirrigCropStruct [crop].cropSeasLength [1]
+		                               - _MDirrigCropStruct [crop].cropSeasLength [2]) / _MDirrigCropStruct [crop].cropSeasLength [3];
 			break;
 	}
  	return (kc);
@@ -283,7 +283,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropRootingDepth;
 						cropPrevRootingDepth = getCurCropRootingDepth (daysSincePlanted - 1, cropID);
-						cropCurRootingDepth  = getCurCropRootingDepth (daysSincePlanted, cropID);
+						cropCurRootingDepth  = getCurCropRootingDepth (daysSincePlanted,     cropID);
 
 						if (cropCurRootingDepth < cropPrevRootingDepth) CMmsgPrint (CMmsgWarning, "Negative rooting depth growth!");
 						if (cropPrevSMoist - cropPrevActSMoist)         CMmsgPrint (CMmsgWarning, "Negative incactive soil moisture!");
