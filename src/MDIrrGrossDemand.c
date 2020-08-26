@@ -222,12 +222,12 @@ static void _MDIrrGrossDemand (int itemID) {
 	if (0.0 < irrAreaFrac) {
 		sumOfCropFractions = 0.0;
 		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
-			cropFraction [cropID] =  MFVarGetFloat (_MDInCropFractionIDs [cropID],itemID, 0.0);
+			cropFraction [cropID] = MFVarGetFloat (_MDInCropFractionIDs [cropID],itemID, 0.0);
 			sumOfCropFractions += cropFraction [cropID];
 		}
 		// default to bare soil when there is no irrigated crop in grid cell
-		if (0.0 >= sumOfCropFractions) cropFraction [cropID] = 0.0;
-		else cropFraction [cropID] = sumOfCropFractions = irrAreaFrac;
+		if (0.0 >= sumOfCropFractions) cropFraction [_MDNumberOfIrrCrops] = 0.0;
+		else cropFraction [_MDNumberOfIrrCrops] = sumOfCropFractions = irrAreaFrac;
 
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 
@@ -304,12 +304,9 @@ static void _MDIrrGrossDemand (int itemID) {
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
 /* Nothing */	} else continue;
 /* Bare */	} else {
-                    cropETP         = refETP;
-                    cropNetDemand   =
-                    cropGrossDemand =
-                    cropSMoist      =
-                    cropSMoistChg   = 0.0;
-                    cropReturnFlow  = precip - refETP >= 0.0 ? precip - refETP : 0.0;
+			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
+			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
+			    cropReturnFlow  = precip - cropETP;
             }
 			irrCropETP     += cropETP         * cropFraction [cropID];
 			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
