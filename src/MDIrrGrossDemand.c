@@ -249,7 +249,7 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		precip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
 		numGrowingSeasons = ceil (irrIntensity);
-		irrNetDemand = irrGrossDemand = irrReturnFlow = irrSMoistChg = irrCropETP = 0.0;
+		irrNetDemand = irrGrossDemand irrSMoist = irrSMoistChg = = irrReturnFlow = irrCropETP = 0.0;
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = _MDIrrDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
 			if (0 < daysSincePlanted) { // Growing season
@@ -260,7 +260,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [cropID] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
 				if (0.0 < cropFraction [cropID]) {
-					cropETP = refETP; // * _MDIrrCropKc (daysSincePlanted, cropID);
+					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
 	/* Rainfed */		if (precip - cropETP - ricePercolation >= 0.0) {
 							cropNetDemand  = cropGrossDemand = 0.0;
