@@ -265,12 +265,10 @@ static void _MDIrrGrossDemand (int itemID) {
 	/* Rainfed */		if (precip >= cropETP + ricePercolation) {
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip - cropETP; // actual percolation can be higher then the rice percolation input
-							if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
     /* Irrigated */	    } else {
 							cropNetDemand  = cropGrossDemand = cropETP + ricePercolation - precip;
 							cropReturnFlow = ricePercolation;
-                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
-						}
+ 						}
 						cropActSMoist = cropSMoist = ricePondingDepth;
 						cropSMoistChg = 0.0;
 /* Non-rice */		} else {
@@ -292,14 +290,12 @@ static void _MDIrrGrossDemand (int itemID) {
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
-                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d\n",__LINE__);
-	/* Irrigated */		} else {
+ 	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand * 100.0 / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
-                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %f %f %f %d\n",irrEfficiency, cropGrossDemand, cropNetDemand, __LINE__);
-						}
+ 						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
 					}
