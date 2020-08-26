@@ -64,8 +64,7 @@ int MDIrrigatedAreaDef () {
 	switch (optionID) {
         default:
         case FAO:
-            if (((_MDOutIrrigatedAreaFracID = MFVarGetID (MDVarIrrAreaFraction, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-                (MFModelAddFunction (_MDIrrigatedAreaIWMI) == CMfailed)) return (CMfailed);
+            if ((_MDOutIrrigatedAreaFracID = MFVarGetID (MDVarIrrAreaFraction, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
 		case IWMI:
 		    if (((_MDOutIrrigatedAreaFracID    = MFVarGetID (MDVarIrrAreaFraction,        MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
