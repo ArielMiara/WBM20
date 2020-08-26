@@ -203,7 +203,7 @@ static void _MDIrrGrossDemand (int itemID) {
 // Local
 	int   cropID, curDay, numGrowingSeasons, daysSincePlanted;
 	float cropAvlWater, cropMinSMoist;
-	float cropETP = 0.0;
+	float cropETP;
 	float cropReturnFlow;
 	float cropNetDemand, cropGrossDemand;
 	float cropCurRootingDepth, cropPrevRootingDepth, cropMaxRootingDepth;
@@ -260,7 +260,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				cropFraction [cropID] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
 				if (0.0 < cropFraction [cropID]) {
-					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
+					cropETP = 5.0; // refETP * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
 	/* Rainfed */		if (precip - cropETP - ricePercolation >= 0.0) {
 							cropNetDemand  = cropGrossDemand = 0.0;
@@ -303,7 +303,7 @@ static void _MDIrrGrossDemand (int itemID) {
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
 /* Nothing */	} else {
-				    cropETP         =
+				    cropETP         = 0.0; //
 					cropNetDemand   =
 					cropGrossDemand =
 					cropReturnFlow  =
@@ -312,7 +312,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				}
 /* Bare */	} else {
 				if (0.0 < cropFraction [cropID]) {
-					cropETP = precip < refETP ? precip : refETP;
+					cropETP = 5.0; // precip < refETP ? precip : refETP;
 					cropNetDemand  = cropGrossDemand = 0.0;
 					cropReturnFlow = precip - cropETP;
 					cropSMoist    = 0.0;
