@@ -34,44 +34,42 @@ static void _MDIrrigatedAreaIWMI (int itemID) {
 	irrAreaFracSeason2 = MFVarGetFloat(_MDInIrrAreaFracSeason2ID, itemID, 0.0);
 
 	if (Season1Doy < Season2Doy) {
-		if (MFDateGetDayOfYear()< Season1Doy)irrAreaFrac=irrAreaFracSeason2;
-		if (MFDateGetDayOfYear()>=Season1Doy && MFDateGetDayOfYear() < Season2Doy)irrAreaFrac=irrAreaFracSeason1;
-		if (MFDateGetDayOfYear()>= Season2Doy) irrAreaFrac=irrAreaFracSeason2;
+		if      (MFDateGetDayOfYear () < Season1Doy) irrAreaFrac = irrAreaFracSeason2;
+		else if (MFDateGetDayOfYear () < Season2Doy) irrAreaFrac = irrAreaFracSeason1;
+		else irrAreaFrac = irrAreaFracSeason2;
+	} else {
+		if (MFDateGetDayOfYear() <= Season1Doy && MFDateGetDayOfYear() > Season2Doy) irrAreaFrac = irrAreaFracSeason1;
+		else irrAreaFrac = irrAreaFracSeason2;
 	}
-	else {
-		irrAreaFrac=irrAreaFracSeason2;
-		if (MFDateGetDayOfYear() > Season2Doy && MFDateGetDayOfYear() <= Season1Doy) irrAreaFrac=irrAreaFracSeason1;
-	}
-
-	if (irrAreaFrac < 0 || irrAreaFrac > 1.0)
-        CMmsgPrint (CMmsgUsrError, "Doy %i IrriAreaFraction= %f, season1Doy %f Season2Doy %f irrAreaFrac1 %f irrAReaFrac2 %f\n",MFDateGetDayOfYear(),irrAreaFrac, Season1Doy, Season2Doy,irrAreaFracSeason1,irrAreaFracSeason2);
-	MFVarSetFloat(_MDIrrigatedAreaFracID,     itemID, irrAreaFrac);	
+	MFVarSetFloat(_MDIrrigatedAreaFracID, itemID, irrAreaFrac);	
 }
 
 enum { FAO_ID = 0, IWMI_ID = 1 };
 
-int MDIrrigatedAreaDef (){
+int MDIrrigatedAreaDef () {
 	const char *mapOptions [] = { "FAO", "IWMI", (char *) NULL };
-	int optionID;
+	int optionID = FAO_ID;
 	const char *optStr;
 
-	if (((optStr = MFOptionGet (MDOptIrrigatedAreaMap))  == (char *) NULL) || ((optionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
+	if (_MDIrrigatedAreaFracID != MFUnset) return (_MDIrrigatedAreaFracID);
+
+	if (((optStr = MFOptionGet (MDOptIrrigatedAreaMap))  != (char *) NULL) && ((optionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
 		CMmsgPrint (CMmsgUsrError, "Type of Irr Area not specifed! Options = 'FAO' or 'IWMI'\n");
 		return CMfailed;
 	}
 	MFDefEntering ("Irrigated Area");
-	if (_MDIrrigatedAreaFracID != MFUnset) return (_MDIrrigatedAreaFracID);
 
-	if (optionID == 0) {
-		_MDIrrigatedAreaFracID = MFVarGetID (MDVarIrrAreaFraction, MFNoUnit, MFInput, MFState, MFBoundary);
-	}
-	else {
+	switch (optionID) {
+		case IWMI_ID:
 		if (((_MDIrrigatedAreaFracID    = MFVarGetID (MDVarIrrAreaFraction,        MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDInIrrAreaFracSeason1ID = MFVarGetID (MDVarIrrAreaFractionSeason1, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDInIrrAreaFracSeason2ID = MFVarGetID (MDVarIrrAreaFractionSeason2, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 		    ((_MDGrowingSeason1ID       = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		    ((_MDGrowingSeason2ID       = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		    (MFModelAddFunction (_MDIrrigatedAreaIWMI) == CMfailed)) return (CMfailed);
+		    ((_MDGrowingSeason2ID       = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed)) return (CMfailed);
+		case FAO_ID:
+		default:
+			if (((_MDIrrigatedAreaFracID = MFVarGetID (MDVarIrrAreaFraction, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+			    (MFModelAddFunction (_MDIrrigatedAreaIWMI) == CMfailed)) return (CMfailed);
 	}
 	MFDefLeaving ("IrrigatedArea");
 	return (_MDIrrigatedAreaFracID);
