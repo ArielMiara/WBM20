@@ -422,7 +422,11 @@ int MDIrrGrossDemandDef () {
 
 int MDIrrReturnFlowDef() {
 	int ret;
-	if  ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
-	else if (ret == MFUnset) return (MFUnset);
-	return (MFVarGetID (MDVarIrrReturnFlow, "mm", MFInput, MFFlux, MFBoundary));
+
+	if (_MDOutIrrReturnFlowID != MFUnset) return (_MDOutIrrReturnFlowID);
+
+	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
+	if (ret == MFUnset) return (MFUnset);
+	_MDOutIrrReturnFlowID = MFVarGetID (MDVarIrrReturnFlow,     "mm",   MFInput, MFFlux,  MFBoundary);
+    return (_MDOutIrrReturnFlowID);
 }
