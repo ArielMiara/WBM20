@@ -292,14 +292,13 @@ static void _MDIrrGrossDemand (int itemID) {
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
-                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
+                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d\n",__LINE__);
 	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
-                            if (cropNetDemand  < 0.0) CMmsgPrint(CMmsgWarning,"Net demand flow in %d",__LINE__);
-                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
+                            if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %f %f %d\n",cropGrossDemand, cropNetDemand, __LINE__);
 						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
@@ -311,7 +310,7 @@ static void _MDIrrGrossDemand (int itemID) {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
 			    cropReturnFlow  = precip - cropETP;
-                if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d",__LINE__);
+                if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d\n",__LINE__);
             }
 			irrCropETP     += cropETP         * cropFraction [cropID];
 			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
