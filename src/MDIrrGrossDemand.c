@@ -57,7 +57,6 @@ static int  _MDOutIrrSMoistChgID        = MFUnset;
 static int *_MDOutCropETIDs             = (int *) NULL;
 static int *_MDOutCropSMoistIDs         = (int *) NULL;
 static int *_MDOutCropActSMoistIDs      = (int *) NULL;
-static int *_MDOutCropGrossDemandIDs    = (int *) NULL;
 static int  _MDOutNonIrrFractionID      = MFUnset;
 
 static int  _MDNumberOfIrrCrops;
@@ -67,7 +66,7 @@ static int getDaysSincePlanting (int dayOfYearModel,int numGrowingSeasons, int *
 	int daysSincePlanted;
 
 	if (crop >= _MDNumberOfIrrCrops) return (ret); // Bare soil
-	for (i = 0; i < numGrowingSeasons; i++) {
+	for (i = 0; i < numGrowingSeasons; ++i) {
 		daysSincePlanted = dayOfYearModel - dayOfYearPlanting [i];
 		if (daysSincePlanted < 0)  daysSincePlanted = 365 + (dayOfYearModel - dayOfYearPlanting [i]);
 		if (daysSincePlanted < _MDirrigCropStruct [crop].cropSeasLength[0]
@@ -103,14 +102,13 @@ static float getCropKc (int daysSincePlanted, int crop) {
 	switch (getCropStage (daysSincePlanted, crop)) {
 		default:
 		case 0: kc = 0.0; break; //crop is not currently grown
-		case 1: kc = _MDirrigCropStruct [crop].cropKc [0]; break;
-		case 2: kc = _MDirrigCropStruct [crop].cropKc [0]
+		case 1: kc =  _MDirrigCropStruct [crop].cropKc [0]; break;
+		case 2: kc =  _MDirrigCropStruct [crop].cropKc [0]
 		           + (_MDirrigCropStruct [crop].cropKc [1] - _MDirrigCropStruct [crop].cropKc [0])
-		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0])
-		           / _MDirrigCropStruct [crop].cropSeasLength [1];
+		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0]) / _MDirrigCropStruct [crop].cropSeasLength [1];
 			break;
- 		case 3: kc = _MDirrigCropStruct [crop].cropKc [1]; break;
-		case 4: kc = _MDirrigCropStruct [crop].cropKc [1]
+ 		case 3: kc =  _MDirrigCropStruct [crop].cropKc [1]; break;
+		case 4: kc =  _MDirrigCropStruct [crop].cropKc [1]
 		           + (_MDirrigCropStruct [crop].cropKc [2] - _MDirrigCropStruct [crop].cropKc [1])
 		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0]
 		                               - _MDirrigCropStruct [crop].cropSeasLength [1]
@@ -164,8 +162,7 @@ static int readCropParameters (const char *filename) {
 			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
 			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (i + 1) * sizeof (int));
 			_MDOutCropETIDs          = (int *) realloc (_MDOutCropETIDs,          (i + 1) * sizeof (int));
-			_MDOutCropGrossDemandIDs = (int *) realloc (_MDOutCropGrossDemandIDs, (i + 1) * sizeof (int));
-			_MDInCropFractionIDs [i] = _MDOutCropETIDs[i] =  _MDOutCropSMoistIDs [i] = _MDOutCropGrossDemandIDs[i] = MFUnset;
+			_MDInCropFractionIDs [i] = _MDOutCropETIDs[i] =  _MDOutCropSMoistIDs [i] = MFUnset;
 			if (sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
 		       &(_MDirrigCropStruct [i].ID),
 		       &(_MDirrigCropStruct [i].DW_ID),
@@ -339,7 +336,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, irrSMoistChg   * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, irrNetDemand   * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, irrGrossDemand * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,  itemID, irrReturnFlow * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, irrReturnFlow  * irrAreaFrac);
 	}
 	else { // cell is not irrigated
 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
@@ -389,6 +386,8 @@ int MDIrrGrossDemandDef () {
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
 			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ()) == CMfailed) ||
 				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInRicePoindingDepthID   = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
@@ -416,7 +415,6 @@ int MDIrrGrossDemandDef () {
 				sprintf (varname,             "CropSoilMoisture%02d",    i + 1);  // Output Soil Moisture
 				sprintf (varname,             "CropActSoilMoisture%02d", i + 1);  // Output Active Soil Moisture
 			    if (((_MDOutCropETIDs [i]          = MFVarGetID (cropETName,          "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-			        ((_MDOutCropGrossDemandIDs [i] = MFVarGetID (cropGrossDemandName, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 			        ((_MDOutCropSMoistIDs [i]      = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
 			        ((_MDOutCropActSMoistIDs [i]   = MFVarGetID (varname,             "mm", MFOutput, MFState, MFInitial)) == CMfailed)) return (CMfailed);
 			}
