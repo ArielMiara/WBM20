@@ -51,6 +51,7 @@ static int  _MDOutIrrNetDemandID        = MFUnset;
 static int  _MDOutIrrGrossDemandID      = MFUnset;
 static int  _MDOutIrrSMoistID           = MFUnset;
 static int  _MDOutIrrSMoistChgID        = MFUnset;
+static int  _MDOutIrrPrecipitationID    = MFUnset;
 static int  _MDOutIrrReturnFlowID       = MFUnset;
 static int *_MDOutCropSMoistIDs         = (int *) NULL;
 static int *_MDOutCropActSMoistIDs      = (int *) NULL;
@@ -197,7 +198,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float irrGrossDemand;
 	float irrNetDemand;
 	float irrCropETP;
-	float irrReturnFlow;
+ 	float irrReturnFlow;
     float irrSMoist;
 	float irrSMoistChg;
 // Local
@@ -308,29 +309,29 @@ static void _MDIrrGrossDemand (int itemID) {
 			    cropReturnFlow  = precip - cropETP;
                 if (cropReturnFlow < 0.0) CMmsgPrint(CMmsgWarning,"Negative return flow in %d\n",__LINE__);
             }
-			irrCropETP     += cropETP         * cropFraction [cropID];
-			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
-			irrGrossDemand += cropGrossDemand * cropFraction [cropID];
-			irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
-			irrSMoist      += cropSMoist      * cropFraction [cropID];
-			irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
+			irrCropETP       += cropETP         * cropFraction [cropID];
+			irrNetDemand     += cropNetDemand   * cropFraction [cropID];
+			irrGrossDemand   += cropGrossDemand * cropFraction [cropID];
+			irrReturnFlow    += cropReturnFlow  * cropFraction [cropID];
+			irrSMoist        += cropSMoist      * cropFraction [cropID];
+			irrSMoistChg     += cropSMoistChg   * cropFraction [cropID];
 		}
- 		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP         * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, irrCropETP     * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, irrNetDemand   * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, irrGrossDemand * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrSMoistID,       itemID, irrSMoist      * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, irrSMoistChg   * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, irrReturnFlow  * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, irrCropETP     * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, irrNetDemand   * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, irrGrossDemand * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrSMoistID,        itemID, irrSMoist      * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
+        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
+		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
 	}
 	else { // cell is not irrigated
-		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, 0.0);
- 		MFVarSetFloat (_MDOutIrrNetDemandID,    itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrGrossDemandID,  itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrSMoistID,       itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrSMoistChgID,    itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,   itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
+ 		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrSMoistID,        itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, 0.0);
+        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, 0.0);
+		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0);
 		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
 			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 			MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
@@ -382,9 +383,10 @@ int MDIrrGrossDemandDef () {
 			    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrEvapotranspiration,      "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,          "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,             "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrPrecipitationID   = MFVarGetID (MDVarIrrPrecipitation,           "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,              "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrSMoistID          = MFVarGetID (MDVarIrrSoilMoisture,            "mm",     MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,         "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,              "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed))
+			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,         "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 
 			if (((cropParameterFileName = MFOptionGet (MDParIrrigationCropFileName)) == (char *) NULL)  ||
