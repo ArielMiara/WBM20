@@ -203,7 +203,7 @@ static void _MDIrrGrossDemand (int itemID) {
 // Local
 	int   cropID, curDay, numGrowingSeasons, daysSincePlanted;
 	float cropAvlWater, cropMinSMoist;
-	float cropETP;
+	float cropETP = 0.0;
 	float cropReturnFlow;
 	float cropNetDemand, cropGrossDemand;
 	float cropCurRootingDepth, cropPrevRootingDepth, cropMaxRootingDepth;
@@ -312,7 +312,7 @@ static void _MDIrrGrossDemand (int itemID) {
 				}
 /* Bare */	} else {
 				if (0.0 < cropFraction [cropID]) {
-					cropETP = 0.0; // precip < refETP ? precip : refETP;
+					cropETP = precip < refETP ? precip : refETP;
 					cropNetDemand  = cropGrossDemand = 0.0;
 					cropReturnFlow = precip - cropETP;
 					cropSMoist    = 0.0;
