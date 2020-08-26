@@ -303,7 +303,7 @@ static void _MDIrrGrossDemand (int itemID) {
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
 /* Nothing */	} else {
-				    cropETP         = 0.0; //
+				    cropETP         = 5.0;
 					cropNetDemand   =
 					cropGrossDemand =
 					cropReturnFlow  =
@@ -317,6 +317,13 @@ static void _MDIrrGrossDemand (int itemID) {
 					cropReturnFlow = precip - cropETP;
 					cropSMoist    = 0.0;
 					cropSMoistChg = 0.0;
+				} else {
+                    cropETP         = 5.0;
+                    cropNetDemand   =
+                    cropGrossDemand =
+                    cropReturnFlow  =
+                    cropSMoist      =
+                    cropSMoistChg   = 0.0;
 				}
 			}
 			irrCropETP     += cropETP         * cropFraction [cropID];
