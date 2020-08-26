@@ -302,18 +302,25 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
+                    irrCropETP     += cropETP         * cropFraction [cropID];
+                    irrNetDemand   += cropNetDemand   * cropFraction [cropID];
+                    irrGrossDemand += cropGrossDemand * cropFraction [cropID];
+                    irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
+                    irrSMoist      += cropSMoist      * cropFraction [cropID];
+                    irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
 /* Nothing */	} else continue;
 /* Bare */	} else {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
 			    cropReturnFlow  = precip - cropETP;
+
+                irrCropETP     += cropETP         * cropFraction [cropID];
+                irrNetDemand   += cropNetDemand   * cropFraction [cropID];
+                irrGrossDemand += cropGrossDemand * cropFraction [cropID];
+                irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
+                irrSMoist      += cropSMoist      * cropFraction [cropID];
+                irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
             }
-			irrCropETP     += cropETP         * cropFraction [cropID];
-			irrNetDemand   += cropNetDemand   * cropFraction [cropID];
-			irrGrossDemand += cropGrossDemand * cropFraction [cropID];
-			irrReturnFlow  += cropReturnFlow  * cropFraction [cropID];
-			irrSMoist      += cropSMoist      * cropFraction [cropID];
-			irrSMoistChg   += cropSMoistChg   * cropFraction [cropID];
 		}
  		MFVarSetFloat (_MDInIrrRefEvapotransID, itemID, refETP         * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrEvapotranspID,  itemID, irrCropETP     * irrAreaFrac);
