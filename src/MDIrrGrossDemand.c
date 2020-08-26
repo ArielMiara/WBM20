@@ -66,7 +66,7 @@ static int getDaysSincePlanting (int dayOfYearModel,int numGrowingSeasons, int *
 	int i, ret = 0;
 	int daysSincePlanted;
 
-	if (crop < _MDNumberOfIrrCrops) return (ret); // Bare soil
+	if (crop >= _MDNumberOfIrrCrops) return (ret); // Bare soil
 	for (i = 0; i < numGrowingSeasons; i++) {
 		daysSincePlanted = dayOfYearModel - dayOfYearPlanting [i];
 		if (daysSincePlanted < 0)  daysSincePlanted = 365 + (dayOfYearModel - dayOfYearPlanting [i]);
@@ -81,7 +81,7 @@ static int getDaysSincePlanting (int dayOfYearModel,int numGrowingSeasons, int *
 static int getCropStage (int daysSincePlanted, int crop) {
 	int ret = 0;
 
-	if (crop < _MDNumberOfIrrCrops) return (ret); // Bare soil
+	if (crop >= _MDNumberOfIrrCrops) return (ret); // Bare soil
     if      (daysSincePlanted <= _MDirrigCropStruct [crop].cropSeasLength[0]) ret = 1;
     else if (daysSincePlanted <= _MDirrigCropStruct [crop].cropSeasLength[0]
 	                           + _MDirrigCropStruct [crop].cropSeasLength[1]) ret = 2;
@@ -99,7 +99,7 @@ static float getCropKc (int daysSincePlanted, int crop) {
 	float kc = 0.2;
 
    //Returns kc depending on the current stage of the growing season
-	if (crop < _MDNumberOfIrrCrops) return (kc); // Bare soil
+	if (crop >= _MDNumberOfIrrCrops) return (kc); // Bare soil
 	switch (getCropStage (daysSincePlanted, crop)) {
 		default:
 		case 0: kc = 0.0; break; //crop is not currently grown
@@ -123,7 +123,7 @@ static float getCurCropRootingDepth (int daysSincePlanted, int crop) {
 	float cropRootingDepth = 0.0;
 	float totalSeasonLenth;
 
-	if (crop < _MDNumberOfIrrCrops) return (cropRootingDepth); // Bare soil
+	if (crop >= _MDNumberOfIrrCrops) return (cropRootingDepth); // Bare soil
 	totalSeasonLenth = _MDirrigCropStruct [crop].cropSeasLength [0]
                      + _MDirrigCropStruct [crop].cropSeasLength [1]
 	                 + _MDirrigCropStruct [crop].cropSeasLength [2]
@@ -137,7 +137,7 @@ static float getCurCropRootingDepth (int daysSincePlanted, int crop) {
 static float getCorrDeplFactor (float cropETP, int crop) {
 	float cropDeplFactor = 0.0;
 
-	if (crop < _MDNumberOfIrrCrops) return (cropDeplFactor); // Bare soil
+	if (crop >= _MDNumberOfIrrCrops) return (cropDeplFactor); // Bare soil
 	cropDeplFactor = _MDirrigCropStruct [crop].cropDepletionFactor + 0.04 * (5.0 - cropETP);
     if (0.1 >= cropDeplFactor) cropDeplFactor = 0.1;
 	if (0.8 <= cropDeplFactor) cropDeplFactor = 0.8;
@@ -294,13 +294,13 @@ static void _MDIrrGrossDemand (int itemID) {
 	/* Rainfed */		if (0.0 > precip + cropPrevSMoist - cropETP - cropMinSMoist) {
 							cropActSMoist = cropPrevSMoist + precip - cropETP > cropMinSMoist? cropPrevSMoist + precip - cropETP : cropMinSMoist;
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
-							cropNetDemand = cropGrossDemand = 0.0;
+							cropNetDemand  = cropGrossDemand = 0.0;
 							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
 	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand / irrEfficiency;
-							cropReturnFlow = cropGrossDemand - cropNetDemand;
+							cropReturnFlow  = cropGrossDemand - cropNetDemand;
 						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
@@ -310,14 +310,14 @@ static void _MDIrrGrossDemand (int itemID) {
 /* Nothing */	} else {
 					cropNetDemand   =
 					cropGrossDemand =
-					cropReturnFlow =
+					cropReturnFlow  =
 					cropSMoist      =
 					cropSMoistChg   = 0.0;
 				}
 /* Bare */	} else {
 				if (0.0 < cropFraction [cropID]) {
 					cropETP = precip < refETP ? precip : refETP;
-					cropNetDemand   = cropGrossDemand = 0.0;
+					cropNetDemand  = cropGrossDemand = 0.0;
 					cropReturnFlow = precip - cropETP;
 					cropSMoist = MFVarGetFloat (_MDOutCropSMoistIDs [cropID], itemID, 0.0);
 					cropSMoistChg = 0.0;
