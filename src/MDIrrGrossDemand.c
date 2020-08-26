@@ -41,7 +41,7 @@ static int  _MDInFldCapaID              = MFUnset;
 static int  _MDInWltPntID               = MFUnset;
 static int  _MDInGrowingSeason1ID       = MFUnset;
 static int  _MDInGrowingSeason2ID       = MFUnset;
-static int  _MDInRicePoindingDepthID    = MFUnset;
+static int  _MDInRicePondingDepthID     = MFUnset;
 static int  _MDInRicePercolationRateID  = MFUnset;
 static int  _MDInIrrIntensityID         = MFUnset;
 static int  _MDInIrrEfficiencyID        = MFUnset;
@@ -156,7 +156,7 @@ static int _MDIrrReadCropParameters (const char *filename) {
 			_MDirrigCropStruct = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (cropID + 1) * sizeof (MDIrrigatedCrop));
 			_MDInCropFractionIDs     = (int *) realloc (_MDInCropFractionIDs,     (cropID + 1) * sizeof (int));
 			_MDOutCropSMoistIDs      = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
-			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropSMoistIDs,      (cropID + 1) * sizeof (int));
+			_MDOutCropActSMoistIDs   = (int *) realloc (_MDOutCropActSMoistIDs,   (cropID + 1) * sizeof (int));
 			_MDInCropFractionIDs [cropID] =  _MDOutCropSMoistIDs [cropID] = _MDOutCropActSMoistIDs [cropID] = MFUnset;
 			if (sscanf (buffer, "%i" "%i" "%s" "%s" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f" "%f",
 		       &(_MDirrigCropStruct [cropID].ID),
@@ -190,7 +190,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	float cropFraction [_MDNumberOfIrrCrops + 1];
 	int   seasStart [2];
 	float ricePercolation;
-	float riceReqPondingDepth;
+	float ricePondingDepth;
     float irrIntensity;
 	float irrEfficiency;
 //Output:
@@ -202,7 +202,6 @@ static void _MDIrrGrossDemand (int itemID) {
 	float irrSMoist;
 // Local
 	int   cropID, curDay, numGrowingSeasons, daysSincePlanted;
-	float ricePondingDepth;
 	float cropAvlWater, cropMinSMoist;
 	float cropETP;
 	float cropReturnFlow;
@@ -232,13 +231,13 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) cropFraction [cropID] = cropFraction [cropID] / sumOfCropFractions;
 
-		riceReqPondingDepth = MFVarGetFloat (_MDInRicePoindingDepthID,   itemID,   2.00);
-		seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
-		seasStart [1]       = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
 		irrIntensity        = MFVarGetFloat (_MDInIrrIntensityID,        itemID, 100.00) / 100.0;
 		irrEfficiency       = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID,  38.00);
+        seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
+        seasStart [1]       = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
 		precip              = MFVarGetFloat (_MDInPrecipID,              itemID,   0.00);
 		snowpackChg         = MFVarGetFloat (_MDInSPackChgID,            itemID,   0.00);
+        ricePondingDepth    = MFVarGetFloat (_MDInRicePondingDepthID,    itemID,   2.00);
 	 	ricePercolation     = MFVarGetFloat (_MDInRicePercolationRateID, itemID,   3.00);
 	 	wltPnt              = MFVarGetFloat (_MDInWltPntID,              itemID,   0.15);
 		fldCap              = MFVarGetFloat (_MDInFldCapaID,             itemID,   0.25);
@@ -384,19 +383,19 @@ int MDIrrGrossDemandDef () {
 			    ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
 			    ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ()) == CMfailed) ||
 				((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrIntensity,               MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,              MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrGrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrGrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInWltPntID              = MFVarGetID (MDVarSoilWiltingPoint,           "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDInFldCapaID             = MFVarGetID (MDVarSoilFieldCapacity,          "mm/m",   MFInput,   MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInRicePoindingDepthID   = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
+			    ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrRicePondingDepth,        "mm",     MFInput,   MFState, MFBoundary)) == CMfailed) ||
 				((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrDailyRicePerolationRate, "mm/day", MFInput ,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrEfficiency,              MFNoUnit, MFInput,   MFState, MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrEvapotranspiration,      "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,             "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,              "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrNetWaterDemand,          "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrGrossDemand,             "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
 			    ((_MDOutIrrSMoistID          = MFVarGetID (MDVarIrrSoilMoisture,            "mm",     MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,         "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed))
+			    ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrSoilMoistChange,         "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed) ||
+			    ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,              "mm",     MFOutput,  MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
 
 			if (((cropParameterFileName = MFOptionGet (MDParIrrigationCropFileName)) == (char *) NULL)  ||
