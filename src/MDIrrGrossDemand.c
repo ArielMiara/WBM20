@@ -6,7 +6,7 @@ Copyright 1994-2020, UNH - ASRC/CUNY
 
 MDIrrigation.c
 
-dominik.wisser@unh.edu
+bfekete@gc.cuny.edu
 
 *******************************************************************************/
 
@@ -26,7 +26,7 @@ typedef struct {
     int   cropIsRice;
     float cropSeasLength [4];
     float cropKc [4 - 1];
-    float cropCurRootingDepth;
+    float cropRootingDepth;
     float cropDepletionFactor;
     float cropLeachReq;
 } MDIrrigatedCrop;
@@ -105,32 +105,34 @@ static float getCropKc (int daysSincePlanted, int crop) {
 		default:
 		case 0: kc = 0.0; break; //crop is not currently grown
 		case 1: kc = _MDirrigCropStruct [crop].cropKc [0]; break;
-		case 2: kc = _MDirrigCropStruct [crop].cropKc [0] + (_MDirrigCropStruct [crop].cropKc [1] - _MDirrigCropStruct [crop].cropKc [0])
-		                                  * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0])
-										  /  _MDirrigCropStruct [crop].cropSeasLength [1];
+		case 2: kc = _MDirrigCropStruct [crop].cropKc [0]
+		           + (_MDirrigCropStruct [crop].cropKc [1] - _MDirrigCropStruct [crop].cropKc [0])
+		           * (daysSincePlanted - _MDirrigCropStruct [crop].cropSeasLength [0]) / _MDirrigCropStruct [crop].cropSeasLength [1];
 			break;
  		case 3: kc = _MDirrigCropStruct [crop].cropKc [1]; break;
-		case 4: kc = _MDirrigCropStruct [crop].cropKc [1] + (_MDirrigCropStruct [crop].cropKc [2] - _MDirrigCropStruct [crop].cropKc [1])
-		                                  * (daysSincePlanted - (_MDirrigCropStruct [crop].cropSeasLength [0] + _MDirrigCropStruct [crop].cropSeasLength [1] + _MDirrigCropStruct [crop].cropSeasLength [2]))
-										  / _MDirrigCropStruct [crop].cropSeasLength [3];
+		case 4: kc = _MDirrigCropStruct [crop].cropKc [1]
+		           + (_MDirrigCropStruct [crop].cropKc [2] - _MDirrigCropStruct [crop].cropKc [1])
+		           * (daysSincePlanted - (_MDirrigCropStruct [crop].cropSeasLength [0] +
+				                          _MDirrigCropStruct [crop].cropSeasLength [1] +
+				                          _MDirrigCropStruct [crop].cropSeasLength [2]) / _MDirrigCropStruct [crop].cropSeasLength [3]);
 			break;
 	}
  	return (kc);
 }
 
 static float getCurCropRootingDepth (int daysSincePlanted, int crop) {
-	float cropCurRootingDepth = 0.0;
+	float cropRootingDepth = 0.0;
 	float totalSeasonLenth;
 
-	if (crop < _MDNumberOfIrrCrops) return (cropCurRootingDepth); // Bare soil
+	if (crop < _MDNumberOfIrrCrops) return (cropRootingDepth); // Bare soil
 	totalSeasonLenth = _MDirrigCropStruct [crop].cropSeasLength [0]
                      + _MDirrigCropStruct [crop].cropSeasLength [1]
 	                 + _MDirrigCropStruct [crop].cropSeasLength [2]
 	                 + _MDirrigCropStruct [crop].cropSeasLength [3];
 
-    cropCurRootingDepth = _MDirrigCropStruct [crop].cropCurRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
- 	if (0.15 > cropCurRootingDepth) cropCurRootingDepth = 0.15;
-	return (cropCurRootingDepth);
+    cropRootingDepth = _MDirrigCropStruct [crop].cropRootingDepth * (0.5 + 0.5 * sin (3.03 * (daysSincePlanted  /  totalSeasonLenth) - 1.47));
+ 	if (0.15 > cropRootingDepth) cropRootingDepth = 0.15;
+	return (cropRootingDepth);
 }
 
 static float getCorrDeplFactor (float cropETP, int crop) {
@@ -176,7 +178,7 @@ static int readCropParameters (const char *filename) {
 		       &(_MDirrigCropStruct [i].cropSeasLength [1]),
 		       &(_MDirrigCropStruct [i].cropSeasLength [2]),
 		       &(_MDirrigCropStruct [i].cropSeasLength [3]),
-		       &(_MDirrigCropStruct [i].cropCurRootingDepth),
+		       &(_MDirrigCropStruct [i].cropRootingDepth),
 		       &(_MDirrigCropStruct [i].cropDepletionFactor)) != 13) return (CMfailed);
 			_MDirrigCropStruct [i].cropIsRice = strcmp (_MDirrigCropStruct [i].cropName , "Rice") == 0 ? 1 : 0;
 			i += 1;
@@ -284,7 +286,7 @@ static void _MDIrrGrossDemand (int itemID) {
 						cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
 						cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 
-						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropCurRootingDepth;
+						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropRootingDepth;
 						cropPrevRootingDepth = getCurCropRootingDepth (daysSincePlanted - 1, cropID);
 						cropCurRootingDepth  = getCurCropRootingDepth (daysSincePlanted, cropID);
 
@@ -361,8 +363,6 @@ int MDIrrGrossDemandDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptIrrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
-	const char *mapOptions   [] = { "FAO", "IWMI", (char *) NULL };
-	const char *distrOptions [] = { "FirstSeason","Distributed", (char *) NULL };
 	const char *cropParameterFileName;
 	int i;
 	char varname [32];
