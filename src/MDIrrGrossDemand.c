@@ -149,8 +149,7 @@ static int _MDIrrReadCropParameters (const char *filename) {
 		return (CMfailed);
 	}
 	else {
-		// read headings..
-		fgets (buffer,sizeof (buffer),cropFILE);
+		fgets (buffer,sizeof (buffer),cropFILE); // read headings..
 
 		while (fgets(buffer, sizeof (buffer), cropFILE) != NULL) {
 			_MDirrigCropStruct = (MDIrrigatedCrop *) realloc (_MDirrigCropStruct, (cropID + 1) * sizeof (MDIrrigatedCrop));
@@ -257,6 +256,9 @@ static void _MDIrrGrossDemand (int itemID) {
 					bareSoil = 1.0 < irrIntensity ? cropFraction [cropID] * (2.0 - irrIntensity) : cropFraction [cropID];
 				cropFraction [cropID] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
+
+                cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
+                cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 				if (0.0 < cropFraction [cropID]) {
 					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
@@ -270,9 +272,6 @@ static void _MDIrrGrossDemand (int itemID) {
 						cropActSMoist = cropSMoist = ricePondingDepth;
 						cropSMoistChg = 0.0;
 /* Non-rice */		} else {
-						cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
-						cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
-
 						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropRootingDepth;
 						cropPrevRootingDepth = _MDIrrCropRootingDepth (daysSincePlanted - 1, cropID);
 						cropCurRootingDepth  = _MDIrrCropRootingDepth (daysSincePlanted, cropID);
@@ -295,11 +294,16 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
-/* Nothing */	} else continue;
+/* Nothing */	} else {
+                    MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
+                    MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
+				}
 /* Bare */	} else {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
 			    cropReturnFlow  = precip - cropETP;
+                MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
+                MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
             }
 			irrCropETP       += cropETP         * cropFraction [cropID];
 			irrNetDemand     += cropNetDemand   * cropFraction [cropID];
@@ -315,8 +319,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
-	}
-	else { // cell is not irrigated
+	} else { // cell is not irrigated
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, 0.0);
