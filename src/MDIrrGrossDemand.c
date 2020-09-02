@@ -391,11 +391,9 @@ int MDIrrGrossDemandDef () {
 			        ((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
 			        ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 			}
-            sprintf (cropFractionName,  "CropFraction_%s",     "Bare"); // Input Fraction of crop type per cell
             sprintf (cropSMoistName,    "CropSoilMoist_%s",    "Bare"); // Output Soil Moisture
             sprintf (cropActSMoistName, "CropActSoilMoist_%s", "Bare"); // Output Active Soil Moisture
-            if (((_MDInCropFractionIDs   [cropID] = MFVarGetID (cropFractionName,  MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+            if (((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
                 ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 			if (MFModelAddFunction (_MDIrrGrossDemand) == CMfailed) return (CMfailed);
 			break;
