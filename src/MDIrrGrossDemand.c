@@ -217,7 +217,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	irrAreaFrac = MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0);
 	
 	if (0.0 < irrAreaFrac) {
-		sumOfCropFractions = 0.0;
+        irrCropETP = irrNetDemand = irrGrossDemand = irrReturnFlow = irrSMoist = irrSMoistChg = sumOfCropFractions = 0.0;
 		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
 			cropFraction [cropID] = MFVarGetFloat (_MDInCropFractionIDs [cropID],itemID, 0.0);
 			sumOfCropFractions += cropFraction [cropID];
@@ -246,7 +246,6 @@ static void _MDIrrGrossDemand (int itemID) {
 
 		precip = 0.0 >= snowpackChg ? precip + fabs (snowpackChg) : 0.0;
 		numGrowingSeasons = ceil (irrIntensity);
-		irrNetDemand = irrGrossDemand = irrSMoist = irrSMoistChg = irrReturnFlow = irrCropETP = 0.0;
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = _MDIrrDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
 			if (0 < daysSincePlanted) { // Growing season
@@ -269,8 +268,8 @@ static void _MDIrrGrossDemand (int itemID) {
 							cropNetDemand  = cropGrossDemand = cropETP + ricePercolation - precip;
 							cropReturnFlow = ricePercolation;
  						}
+                        cropSMoistChg = 0.0;
 						cropActSMoist = cropSMoist = ricePondingDepth;
-						cropSMoistChg = 0.0;
 /* Non-rice */		} else {
 						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropRootingDepth;
 						cropPrevRootingDepth = _MDIrrCropRootingDepth (daysSincePlanted - 1, cropID);
