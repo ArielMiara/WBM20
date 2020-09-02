@@ -292,11 +292,17 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
-/* Nothing */	} else continue;
+/* Nothing */	} else {
+                    MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
+                    MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
+				    continue;
+				}
 /* Bare */	} else {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
 			    cropReturnFlow  = precip - cropETP;
+                MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
+                MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
             }
 			irrCropETP       += cropETP         * cropFraction [cropID];
 			irrNetDemand     += cropNetDemand   * cropFraction [cropID];
@@ -312,8 +318,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
-	}
-	else { // cell is not irrigated
+	} else { // cell is not irrigated
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, 0.0);
@@ -321,8 +326,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, 0.0);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0);
-		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
-			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
+		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
+			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
 			MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 		}
 	}
