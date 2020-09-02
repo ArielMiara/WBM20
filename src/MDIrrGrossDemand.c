@@ -318,7 +318,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistID,        itemID, irrSMoist      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
+//		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
+        MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0 * irrAreaFrac);
 	} else { // cell is not irrigated
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
