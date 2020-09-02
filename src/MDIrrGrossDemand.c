@@ -248,16 +248,15 @@ static void _MDIrrGrossDemand (int itemID) {
 		numGrowingSeasons = ceil (irrIntensity);
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = _MDIrrDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
-			if (0 < daysSincePlanted) { // Growing season
+            cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
+            cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
+            if (0 < daysSincePlanted) { // Growing season
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First growing season
 					bareSoil = 1.0 > irrIntensity ? cropFraction [cropID] * (1.0 - irrIntensity) : 0.0;
 				else  // Second growing season
 					bareSoil = 1.0 < irrIntensity ? cropFraction [cropID] * (2.0 - irrIntensity) : cropFraction [cropID];
 				cropFraction [cropID] -= bareSoil;
 				cropFraction [_MDNumberOfIrrCrops] += bareSoil;
-
-                cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
-                cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 				if (0.0 < cropFraction [cropID]) {
 					cropETP = refETP * _MDIrrCropKc (daysSincePlanted, cropID);
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
@@ -313,7 +312,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
-	} else { // cell is not irrigated
+	}
+	else { // cell is not irrigated
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, 0.0);
@@ -321,8 +321,8 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, 0.0);
         MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0);
-		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
-			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
+		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
+			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 			MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
 		}
 	}
