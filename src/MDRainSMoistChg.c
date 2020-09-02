@@ -62,39 +62,21 @@ static void _MDRainSMoistChg (int itemID) {
 	intercept    = _MDInInterceptID        != MFUnset ? MFVarGetFloat (_MDInInterceptID,         itemID, 0.0) : 0.0;
 	irrAreaFrac  = _MDInIrrAreaFracID      != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID,       itemID, 0.0) : 0.0;
 
-	
-	//if (iceContent> 0.0) printf ("IceContent upper Layer = %f\n",iceContent);
-	
-	//reduce available water capacity by ice content
-//	awCap= awCap - (awCap * iceContent);
-	
-//	if (airT > 0.0) {
-		waterIn = precip - intercept - sPackChg;
-		pet = pet > intercept ? pet - intercept : 0.0;
+	waterIn = precip - intercept - sPackChg;
+	pet = pet > intercept ? pet - intercept : 0.0;
 
-		if (awCap > 0.0) {
-			if (waterIn > pet) {
-				sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist;
-			}
-			else {
-				gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA));
-				sMoistChg = (waterIn - pet) * gm;
-			}
-			if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
-			if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
-			sMoist = sMoist + sMoistChg;
+	if (awCap > 0.0) {
+	    if (waterIn > pet) { sMoistChg = waterIn - pet < awCap - sMoist ? waterIn - pet : awCap - sMoist; }
+	    else {
+	        gm = (1.0 - exp (- _MDSoilMoistALPHA * sMoist / awCap)) / (1.0 - exp (- _MDSoilMoistALPHA));
+	        sMoistChg = (waterIn - pet) * gm;
+	    }
+	    if (sMoist + sMoistChg > awCap) sMoistChg = awCap - sMoist;
+	    if (sMoist + sMoistChg <   0.0) sMoistChg =       - sMoist;
+	    sMoist = sMoist + sMoistChg;
+	} else sMoist = sMoistChg = 0.0;
 
-		}
-		else sMoist = sMoistChg = 0.0;
-
-		evapotrans = pet + intercept < precip - sPackChg - sMoistChg ?
-		             pet + intercept : precip - sPackChg - sMoistChg;	
-//	}
-//	else  { sMoistChg = 0.0; evapotrans = 0.0; }
-
-//		if (itemID == 25014) printf("! sMoist cell = %f, sMoist = %f, evapotrans = %f, sMoistChg = %f, pet = %f, awCap = %f, waterIn = %f\n", sMoist, sMoist * (1.0 - irrAreaFrac), evapotrans, sMoistChg, pet, awCap, waterIn);
-//		if (itemID == 25014) printf("! precip = %f, intercept = %f, sPackChg = %f\n", precip, intercept, sPackChg);
-
+	evapotrans = pet + intercept < precip - sPackChg - sMoistChg ? pet + intercept : precip - sPackChg - sMoistChg;
 	MFVarSetFloat (_MDOutSoilMoistCellID,     itemID, sMoist);
 	MFVarSetFloat (_MDOutEvaptrsID,           itemID, evapotrans * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
 	MFVarSetFloat (_MDOutSoilMoistID,         itemID, sMoist     * (1.0 - irrAreaFrac)); //RJS 01-17-08 "- impAreaFrac - H2OAreaFrac"
@@ -121,8 +103,7 @@ int MDRainSMoistChgDef () {
 	
 	MFDefEntering ("Rainfed Soil Moisture");
 	if (soilTemperatureID == MFcalculate ) {
-		if (((ret                        = MDPermafrostDef()) == CMfailed) ||
-		    ((_MDInRelativeIceContent    = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed) ||
+		if (((_MDInRelativeIceContent    = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed) ||
 			((_MDOutLiquidSoilMoistureID = MFVarGetID (MDVarLiquidSoilMoisture, "-",    MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
 	}
 

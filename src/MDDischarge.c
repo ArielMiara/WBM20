@@ -35,7 +35,7 @@ enum { MDinput, MDcalculate, MDcorrected };
 
 int MDDischargeDef() {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDOptDischarge;
+	const char *optStr, *optName = MDOptConfig_Discharge;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
 
 	if (_MDOutDischargeID != MFUnset) return (_MDOutDischargeID);

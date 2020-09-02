@@ -30,7 +30,7 @@ typedef enum { MDpet,
 int main (int argc,char *argv []) {
     int argNum;
     int optID = MDbalance;
-    const char *optStr, *optName = MDOptModel;
+    const char *optStr, *optName = MDOptConfig_Model;
     const char *options[] = {"pet",
                              "surplus",
                              "infiltration",
@@ -63,7 +63,7 @@ int main (int argc,char *argv []) {
         case MDgeometry:        return (MFModelRun(argc, argv, argNum, MDRiverWidthDef));
         case MDbalance:         return (MFModelRun(argc, argv, argNum, MDWaterBalanceDef));
         case MDwatertemp:       return (MFModelRun(argc, argv, argNum, MDWTempRiverRouteDef));
-        case MDthermal:         return (MFModelRun(argc, argv, argNum, MDThermalInputs3Def));
+        case MDthermal:         return (MFModelRun(argc, argv, argNum, MDThermalInputsDef));
         case MDBQARTpreprocess: return (MFModelRun(argc, argv, argNum, MDBQARTpreprocessDef));
         case MDsedimentflux:    return (MFModelRun(argc, argv, argNum, MDSedimentFluxDef));
         case MDbedloadflux:     return (MFModelRun(argc, argv, argNum, MDBedloadFluxDef));

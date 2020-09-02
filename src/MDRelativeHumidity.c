@@ -25,7 +25,7 @@ static int _MDInAirPressureID = MFUnset;
 // Output
 static int _MDOutRelativeHumidityID = MFUnset;
 
-static void _MDRelativeHumidity(int itemID) {
+static void _MDRelativeHumidity (int itemID) {
     float airtemp;
     float sh;
     float airpressure;
@@ -35,56 +35,42 @@ static void _MDRelativeHumidity(int itemID) {
     float v1;
     float v2;
 
-    airtemp          = MFVarGetFloat(_MDInAirTemperatureID,   itemID, 0.0) + 273.16;
-//  airpressure      = MFVarGetFloat(_MDInAirPressureID,      itemID, 0.0) / 100; //pressure (HPa)
-    airpressure      = MFVarGetFloat(_MDInAirPressureID,      itemID, 0.0); //pressure (Pa)
-    sh = MFVarGetFloat(_MDInSpecificHumidityID, itemID, 0.0); // jan27 2017 - divide by 100 for NCEP
-
-//    es = 6.112 * exp(17.27 * (airtemp / (237.3 + airtemp))); //Sat. vapor press. (hPa)
-//    e = rh * es / 100; //e (HPa)
-//    relativehumidity = 1000 * ((0.622 * e) / (airpressure - (0.378 * e)));
+    airtemp     = MFVarGetFloat (_MDInAirTemperatureID,   itemID, 0.0) + 273.16;
+    airpressure = MFVarGetFloat (_MDInAirPressureID,      itemID, 0.0); //pressure (Pa)
+    sh          = MFVarGetFloat (_MDInSpecificHumidityID, itemID, 0.0); // jan27 2017 - divide by 100 for NCEP
 
     v1 = exp( (17.67 * (airtemp - 273.16) / (airtemp - 29.65) ) );
     v2 = 0.263 * airpressure;
-//    specifichumidity = (rh * v1) / v2;
-relativehumidity = (sh * v2)/v1;
-//printf("relativehumidity = %f \n", relativehumidity);
-
-//printf("v1 = %f, v2 = %f, sh = %f, airtemp = %f, relativehumidity = %f \n", v1, v2, sh, airtemp, relativehumidity);
-
+    relativehumidity = (sh * v2)/v1;
     MFVarSetFloat(_MDOutRelativeHumidityID, itemID, relativehumidity);
 }
 
-enum {
-    MDnone, MDinput, MDcalculate
-};
+enum { MDnone, MDinput, MDcalculate };
 
-int MDRelativeHumidityDef() {
+int MDRelativeHumidityDef () {
     int optID = MFUnset;
-    const char *optStr, *optName = MDOptRelativeHumidity;
+    const char *optStr, *optName = MDOptWeather_RelativeHumidity;
     const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL};
     
     if ((optStr = MFOptionGet(optName)) != (char *) NULL) optID = CMoptLookup(options, optStr, true);
     if ((optID == MDnone) || (_MDOutRelativeHumidityID != MFUnset)) return (_MDOutRelativeHumidityID);
     
-    MFDefEntering("RelativeHumidity");
+    MFDefEntering ("RelativeHumidity");
     
     switch (optID) {
         case MDinput:
-            if      ((_MDOutRelativeHumidityID = MFVarGetID(MDVarRelativeHumidity, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if      ((_MDOutRelativeHumidityID = MFVarGetID (MDVarWeather_RelativeHumidity, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
-            if (    ((_MDInAirTemperatureID   = MFVarGetID(MDVarAirTemperature,   "degC",  MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInSpecificHumidityID = MFVarGetID(MDVarSpecificHumidity, "%", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInAirPressureID      = MFVarGetID(MDVarAirPressure,      "g/kg",    MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRelativeHumidityID     = MFVarGetID(MDVarRelativeHumidity,      "degC",  MFOutput,MFState, MFBoundary)) == CMfailed) ||
-                ((MFModelAddFunction(_MDRelativeHumidity) == CMfailed))
-                ) return (CMfailed);
+            if (((_MDInAirTemperatureID    = MFVarGetID (MDVarAirTemperature,   "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInSpecificHumidityID  = MFVarGetID (MDVarWeather_SpecificHumidity, "%", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInAirPressureID       = MFVarGetID (MDVarWeather_AirPressure, "g/kg", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRelativeHumidityID = MFVarGetID (MDVarWeather_RelativeHumidity, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((MFModelAddFunction (_MDRelativeHumidity) == CMfailed))) return (CMfailed);
             break;
-        default: MFOptionMessage(optName, optStr, options);
+        default: MFOptionMessage (optName, optStr, options);
             return (CMfailed);
     }
-    MFDefLeaving("RelativeHumidity");
+    MFDefLeaving ("RelativeHumidity");
     return (_MDOutRelativeHumidityID);
 }
-

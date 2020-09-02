@@ -69,14 +69,8 @@ int MDRainInfiltrationDef () {
 	 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	
-	//if ((ret = MDPermafrostDef())                == CMfailed) return CMfailed;
-	
-	if (soilMoistureOptionID ==1){ //layer is the soil moisture option infiltration will be calculated differently. 
-		//if ((_MDInRainWaterSurplusID = MDRainWaterSurplusDef ()) == CMfailed) return (CMfailed);
-		
-		
-		if ((ret = MDRainSMoistChgLayeredSoilDef()) == CMfailed) return CMfailed;
-		if ((_MDOutRainSurfRunoffID       = MFVarGetID (MDVarRainSurfRunoff,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed)return CMfailed; 
+	if (soilMoistureOptionID == 1){ //layer is the soil moisture option infiltration will be calculated differently.
+		if ((_MDOutRainSurfRunoffID       = MFVarGetID (MDVarRainSurfRunoff,       "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed)return CMfailed;
 		if ((_MDOutRainInfiltrationID     = MFVarGetID (MDVarRainInfiltration,           "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) return CMfailed;
 		if ((_MDInSaturationExcessRunoffID       = MFVarGetID (MDVarSaturationExcessflow,       "mm", MFInput, MFFlux, MFBoundary)) == CMfailed)return CMfailed; 
 		if ((_MDInRainInfiltrationID     = MFVarGetID (MDVarRainInfiltration,           "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) return CMfailed;

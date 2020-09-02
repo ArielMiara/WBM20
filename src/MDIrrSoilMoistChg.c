@@ -19,7 +19,7 @@ enum { MDnone, MDinput, MDcalculate };
 
 int MDIrrSoilMoistChgDef() {
 	int optID = MFUnset, ret;
-	const char *optStr, *optName = MDOptIrrigation;
+	const char *optStr, *optName = MDOptConfig_Irrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);

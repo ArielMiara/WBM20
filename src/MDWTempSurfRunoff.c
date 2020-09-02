@@ -81,7 +81,7 @@ int MDWTempSurfRunoffDef () {
 	    ((_MDInWetBulbTempID  = MDWetBulbTempDef())    == CMfailed) ||
 	    ((_MDInSnowPackID     = MFVarGetID (MDVarSnowPack,        "mm",   MFInput,  MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInAirTempID      = MFVarGetID (MDVarAirTemperature,  "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-//            ((_MDWetBulbTempID    = MFVarGetID (MDVarWetBulbTemp,     "degC", MFInput,  MFState,  MFBoundary)) == CMfailed) ||
+//            ((_MDWetBulbTempID    = MFVarGetID (MDVarWeather_WetBulbTemp,     "degC", MFInput,  MFState,  MFBoundary)) == CMfailed) ||
 	    ((_MDOutWTempSurfROID = MFVarGetID (MDVarWTempSurfRunoff, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDWTempSurfRunoff) == CMfailed)) return (CMfailed);
 

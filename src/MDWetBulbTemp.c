@@ -93,7 +93,7 @@ static void _MDWetBulbTemp(int itemID) {
             firstsol = twn;
             delta = eps + 1;
 
-                for (x = 0; x < 10; x++) {
+            for (x = 0; x < 10; x++) {
                 esw = 611 * exp(17.27 * (twn / (237.3 + twn))) / 100; //Sat. vapor press. (hPa) at Twn
                 ws = 0.62197 * (esw / (airpressure - esw)); //dimensionless mixing ratio at saturation
                 twn2 = (twn + airtemp + lv / cp * (w - ws)) / 2; //average with prev. value for stability
@@ -103,13 +103,13 @@ static void _MDWetBulbTemp(int itemID) {
                 } else {
                     if (x == 9) { //%alternate solution for nonconvergence
                         //twn2 = firstsol; //Return the Chappell approximation Deleted by Ariel in place of method in Adalberto Tejeda Martinez 1994
-			S = 662.23 + (0.97 * airpressure);
-			Q = 8264.65 - ((1480.45 * (relativehumidity / 100)) * es) - (0.966 * airtemp * airpressure);
-			pl1=pow(Q,2) / 4;
-			pl2=pow(S,3) / 27;
-			pl4=cbrt((-Q/2.0)+(pow((pl1+pl2),0.5)));
-			pl5=cbrt((-Q/2.0)-(pow((pl1+pl2),0.5)));
-			twn2 = pl4 + pl5 - 1.0;
+			        S = 662.23 + (0.97 * airpressure);
+			        Q = 8264.65 - ((1480.45 * (relativehumidity / 100)) * es) - (0.966 * airtemp * airpressure);
+			        pl1=pow(Q,2) / 4;
+			        pl2=pow(S,3) / 27;
+			        pl4=cbrt((-Q/2.0)+(pow((pl1+pl2),0.5)));
+			        pl5=cbrt((-Q/2.0)-(pow((pl1+pl2),0.5)));
+			        twn2 = pl4 + pl5 - 1.0;
                     } else {
                         twn = twn2;
                     }
@@ -118,54 +118,36 @@ static void _MDWetBulbTemp(int itemID) {
             wetbulbtemp = twn2; //Return Final Wet Bulb Temperature
         }
     }
-
-
     wetbulbtemp = (airtemp < 0.0) ? 0.0 : wetbulbtemp;
-
-
-if (wetbulbtemp > 100) {
-printf("NEW NEW NEW NEW NEW NEW NEW \n");
-printf("x = %i \n" , x);
-printf("twn2 = %f, relativehumidity= %f, airtemp = %f, specifichumidity = %f, airpressure = %f, wetbulbtemp = %f, \n", twn2, relativehumidity, airtemp, specifichumidity, airpressure, wetbulbtemp);
-printf("w = %f, ws = %f, td = %f, a = %f, b = %f, c = %f, twn = %f, lv = %f, firstsol = %f \n", w, ws, td, a, b, c, twn, lv, firstsol);
-printf("delta = %f, x = %i, esw = %f, e = %f, es = %f \n", delta, x, esw, e, es);
-printf("S = %f, Q = %f, pl1 = %f, pl2 = %f, pl3 = %f, pl4 = %f, pl5 = %f, pl6 = %f \n", S, Q, pl1, pl2, pl3, pl4, pl5, pl6);
-}
     MFVarSetFloat(_MDOutWetBulbTempID, itemID, wetbulbtemp);
 }
 
+enum { MDnone, MDinput, MDcalculate};
 
-    enum {
-        MDnone, MDinput, MDcalculate
-    };
+int MDWetBulbTempDef () {
+    int optID = MFUnset;
+    const char *optStr, *optName = MDOptWeather_WetBulbTemp;
+    const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL};
 
-    int MDWetBulbTempDef() {
-        int optID = MFUnset;
-        const char *optStr, *optName = MDOptWetBulbTemp;
-        const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL};
+    if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
+    if ((optID == MDnone) || (_MDOutWetBulbTempID != MFUnset)) return (_MDOutWetBulbTempID);
 
-        if ((optStr = MFOptionGet(optName)) != (char *) NULL) optID = CMoptLookup(options, optStr, true);
-        if ((optID == MDnone) || (_MDOutWetBulbTempID != MFUnset)) return (_MDOutWetBulbTempID);
+    MFDefEntering("WetBulbTemp");
 
-        MFDefEntering("WetBulbTemp");
-
-        switch (optID) {
-            case MDinput:
-                if      ((_MDOutWetBulbTempID = MFVarGetID(MDVarWetBulbTemp, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
-		break;
-            case MDcalculate:
-                if (    ((_MDInSpecificHumidityID = MDSpecificHumidityDef ()) == CMfailed) ||
-			((_MDInRelativeHumidityID = MDRelativeHumidityDef ()) == CMfailed) ||
-//			((_MDInRelativeHumidityID   = MFVarGetID(MDVarRelativeHumidity,   "%",  MFInput, MFState, MFBoundary)) == CMfailed) ||
-			((_MDInAirTemperatureID   = MFVarGetID(MDVarAirTemperature,   "degC",  MFInput, MFState, MFBoundary)) == CMfailed) ||
-                        ((_MDInAirPressureID      = MFVarGetID(MDVarAirPressure,      "pa",    MFInput, MFState, MFBoundary)) == CMfailed) ||
-                        ((_MDOutWetBulbTempID     = MFVarGetID(MDVarWetBulbTemp,      "degC",  MFOutput,MFState, MFBoundary)) == CMfailed) ||
-                        ((MFModelAddFunction(_MDWetBulbTemp) == CMfailed))
-                        ) return (CMfailed);
-                break;
-            default: MFOptionMessage(optName, optStr, options);
-                return (CMfailed);
-        }
-        MFDefLeaving("WetBulbTemp");
-        return (_MDOutWetBulbTempID);
+    switch (optID) {
+        case MDinput:
+            if ((_MDOutWetBulbTempID = MFVarGetID (MDVarWeather_WetBulbTemp, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            break;
+        case MDcalculate:
+            if (((_MDInSpecificHumidityID = MDSpecificHumidityDef ()) == CMfailed) ||
+                ((_MDInRelativeHumidityID = MDRelativeHumidityDef ()) == CMfailed) ||
+                ((_MDInAirTemperatureID   = MFVarGetID (MDVarAirTemperature,   "degC",  MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInAirPressureID      = MFVarGetID (MDVarWeather_AirPressure, "pa", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutWetBulbTempID     = MFVarGetID (MDVarWeather_WetBulbTemp, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((MFModelAddFunction (_MDWetBulbTemp) == CMfailed))) return (CMfailed);
+            break;
+        default: MFOptionMessage (optName, optStr, options); return (CMfailed);
     }
+    MFDefLeaving ("WetBulbTemp");
+    return (_MDOutWetBulbTempID);
+}

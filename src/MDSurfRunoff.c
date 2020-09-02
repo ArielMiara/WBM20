@@ -36,12 +36,6 @@ int MDSurfRunoffDef () {
 
 	MFDefEntering ("Surface runoff");
 	 
-	if (((ret = MDWetlandRunoffDef ()) != MFUnset) &&
-	    ((ret == CMfailed) ||
-	     ((_MDInWetlandUptakeID = MFVarGetID (MDVarWetlandSurfROUptake, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
-	     return (CMfailed);
-	
-	
 	if (((ret = MDSmallReservoirReleaseDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
 	     ((_MDInSmallResUptakeID = MFVarGetID (MDVarSmallResUptake, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))

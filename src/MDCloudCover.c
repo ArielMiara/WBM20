@@ -66,7 +66,7 @@ enum {
 
 int MDCloudCoverDef() {
     int optID = MFUnset;
-    const char *optStr, *optName = MDOptCloudCover;
+    const char *optStr, *optName = MDOptWeather_CloudCover;
     const char *options [] = {MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL};
 
     if ((optStr = MFOptionGet(optName)) != (char *) NULL) optID = CMoptLookup(options, optStr, true);
@@ -77,14 +77,14 @@ int MDCloudCoverDef() {
     switch (optID) {
         case MDnone:
         case MDinput:
-            if      ((_MDOutCloudCoverID = MFVarGetID(MDVarCloudCover, "fraction", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if      ((_MDOutCloudCoverID = MFVarGetID(MDVarWeather_CloudCover, "fraction", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
-            if (    ((_MDInGrossRadID        = MDGrossRadDef ()) == CMfailed) ||
-		    ((_MDInSolarRadID        = MFVarGetID(MDVarSolarRadiation,   	"MJ/m2",  	MFInput, MFState, MFBoundary)) == CMfailed) ||
+            if (((_MDInGrossRadID        = MDGrossRadDef ()) == CMfailed) ||
+                ((_MDInSolarRadID        = MFVarGetID(MDVarSolarRadiation,   	"MJ/m2",  	MFInput, MFState, MFBoundary)) == CMfailed) ||
 //                    ((_MDInPrecipitationID     = MFVarGetID (MDVarPrecipitation,     "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDOutCloudCoverID     = MFVarGetID(MDVarCloudCover,      "%",  	MFOutput,MFState, MFBoundary)) == CMfailed) ||
-                    ((MFModelAddFunction(_MDCloudCover) == CMfailed))
+                    ((_MDOutCloudCoverID     = MFVarGetID(MDVarWeather_CloudCover, "%", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((MFModelAddFunction(_MDCloudCover) == CMfailed))
                     ) return (CMfailed);
             break;
         default: MFOptionMessage(optName, optStr, options);

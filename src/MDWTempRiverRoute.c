@@ -381,8 +381,8 @@ int MDWTempRiverRouteDef () {
 
 	MFDefEntering ("Route river temperature");
 	
-	if (((optStr = MFOptionGet (MDOptReservoirs))  == (char *) NULL) ||
-       ((optID  = CMoptLookup ( options, optStr, true)) == CMfailed)) {
+	if (((optStr = MFOptionGet (MDOptConfig_Reservoirs)) == (char *) NULL) ||
+        ((optID  = CMoptLookup ( options, optStr, true)) == CMfailed)) {
       CMmsgPrint(CMmsgUsrError,"Reservoir Option not specified! Option none or calculate");
 		return CMfailed;
    }
@@ -406,7 +406,7 @@ int MDWTempRiverRouteDef () {
        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarDischarge0,             "m3/s",       MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
        ((_MDInWindSpeedID            = MFVarGetID (MDVarWindSpeed,              "m/s",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
        ((_MDInAirTemperatureID       = MFVarGetID (MDVarAirTemperature,         "degC",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
-//       ((_MDInRelativeHumidityID       = MFVarGetID (MDVarRelativeHumidity,         "%",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+//       ((_MDInRelativeHumidityID       = MFVarGetID (MDVarWeather_RelativeHumidity,         "%",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
        ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRiverStorageChg,        "m3/s",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
        ((_MDInRiverStorageID         = MFVarGetID (MDVarRiverStorage,           "m3",         MFInput,  MFState, MFInitial))  == CMfailed) ||
        ((_MDInSnowPackID             = MFVarGetID (MDVarSnowPack,               "mm",         MFInput,  MFState, MFBoundary)) == CMfailed) ||

@@ -41,7 +41,7 @@ int MDDischLevel1Def() {
 	MFDefEntering ("Discharge Level 1");
 	if ((_MDInDischLevel2ID = MDDischLevel2Def ()) == CMfailed) return (CMfailed);
 
-	if (((optStr = MFOptionGet (MDOptReservoirs)) != (char *) NULL) && (CMoptLookup (options,optStr,true) == CMfailed)) {
+	if (((optStr = MFOptionGet (MDOptConfig_Reservoirs)) != (char *) NULL) && (CMoptLookup (options, optStr, true) == CMfailed)) {
 		if ((_MDInDischReleasedID = MDReservoirDef ()) == CMfailed) return (CMfailed);
 	}
 	if (((_MDOutDischLevel1ID = MFVarGetID ("__DischLevel1", "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) ||

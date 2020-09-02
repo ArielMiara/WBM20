@@ -1236,7 +1236,7 @@ printf("operational_capacity = %f, consumption_T = %f, generation = %f, Q_outgoi
 
 enum { MDnone, MDinput };
 
-int MDThermalInputs3Def () {
+int MDThermalInputsDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptThermalInputs3;
 	const char *options [] = { MDNoneStr, MDInputStr, (char *) NULL };
@@ -1282,18 +1282,18 @@ int MDThermalInputs3Def () {
 
                                 ((_MDInNamePlate4ID         = MFVarGetID (MDVarNamePlate4,          "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
                                 ((_MDInFuelType4ID          = MFVarGetID (MDVarFuelType4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInTechnology4ID        = MFVarGetID (MDVarTechnology4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInEfficiency4ID        = MFVarGetID (MDVarEfficiency4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInDemand4ID            = MFVarGetID (MDVarDemand4,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInTechnology4ID        = MFVarGetID (MDVarTechnology4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInEfficiency4ID        = MFVarGetID (MDVarEfficiency4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInDemand4ID            = MFVarGetID (MDVarDemand4,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-                                ((_MDInCWA_DeltaID          = MFVarGetID (MDVarCWA_Delta,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInCWA_LimitID          = MFVarGetID (MDVarCWA_Limit,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDInCWA_OnOffID          = MFVarGetID (MDVarCWA_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInDownstream_OnOffID   = MFVarGetID (MDVarDownstream_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInCWA_316b_OnOffID   = MFVarGetID (MDVarCWA_316b_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_DeltaID          = MFVarGetID (MDVarCWA_Delta,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_LimitID          = MFVarGetID (MDVarCWA_Limit,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_OnOffID          = MFVarGetID (MDVarCWA_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInDownstream_OnOffID   = MFVarGetID (MDVarDownstream_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_316b_OnOffID   = MFVarGetID (MDVarCWA_316b_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-				((_MDOutLossToWaterID       = MFVarGetID (MDVarLossToWater,  "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutLossToInletID       = MFVarGetID (MDVarLossToInlet,  "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutLossToWaterID       = MFVarGetID (MDVarTP2M_LossToWater, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutLossToInletID       = MFVarGetID (MDVarTP2M_LossToInlet, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
 
 //				((_MDOutDischargeID    	      = MFVarGetID (MDVarDischarge,  "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||		// late night discharge test 113012 -
 				((_MDOutAvgEfficiencyID       = MFVarGetID (MDVarAvgEfficiency,  "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||

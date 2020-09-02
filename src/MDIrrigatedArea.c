@@ -55,7 +55,7 @@ int MDIrrigatedAreaDef () {
 
 	if (_MDOutIrrigatedAreaFracID != MFUnset) return (_MDOutIrrigatedAreaFracID);
 
-	if (((optStr = MFOptionGet (MDOptIrrigatedAreaMap))  != (char *) NULL) && ((optionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
+	if (((optStr = MFOptionGet (MDOptIrrigation_AreaMap)) != (char *) NULL) && ((optionID = CMoptLookup (mapOptions, optStr, true)) == CMfailed)) {
 		CMmsgPrint (CMmsgUsrError, "Type of Irr Area not specifed! Options = 'FAO' or 'IWMI'\n");
 		return CMfailed;
 	}

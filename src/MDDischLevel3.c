@@ -19,7 +19,7 @@ static int _MDDischLevel3ID = MFUnset;
 
 int MDDischLevel3Def() {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDOptRouting;
+	const char *optStr, *optName = MDOptConfig_Routing;
 	const char *options []    = { "accumulate", "muskingum", "cascade", (char *) NULL };
 
 	if (_MDDischLevel3ID != MFUnset) return (_MDDischLevel3ID);

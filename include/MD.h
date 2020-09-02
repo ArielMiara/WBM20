@@ -22,40 +22,41 @@ extern "C" {
 #define MDLookupStr    "lookup"
 #define MDCalculateStr "calculate"
 
-// Options
-#define MDOptDischarge                       "Discharge"
-#define MDOptIrrigation                      "Irrigation"
-#define MDOptModel                           "Model"
-#define MDOptReservoirs                      "Reservoirs"
-#define MDOptRiverbed                        "Riverbed"
-#define MDOptRouting                         "Routing"
-#define MDOptMuskingum                       "Muskingum"
-#define MDOptIrrReferenceET                  "IrrReferenceETP"
-#define MDOptIrrIntensity                    "DoubleCropping"
+// Configuration options
+#define MDOptConfig_Discharge                       "Discharge"
+#define MDOptConfig_Irrigation                      "Irrigation"
+#define MDOptConfig_Model                           "Model"
+#define MDOptConfig_Reservoirs                      "Reservoirs"
+#define MDOptConfig_Routing                         "Routing"
+
+#define MDOptIrrigation_AreaMap                "IrrigatedAreaMap"
+#define MDOptIrrigation_ReferenceET                  "IrrReferenceETP"
+
+#define MDOptRouting_Muskingum                       "Muskingum"
+#define MDOptRouting_Riverbed                        "Riverbed"
 #define MDOptSoilMoisture					 "SoilMoisture"
 #define MDOptSoilTemperature				 "SoilTemperature"
 
-#define MDOptIrrigatedAreaMap                "IrrigatedAreaMap"
 #define MDOptSoilAvailableWaterCapacity		 "SoilWaterCapacity"
 #define MDOptThermalInputs3					 "ThermalInputs3" //change to thermalinputs3 - AM 042415
 
-#define MDOptWetBulbTemp             "WetBulbTemp"
-#define MDOptSpecificHumidity             "SpecificHumidity"
+#define MDOptWeather_CloudCover		                 "CloudCover"
+#define MDOptWeather_WetBulbTemp             "WetBulbTemp"
+#define MDOptWeather_SpecificHumidity                 "SpecificHumidity"
+#define MDOptWeather_RelativeHumidity                 "RelativeHumidity" //for wet bulb
 
-//WETBULB
-#define MDVarSpecificHumidity        "SpecificHumidity" //for wet bulb
-#define MDVarAirPressure             "AirPressure"      //for wet bulb
-#define MDVarWetBulbTemp             "WetBulbTemp"      //for wet bulb
-#define MDVarRelativeHumidity        "RelativeHumidity" //for wet bulb
-#define MDOptRelativeHumidity        "RelativeHumidity" //for wet bulb
+// Weather
+#define MDVarWeather_CloudCover		     "CloudCover"	//cloud cover fraction AM sep2015
+#define MDVarWeather_SpecificHumidity        "SpecificHumidity" //for wet bulb
+#define MDVarWeather_AirPressure             "AirPressure"      //for wet bulb
+#define MDVarWeather_WetBulbTemp             "WetBulbTemp"      //for wet bulb
+#define MDVarWeather_RelativeHumidity        "RelativeHumidity" //for wet bulb
 
 //SOLAR TO CLOUD
-#define MDOptCloudCover		     "CloudCover"	//cloud cover fraction AM sep2015
-#define MDVarCloudCover		     "CloudCover"	//cloud cover fraction AM sep2015
 
 //TP2M
-#define MDVarLossToWater					"LossToWater"
-#define MDVarLossToInlet                                        "LossToInlet"
+#define MDVarTP2M_LossToWater					"LossToWater"
+#define MDVarTP2M_LossToInlet                                        "LossToInlet"
 
 #define MDVarAvgEfficiency                                       "AvgEfficiency"                // RJS 062012
 #define MDVarAvgDeltaTemp                                        "AvgDeltaTemp"                 // RJS 062012
@@ -228,8 +229,7 @@ extern "C" {
 #define MDVarIrrUptakeGrdWater               "IrrUptakeGroundWater"
 #define MDVarIrrUptakeRiver                  "IrrUptakeRiver"       
 #define MDVarIrrWaterBalance                 "IrrWaterBalance"
-#define MDNonIrrigatedFraction               "NonIrrigatedFraction"	
-#define MDVarIrrDailyRicePerolationRate      "RicePercolationRate"	
+#define MDVarIrrDailyRicePerolationRate      "RicePercolationRate"
 #define MDVarIrrRicePondingDepth			 "RicePondingDepth"
 #define	MDVarMeanElevation                   "Elevation"
 #define MDVarMuskingumC0                     "MuskingumC0"
@@ -250,9 +250,6 @@ extern "C" {
 #define MDVarPrecipitation                   "Precipitation"
 #define MDVarPrecipFraction                  "PrecipitationFraction"
 #define MDVarPrecipMonthly                   "MonthlyPrecipitation"
-
-#define MDVarWetlandEvapotranspiration		 "WetlandEvapotranspiration"
-#define MDVarWetlandAreaFraction			 "WetlandAreaFraction"
 
 #define MDVarRainEvapotranspiration          "RainEvapotranspiration"
 #define MDVarRainInfiltration                "RainInfiltration"
@@ -347,7 +344,6 @@ extern "C" {
 #define MDVarSoilMoisture                    "SoilMoisture"
 #define MDVarSoilMoistChange                 "SoilMoistureChange"
 #define MDVarSoilWiltingPoint                "WiltingPoint"
-#define MDVarSoilBulkDensity                 "SoilBulkDensity"
 #define MDVarTotalThermalWdls				 "TotalThermalWdls"	//RJS 013112
 #define MDVarTotalOptThermalWdls			 "TotalOptThermalWdls" //RJS 020212
 #define MDVarTimeSteps			"TimeSteps"
@@ -370,32 +366,14 @@ extern "C" {
 
 #define	MDVarSaturationExcessflow			"SaturationExcessFlow"
 
-#define MDVarWetlandAreaFraction            "WetlandAreaFraction"
-#define MDVarWetlandEvapotranspiration	    "WetlandEvapotranspiration"
-#define MDVarWetlandSurfROUptake            "WetlandSurfROUptake"
-#define MDVarWetlandRunoff                  "WetlandRunoff"
-#define MDVarWetlandStorageChange           "WetlandStorageChange"
-#define MDVarWetlandCatchmentAreaFactor		"WetlandCatchmentAreaFactor"
-#define MDVarWetlandStorage					"WetlandStorage"	
-#define MDVarWetlandWaterLevelDepth			"WetlandWaterLevelDepth"
-
-
 #define MDParGrossRadTAU                     "GrossRadTAU"
 #define MDParGroundWatBETA                   "GroundWaterBETA"
 #define MDParSoilMoistALPHA                  "SoilMoistureALPHA"
 #define MDParInfiltrationFrac                "InfiltrationFraction"
-#define MDVarOutSoilDebug					 "DebugOutput"
-#define MDVarInitalSoilTemperature		     "InitialSoilTemperature"
 #define MDVarLiquidSoilMoisture			     "LiquidSoilMoisture"
-#define MDVarActiveLayerDepth                "ActiveLayerDepth"
-#define MDVarThawingDepth                    "ThawingDepth"
 #define MDVarSnowDepth                       "SnowDepth"
 #define MDVarSnowDensity                     "SnowDensity"
-#define	MDVarIsInitial                       "IsInitial"
-#define MDVarSoilMoistureIsInitial           "SoilMoistureIsInitial"
 #define MDVarWinterOnsetDoy                  "WinterOnsetDoY"
-#define MDVarWaterTableDepth                 "WaterTableDepth"
-#define MDVarSoilOrganicLayer                "SoilOrganicLayer"
 #define MDParInfiltrationFracSpatial         "InfiltrationFractionSpatial"
 #define MDParSnowMeltThreshold               "SnowMeltThreshold"	
 #define	MDParFallThreshold				     "SnowFallThreshold"
@@ -429,102 +407,100 @@ extern "C" {
 #define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
 #define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
 
-int MDAccumPrecipDef();
-int MDAccumEvapDef();
-int MDAccumSMoistChgDef();
-int MDAccumGrdWatChgDef();
-int MDAccumRunoffDef();
-int MDAccumBalanceDef();
-int MDAvgNStepsDef();
-int MDBaseFlowDef();
+int MDAccumPrecipDef ();
+int MDAccumEvapDef ();
+int MDAccumSMoistChgDef ();
+int MDAccumGrdWatChgDef ();
+int MDAccumRunoffDef ();
+int MDAccumBalanceDef ();
+int MDAvgNStepsDef ();
+int MDBaseFlowDef ();
 
-int MDBQARTpreprocessDef(); //NEW !!!!!  (S.C)
-int MDBankfullQcalcDef();//NEW !!!!!  (S.C)
-int MDBedloadFluxDef();//NEW !!!!!  (S.C)
-int MDSedimentFluxDef(); //NEW !!!!!  (S.C)
+int MDBQARTpreprocessDef (); //NEW !!!!!  (S.C)
+int MDBankfullQcalcDef ();//NEW !!!!!  (S.C)
+int MDBedloadFluxDef ();//NEW !!!!!  (S.C)
+int MDSedimentFluxDef (); //NEW !!!!!  (S.C)
 int MDDischargeBFDef ();
 
 int MDCloudCoverDef ();
 int MDRelativeHumidityDef ();
 int MDSpecificHumidityDef ();
-int MDWetBulbTempDef();
+int MDWetBulbTempDef ();
 
-int MDCParamAlbedoDef();
-int MDCParamCHeightDef();
-int MDCParamLWidthDef();
-int MDCParamRSSDef();
-int MDCParamR5Def();
-int MDCParamCDDef();
-int MDCParamCRDef();
-int MDCParamGLMaxDef();
-int MDCParamLPMaxDef();
-int MDCParamZ0gDef();
-int MDDischargeDef();
-int MDDischLevel1Def();
-int MDDischLevel2Def();
-int MDDischLevel3Def();
-int MDDischLevel3AccumulateDef();
-int MDDischLevel3CascadeDef();
-int MDDischLevel3MuskingumDef();
-int MDDischLevel3MuskingumCoeffDef();
-int MDDischMeanDef();
-int MDEvapotranspirationDef();
-int MDGrossRadDef();
-int MDIrrigatedAreaDef();
-int MDIrrGrossDemandDef();
-int MDIrrRefEvapotransDef();
-int MDIrrRefEvapotransFAODef();
-int MDIrrRefEvapotransHamonDef();
-int MDIrrReturnFlowDef();
-int MDIrrSoilMoistureDef();
-int MDIrrSoilMoistChgDef();
-int MDIrrUptakeRiverDef();
-int MDIrrUptakeGrdWaterDef();
-int MDReservoirDef();
-int MDLandCoverDef();
-int MDLeafAreaIndexDef();
-int MDRainInfiltrationDef();
-int MDRainInterceptDef();
-int MDRainPotETDef();
-int MDRainPotETHamonDef();
-int MDRainPotETJensenDef();
-int MDRainPotETPstdDef();
-int MDRainPotETPsTaylorDef();
-int MDRainPotETPMdayDef();
-int MDRainPotETPMdnDef();
-int MDRainPotETSWGdayDef();
-int MDRainPotETSWGdnDef();
-int MDRainPotETTurcDef();
-int MDRainSMoistChgDef();
-int MDRainSurfRunoffDef();
-int MDRainWaterSurplusDef();
-int MDWetlandRunoffDef();
-int MDRiverbedShapeExponentDef();
-int MDRiverWidthDef();
+int MDCParamAlbedoDef ();
+int MDCParamCHeightDef ();
+int MDCParamLWidthDef ();
+int MDCParamRSSDef ();
+int MDCParamR5Def ();
+int MDCParamCDDef ();
+int MDCParamCRDef ();
+int MDCParamGLMaxDef ();
+int MDCParamLPMaxDef ();
+int MDCParamZ0gDef ();
+int MDDischargeDef ();
+int MDDischLevel1Def ();
+int MDDischLevel2Def ();
+int MDDischLevel3Def ();
+int MDDischLevel3AccumulateDef ();
+int MDDischLevel3CascadeDef ();
+int MDDischLevel3MuskingumDef ();
+int MDDischLevel3MuskingumCoeffDef ();
+int MDDischMeanDef ();
+int MDEvapotranspirationDef ();
+int MDGrossRadDef ();
+int MDIrrigatedAreaDef ();
+int MDIrrGrossDemandDef ();
+int MDIrrRefEvapotransDef ();
+int MDIrrRefEvapotransFAODef ();
+int MDIrrRefEvapotransHamonDef ();
+int MDIrrReturnFlowDef ();
+int MDIrrSoilMoistureDef ();
+int MDIrrSoilMoistChgDef ();
+int MDIrrUptakeRiverDef ();
+int MDIrrUptakeGrdWaterDef ();
+int MDReservoirDef ();
+int MDLandCoverDef ();
+int MDLeafAreaIndexDef ();
+int MDRainInfiltrationDef ();
+int MDRainInterceptDef ();
+int MDRainPotETDef ();
+int MDRainPotETHamonDef ();
+int MDRainPotETJensenDef ();
+int MDRainPotETPstdDef ();
+int MDRainPotETPsTaylorDef ();
+int MDRainPotETPMdayDef ();
+int MDRainPotETPMdnDef ();
+int MDRainPotETSWGdayDef ();
+int MDRainPotETSWGdnDef ();
+int MDRainPotETTurcDef ();
+int MDRainSMoistChgDef ();
+int MDRainSurfRunoffDef ();
+int MDRainWaterSurplusDef ();
+int MDRiverbedShapeExponentDef ();
+int MDRiverWidthDef ();
 
-int MDRunoffDef();
-int MDRunoffMeanDef();
-int MDRunoffVolumeDef();
-int MDSPackChgDef();
-int MDSPackMeltDef();
-int MDSmallReservoirReleaseDef();
-int MDSmallReservoirCapacityDef();
-int MDSolarRadDef();
-int MDSRadDayLengthDef();
-int MDSRadI0HDayDef();
-int MDSoilAvailWaterCapDef();
-int MDSoilMoistChgDef();
-int MDSurfRunoffDef();
-int MDStemAreaIndexDef();
-int MDWaterBalanceDef();
-int MDPrecipitationDef();
-int MDWetDaysDef();
-int MDWetlandAreaDef();
-int MDPermafrostDef();
-int MDWTempGrdWaterDef();
-int MDWTempRiverDef();
-int MDWTempRiverRouteDef();
-int MDThermalInputs3Def();  //changed AM 042415
+int MDRunoffDef ();
+int MDRunoffMeanDef ();
+int MDRunoffVolumeDef ();
+int MDSPackChgDef ();
+int MDSPackMeltDef ();
+int MDSmallReservoirReleaseDef ();
+int MDSmallReservoirCapacityDef ();
+int MDSolarRadDef ();
+int MDSRadDayLengthDef ();
+int MDSRadI0HDayDef ();
+int MDSoilAvailWaterCapDef ();
+int MDSoilMoistChgDef ();
+int MDSurfRunoffDef ();
+int MDStemAreaIndexDef ();
+int MDWaterBalanceDef ();
+int MDPrecipitationDef ();
+int MDWetDaysDef ();
+int MDPermafrostDef ();
+int MDWTempGrdWaterDef ();
+int MDWTempRiverDef ();
+int MDWTempRiverRouteDef ();
+int MDThermalInputsDef ();  //changed AM 042415
 
 int MDWTempSurfRunoffDef();
 

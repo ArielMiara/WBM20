@@ -339,7 +339,7 @@ enum { MDnone, MDinput, MDcalculate };
 
 int MDIrrGrossDemandDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDOptIrrigation;
+	const char *optStr, *optName = MDOptConfig_Irrigation;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 	const char *cropParameterFileName;
 	int cropID;
