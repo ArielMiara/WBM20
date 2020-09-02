@@ -293,10 +293,7 @@ static void _MDIrrGrossDemand (int itemID) {
 					}
                     MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropSMoist);
 				 	MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropActSMoist);
-/* Nothing */	} else {
-                    MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
-                    MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
-				}
+/* Nothing */	} else continue;
 /* Bare */	} else {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
