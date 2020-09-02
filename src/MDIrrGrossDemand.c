@@ -314,18 +314,18 @@ static void _MDIrrGrossDemand (int itemID) {
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, irrCropETP     * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, irrNetDemand   * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, irrGrossDemand * irrAreaFrac);
+        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
+        MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistID,        itemID, irrSMoist      * irrAreaFrac);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, irrSMoistChg   * irrAreaFrac);
-        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, precip         * irrAreaFrac);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, irrReturnFlow  * irrAreaFrac);
 	} else { // cell is not irrigated
 		MFVarSetFloat (_MDOutIrrEvapotranspID,   itemID, 0.0);
  		MFVarSetFloat (_MDOutIrrNetDemandID,     itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrGrossDemandID,   itemID, 0.0);
+        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, 0.0);
+        MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrSMoistID,        itemID, 0.0);
 		MFVarSetFloat (_MDOutIrrSMoistChgID,     itemID, 0.0);
-        MFVarSetFloat (_MDOutIrrPrecipitationID, itemID, 0.0);
-		MFVarSetFloat (_MDOutIrrReturnFlowID,    itemID, 0.0);
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
 			MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
