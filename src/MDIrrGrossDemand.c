@@ -248,7 +248,9 @@ static void _MDIrrGrossDemand (int itemID) {
 		numGrowingSeasons = ceil (irrIntensity);
 		for (cropID = 0; cropID <= _MDNumberOfIrrCrops; ++cropID) {
 			daysSincePlanted = _MDIrrDaysSincePlanting (curDay, numGrowingSeasons, seasStart, cropID);
-			if (0 < daysSincePlanted) { // Growing season
+            cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
+            cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
+            if (0 < daysSincePlanted) { // Growing season
 				if (curDay < seasStart [1] || (daysSincePlanted > seasStart [1] - seasStart [0])) // First growing season
 					bareSoil = 1.0 > irrIntensity ? cropFraction [cropID] * (1.0 - irrIntensity) : 0.0;
 				else  // Second growing season
@@ -268,9 +270,6 @@ static void _MDIrrGrossDemand (int itemID) {
                         cropSMoistChg = 0.0;
 						cropActSMoist = cropSMoist = ricePondingDepth;
 /* Non-rice */		} else {
-						cropPrevSMoist       = MFVarGetFloat (_MDOutCropSMoistIDs    [cropID], itemID, 0.0);
-						cropPrevActSMoist    = MFVarGetFloat (_MDOutCropActSMoistIDs [cropID], itemID, 0.0);
-
 						cropMaxRootingDepth  = _MDirrigCropStruct [cropID].cropRootingDepth;
 						cropPrevRootingDepth = _MDIrrCropRootingDepth (daysSincePlanted - 1, cropID);
 						cropCurRootingDepth  = _MDIrrCropRootingDepth (daysSincePlanted, cropID);
@@ -392,6 +391,10 @@ int MDIrrGrossDemandDef () {
 			        ((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
 			        ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 			}
+            sprintf (cropSMoistName,    "CropSoilMoist_%s",    "Bare"); // Output Soil Moisture
+            sprintf (cropActSMoistName, "CropActSoilMoist_%s", "Bare"); // Output Active Soil Moisture
+            if (((_MDOutCropSMoistIDs    [cropID] = MFVarGetID (cropSMoistName,    "mm",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+                ((_MDOutCropActSMoistIDs [cropID] = MFVarGetID (cropActSMoistName, "mm",     MFOutput, MFState, MFInitial))  == CMfailed)) return (CMfailed);
 			if (MFModelAddFunction (_MDIrrGrossDemand) == CMfailed) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
