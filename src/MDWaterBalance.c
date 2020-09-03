@@ -96,17 +96,17 @@ static void _MDWaterBalance(int itemID) {
 int MDWaterBalanceDef() {
  
 	MFDefEntering ("WaterBalance");
-	if ((                                  MDAccumBalanceDef     ()  == CMfailed) ||
-		((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
-		((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
+	if ((MDAux_AccumBalanceDef() == CMfailed) ||
+        ((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
+        ((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
 
-		((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
-		((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
-		((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
-		((_MDInEvaptrsID                 = MFVarGetID (MDVarCore_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-		((_MDInGrdWatChgID               = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-		((_MDOutWaterBalanceID           = MFVarGetID (MDVarCore_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-		(MFModelAddFunction(_MDWaterBalance) == CMfailed))
+        ((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
+        ((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
+        ((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
+        ((_MDInEvaptrsID                 = MFVarGetID (MDVarCore_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDInGrdWatChgID               = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutWaterBalanceID           = MFVarGetID (MDVarCore_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction(_MDWaterBalance) == CMfailed))
 	    return (CMfailed);
 	if ((_MDInIrrGrossDemandID           = MDIrrGrossDemandDef    ()) != MFUnset) {
 		if ((_MDInIrrGrossDemandID == CMfailed) ||

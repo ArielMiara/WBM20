@@ -27,7 +27,7 @@ static void _MDAccumPrecip (int itemID) {
 	MFVarSetFloat(_MDOutAccPrecipID, itemID, MFVarGetFloat (_MDOutAccPrecipID, itemID, 0.0) + accum);
 }
 
-int MDAccumPrecipDef() {
+int MDAux_AccumPrecipDef() {
 
 	if (_MDOutAccPrecipID != MFUnset) return (_MDOutAccPrecipID);
 
@@ -54,7 +54,7 @@ static void _MDAccumEvap (int itemID) {
 	MFVarSetFloat(_MDOutAccEvapID, itemID, MFVarGetFloat (_MDOutAccEvapID, itemID, 0.0) + accum);
 }
 
-int MDAccumEvapDef() {
+int MDAux_AccumEvapDef() {
 
 	if (_MDOutAccEvapID != MFUnset) return (_MDOutAccEvapID);
 
@@ -81,7 +81,7 @@ static void _MDAccumSMoistChg (int itemID) {
 	MFVarSetFloat(_MDOutAccSMoistChgID, itemID, MFVarGetFloat (_MDOutAccSMoistChgID, itemID, 0.0) + accum);
 }
 
-int MDAccumSMoistChgDef() {
+int MDAux_AccumSMoistChgDef() {
 
 	if (_MDOutAccSMoistChgID != MFUnset) return (_MDOutAccSMoistChgID);
 
@@ -108,7 +108,7 @@ static void _MDAccumGrdWatChg (int itemID) {
 	MFVarSetFloat(_MDOutAccGrdWatChgID, itemID, MFVarGetFloat (_MDOutAccGrdWatChgID, itemID, 0.0) + accum);
 }
 
-int MDAccumGrdWatChgDef() {
+int MDAux_AccumGrdWatChgDef() {
 
 	if (_MDOutAccGrdWatChgID != MFUnset) return (_MDOutAccGrdWatChgID);
 
@@ -133,7 +133,7 @@ static void _MDAccumRunoff (int itemID) {
 	                                         MFVarGetFloat (_MDInRunoffVolumeID, itemID, 0.0));
 }
 
-int MDAccumRunoffDef() {
+int MDAux_AccumRunoffDef() {
 
 	if (_MDOutAccRunoffID != MFUnset) return (_MDOutAccRunoffID);
 

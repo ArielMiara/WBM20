@@ -184,6 +184,15 @@ extern "C" {
 #define MDVarReservoir_StorageChange            "ReservoirStorageChange"
 
 // Routing variables
+#define MDVarRouting_BankfullQ                  "BankfullQ"
+#define MDVarRouting_BankfullQ2                 "BankfullQ2"
+#define MDVarRouting_BankfullQ5                 "BankfullQ5"
+#define MDVarRouting_BankfullQ10                "BankfullQ10"
+#define MDVarRouting_BankfullQ25                "BankfullQ25"
+#define MDVarRouting_BankfullQ50                "BankfullQ50"
+#define MDVarRouting_BankfullQ100               "BankfullQ100"
+#define MDVarRouting_BankfullQ200               "BankfullQ200"
+#define MDVarRouting_Bankfull_Qn                "Bankfull_Qn"
 #define MDVarRouting_Discharge                  "Discharge"
 #define MDVarRouting_Discharge0                 "Discharge0"
 #define MDVarRouting_Discharge1                 "Discharge1"
@@ -201,7 +210,49 @@ extern "C" {
 #define MDVarRouting_RiverStorageChg            "RiverStorageChange"
 #define MDVarRouting_RiverWidth                 "RiverbedWidth"
 
-//TP2M Variables
+// Sediment variable
+#define MDVarSediment_DischargeAcc	            "DischargeAcc"
+#define MDVarSediment_NewDischargeAcc	        "NewDischargeAcc"
+#define MDVarSediment_OverBankQ	                "OverBankQ"
+#define MDVarSediment_Relief                    "ReliefMax"
+#define MDVarSediment_SuspendedFlux		        "SedimentFlux"
+#define MDVarSediment_BedloadFlux		        "BedloadFlux"
+#define MDVarSediment_AirTemperatureAcc_space	"AirTempAcc_space"
+#define MDVarSediment_AirTemperatureAcc_time    "AirTempAcc_time"
+#define MDVarSediment_NewAirTemperatureAcc_time "NewAirTempAcc_time"
+#define MDVarSediment_ContributingAreaAcc       "ContributingAreaAcc"
+#define MDVarSediment_TimeSteps                 "TimeSteps"
+#define MDVarSediment_NewTimeSteps              "NewTimeSteps"
+#define MDVarSediment_NewSedimentAcc		    "NewSedimentAcc"
+#define MDVarSediment_BQART_A			        "BQART_A"
+#define MDVarSediment_BQART_B	     	        "BQART_B"
+#define MDVarSediment_BQART_Qbar_km3y           "BQART_Qbar_km3y"
+#define MDVarSediment_BQART_Qbar_m3s            "BQART_Qbar_m3s"
+#define MDVarSediment_BQART_R                   "BQART_R"
+#define MDVarSediment_QART_T                    "BQART_T"
+#define MDVarSediment_BQART_Lithology           "BQART_Lithology"
+#define MDVarSediment_BQART_GNP                 "BQART_GNP"
+#define MDVarSediment_Population                "Population"
+#define MDVarSediment_LithologyAreaAcc          "LithologyAreaAcc"
+#define MDVarSediment_LithologyMean             "LithologyMean"
+#define MDVarSediment_PopulationAcc             "PopulationAcc"
+#define MDVarSediment_PopulationDensity         "PopulationDensity"
+#define MDVarSediment_GNPAreaAcc                "GNPAreaAcc"
+#define MDVarSediment_MeanGNP                   "MeanGNP"
+#define MDVarSediment_BQART_Eh                  "BQART_Eh"
+#define MDVarSediment_BQART_Te                  "BQART_Te"
+#define MDVarSediment_TeAacc                    "TeAacc"
+#define MDVarSediment_ResStorageAcc             "ResStorageAcc"
+#define MDVarSediment_Qs_bar                    "Qs_bar"
+#define MDVarSediment_rnseed                    "rnseed"
+#define MDVarSediment_MinSlope                  "Slope-Min"
+#define MDVarSediment_UpStreamQb                "UpStreamQb"
+#define MDVarSediment_DeltaBedload              "DeltaBedload"
+#define MDVarSediment_UpStreamQs                "UpStreamQs"
+#define MDVarSediment_DeltaQs                   "DeltaQs"
+#define MDVarSediment_FlowCoefficient           "FlowCoefficient"
+
+// TP2M Variables
 #define MDVarTP2M_LossToWater					"LossToWater"
 #define MDVarTP2M_LossToInlet                   "LossToInlet"
 #define MDOptTP2M_ThermalInputs					"ThermalInputs3"
@@ -301,57 +352,6 @@ extern "C" {
 #define MDVarTP2M_DeltaStorageMixing_QxT        "QxT_DeltaStorageMixing"
 #define MDVarTP2M_WTempMixing_QxT               "QxT_WaterTempMixing"
 
-// Sediment variable
-#define MDVarSediment_DischargeAcc	            "DischargeAcc"
-#define MDVarSediment_NewDischargeAcc	        "NewDischargeAcc"
-#define MDVarSediment_OverBankQ	                "OverBankQ"
-#define MDVarSediment_Relief                    "ReliefMax"
-#define MDVarSediment_SuspendedFlux		        "SedimentFlux"
-#define MDVarSediment_BedloadFlux		        "BedloadFlux"
-#define MDVarSediment_AirTemperatureAcc_space	"AirTempAcc_space"
-#define MDVarSediment_AirTemperatureAcc_time    "AirTempAcc_time"
-#define MDVarSediment_NewAirTemperatureAcc_time "NewAirTempAcc_time"
-#define MDVarSediment_ContributingAreaAcc       "ContributingAreaAcc"
-#define MDVarSediment_TimeSteps                 "TimeSteps"
-#define MDVarSediment_NewTimeSteps              "NewTimeSteps"
-#define MDVarSediment_NewSedimentAcc		    "NewSedimentAcc"
-#define MDVarSediment_BQART_A			        "BQART_A"
-#define MDVarSediment_BQART_B	     	        "BQART_B"
-#define MDVarSediment_BQART_Qbar_km3y           "BQART_Qbar_km3y"
-#define MDVarSediment_BQART_Qbar_m3s            "BQART_Qbar_m3s"
-#define MDVarSediment_BQART_R                   "BQART_R"
-#define MDVarSediment_QART_T                    "BQART_T"
-#define MDVarSediment_BQART_Lithology           "BQART_Lithology"
-#define MDVarSediment_BQART_GNP                 "BQART_GNP"
-#define MDVarSediment_Population                "Population"
-#define MDVarSediment_LithologyAreaAcc          "LithologyAreaAcc"
-#define MDVarSediment_LithologyMean             "LithologyMean"
-#define MDVarSediment_PopulationAcc             "PopulationAcc"
-#define MDVarSediment_PopulationDensity         "PopulationDensity"
-#define MDVarSediment_GNPAreaAcc                "GNPAreaAcc"
-#define MDVarSediment_MeanGNP                   "MeanGNP"
-#define MDVarSediment_BQART_Eh                  "BQART_Eh"
-#define MDVarSediment_BQART_Te                  "BQART_Te"
-#define MDVarSediment_TeAacc                    "TeAacc"
-#define MDVarSediment_ResStorageAcc             "ResStorageAcc"
-#define MDVarSediment_Qs_bar                    "Qs_bar"
-#define MDVarSediment_rnseed                    "rnseed"
-#define MDVarSediment_MinSlope                  "Slope-Min"
-#define MDVarSediment_UpStreamQb                "UpStreamQb"
-#define MDVarSediment_DeltaBedload              "DeltaBedload"
-#define MDVarSediment_UpStreamQs                "UpStreamQs"
-#define MDVarSediment_DeltaQs                   "DeltaQs"
-#define MDVarSediment_BankfullQ                 "BankfullQ"
-#define MDVarSediment_BankfullQ2                "BankfullQ2"
-#define MDVarSediment_BankfullQ5                "BankfullQ5"
-#define MDVarSediment_BankfullQ10               "BankfullQ10"
-#define MDVarSediment_BankfullQ25               "BankfullQ25"
-#define MDVarSediment_BankfullQ50               "BankfullQ50"
-#define MDVarSediment_BankfullQ100              "BankfullQ100"
-#define MDVarSediment_BankfullQ200              "BankfullQ200"
-#define MDVarSediment_Bankfull_Qn               "Bankfull_Qn"
-#define MDVarSediment_FlowCoefficient           "FlowCoefficient"
-
 // Hardwired constants
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
 #define MDConstInterceptCH 10.0    // Interception canopy height constant 
@@ -382,13 +382,14 @@ extern "C" {
 #define MDMinimum(a,b) (((a) < (b)) ? (a) : (b))
 #define MDMaximum(a,b) (((a) > (b)) ? (a) : (b))
 
-int MDAccumPrecipDef ();
-int MDAccumEvapDef ();
-int MDAccumSMoistChgDef ();
-int MDAccumGrdWatChgDef ();
-int MDAccumRunoffDef ();
-int MDAccumBalanceDef ();
+int MDAux_AccumBalanceDef ();
+int MDAux_AccumEvapDef ();
+int MDAux_AccumGrdWatChgDef ();
+int MDAux_AccumPrecipDef ();
+int MDAux_AccumRunoffDef ();
+int MDAux_AccumSMoistChgDef ();
 int MDAvgNStepsDef ();
+
 int MDBaseFlowDef ();
 
 int MDBQARTpreprocessDef (); //NEW !!!!!  (S.C)

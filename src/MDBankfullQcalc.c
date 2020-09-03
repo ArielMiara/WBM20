@@ -148,41 +148,24 @@ static void _MDBankfullQcalc (int itemID) {
 		MFVarSetFloat (_MDOutBankfullQ100ID, itemID, BankfullQ100);
 		MFVarSetFloat (_MDOutBankfullQ200ID, itemID, BankfullQ200);
 		p++;
-		
-	/*	printf ("Sum:%f\n",Sum);
-		printf ("Mean:%f\n",Mean);
-		printf ("sum_X_Xbar_2:%f\n",sum_X_Xbar_2);
-		printf ("sum_X_Xbar_3:%f\n",sum_X_Xbar_3);
-		printf ("StdDev:%f\n",StdDev);
-		printf ("Skew:%f\n",Skew);
-		printf ("K2:%f\n",K2);
-		printf ("LogQ2:%f\n",LogQ2);
-		printf ("BankfullQ2:%f\n",BankfullQ2);
-		abort();*/
-		
-	}	
+	}
 	if (itemID==1){
 		day++;
 		//printf ("day:%d\n",day);
 	}	
 }
 
-enum { MDinput, MDcalculate, MDcorrected };
-
 int MDBankfullQcalcDef() {
 
 	MFDefEntering ("BankfullQcalc");
-	if ( 
-       // output
-    ((_MDOutBankfullQ2ID  		= MFVarGetID (MDVarSediment_BankfullQ2, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ5ID  		= MFVarGetID (MDVarSediment_BankfullQ5, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ10ID  		= MFVarGetID (MDVarSediment_BankfullQ10, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ25ID  		= MFVarGetID (MDVarSediment_BankfullQ25, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ50ID  		= MFVarGetID (MDVarSediment_BankfullQ50, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ100ID  	= MFVarGetID (MDVarSediment_BankfullQ100, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ200ID  	= MFVarGetID (MDVarSediment_BankfullQ200, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-
-    (MFModelAddFunction (_MDBankfullQcalc) == CMfailed)) return (CMfailed);
+	if (((_MDOutBankfullQ2ID  		= MFVarGetID (MDVarRouting_BankfullQ2, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ5ID  		= MFVarGetID (MDVarRouting_BankfullQ5, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ10ID  		= MFVarGetID (MDVarRouting_BankfullQ10, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ25ID  		= MFVarGetID (MDVarRouting_BankfullQ25, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ50ID  		= MFVarGetID (MDVarRouting_BankfullQ50, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ100ID  	= MFVarGetID (MDVarRouting_BankfullQ100, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutBankfullQ200ID  	= MFVarGetID (MDVarRouting_BankfullQ200, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDBankfullQcalc) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("BankfullQcalc");
 	return (_MDOutBankfullQ5ID);
 }
