@@ -36,7 +36,7 @@ enum { MDinput, MDcalculate, MDcorrected };
 
 int MDRunoffDef () {
 	int  optID = MFUnset;
-	const char *optStr, *optName = MDVarRunoff;
+	const char *optStr, *optName = MDVarCore_Runoff;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
 
 	if (_MDOutRunoffID != MFUnset) return (_MDOutRunoffID);
@@ -44,15 +44,15 @@ int MDRunoffDef () {
 	MFDefEntering ("Runoff");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	switch (optID) {
-		case MDinput: _MDOutRunoffID = MFVarGetID (MDVarRunoff,         "mm",     MFInput,  MFFlux, MFBoundary); break;
+		case MDinput: _MDOutRunoffID = MFVarGetID (MDVarCore_Runoff, "mm", MFInput, MFFlux, MFBoundary); break;
 		case MDcorrected:
-			if ((_MDInRunoffCorrID  = MFVarGetID (MDVarRunoffCorretion, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed)
+			if ((_MDInRunoffCorrID  = MFVarGetID (MDVarDataAssim_RunoffCorretion, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:		
 			if (((_MDInBaseFlowID   = MDBaseFlowDef   ()) == CMfailed) ||
-			    ((_MDInSurfRunoffID = MDSurfRunoffDef ()) == CMfailed) ||
-				((_MDOutRunoffID    = MFVarGetID (MDVarRunoff,          "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-				(MFModelAddFunction (_MDRunoff) == CMfailed)) return (CMfailed);
+                ((_MDInSurfRunoffID = MDSurfRunoffDef ()) == CMfailed) ||
+                ((_MDOutRunoffID    = MFVarGetID (MDVarCore_Runoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDRunoff) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

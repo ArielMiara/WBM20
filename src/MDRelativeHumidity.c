@@ -59,13 +59,13 @@ int MDRelativeHumidityDef () {
     
     switch (optID) {
         case MDinput:
-            if      ((_MDOutRelativeHumidityID = MFVarGetID (MDVarWeather_RelativeHumidity, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if      ((_MDOutRelativeHumidityID = MFVarGetID (MDVarCommon_HumidityRelative, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
-            if (((_MDInAirTemperatureID    = MFVarGetID (MDVarAirTemperature,   "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInSpecificHumidityID  = MFVarGetID (MDVarWeather_SpecificHumidity, "%", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInAirPressureID       = MFVarGetID (MDVarWeather_AirPressure, "g/kg", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRelativeHumidityID = MFVarGetID (MDVarWeather_RelativeHumidity, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+            if (((_MDInAirTemperatureID    = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInSpecificHumidityID  = MFVarGetID (MDVarCommon_HumiditySpecific, "%", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInAirPressureID       = MFVarGetID (MDVarCommon_AirPressure, "g/kg", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRelativeHumidityID = MFVarGetID (MDVarCommon_HumidityRelative, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDRelativeHumidity) == CMfailed))) return (CMfailed);
             break;
         default: MFOptionMessage (optName, optStr, options);

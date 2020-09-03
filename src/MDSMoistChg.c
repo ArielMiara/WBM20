@@ -53,12 +53,12 @@ int MDSoilMoistChgDef () {
 	     ((_MDInIrrSoilMoistChgID  = MDIrrSoilMoistChgDef ()) == CMfailed)))
 	     return (CMfailed);
 	if (((_MDInSoilAvailWaterCapID = MDSoilAvailWaterCapDef ()) == CMfailed) ||
-	    ((_MDInRainSoilMoistID     = MFVarGetID (MDVarRainSoilMoisture,    "mm",   MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInRainSoilMoistChgID  = MFVarGetID (MDVarRainSoilMoistChange, "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSoilMoistID        = MFVarGetID (MDVarSoilMoisture,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutSoilMoistChgID     = MFVarGetID (MDVarSoilMoistChange,     "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutRelSoilMoistID     = MFVarGetID (MDVarRelSoilMoisture,     "mm",   MFOutput, MFState, MFInitial)) == CMfailed) ||
-       (MFModelAddFunction (_MDSoilMoistChg) == CMfailed)) return (CMfailed);
+        ((_MDInRainSoilMoistID     = MFVarGetID (MDVarCore_RainSoilMoisture, "mm", MFInput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDInRainSoilMoistChgID  = MFVarGetID (MDVarCore_RainSoilMoistChange, "mm", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSoilMoistID        = MFVarGetID (MDVarCore_SoilMoisture, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSoilMoistChgID     = MFVarGetID (MDVarCore_SoilMoistChange, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutRelSoilMoistID     = MFVarGetID (MDVarCore_RelSoilMoisture, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        (MFModelAddFunction (_MDSoilMoistChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Soil Moisture");
 	return (_MDOutSoilMoistChgID);
 }

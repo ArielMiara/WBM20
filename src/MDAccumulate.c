@@ -33,8 +33,8 @@ int MDAccumPrecipDef() {
 
 	MFDefEntering ("Accumulate Precipitation");
 	if (((_MDInPrecipID     = MDPrecipitationDef ()) == CMfailed) ||
-	    ((_MDOutAccPrecipID = MFVarGetID (MDVarAccPrecipitation, "m3/s",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction(_MDAccumPrecip) == CMfailed)) return (CMfailed);
+        ((_MDOutAccPrecipID = MFVarGetID (MDVarAux_AccPrecipitation, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction(_MDAccumPrecip) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Accumulate Precipitation");
 	return (_MDOutAccPrecipID);	
@@ -60,8 +60,8 @@ int MDAccumEvapDef() {
 
 	MFDefEntering ("Accumulate Evapotranspiration");
 	if (((_MDInEvapID     = MDEvapotranspirationDef ()) == CMfailed) ||
-	    ((_MDOutAccEvapID = MFVarGetID (MDVarAccEvapotranspiration, "m3/s", MFRoute, MFState, MFBoundary))  == CMfailed) ||
-	    (MFModelAddFunction(_MDAccumEvap) == CMfailed)) return (CMfailed);
+        ((_MDOutAccEvapID = MFVarGetID (MDVarAux_AccEvapotranspiration, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction(_MDAccumEvap) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Accumulate Evapotranspiration");
 	return (_MDOutAccEvapID);	
@@ -87,8 +87,8 @@ int MDAccumSMoistChgDef() {
 
 	MFDefEntering ("Accumulate Soil Moisture Change");
 	if (((_MDInSMoistChgID     = MDSoilMoistChgDef ()) == CMfailed) ||
-	    ((_MDOutAccSMoistChgID = MFVarGetID (MDVarAccSoilMoistChange, "m3/s", MFRoute, MFState, MFBoundary))  == CMfailed) ||
-	    (MFModelAddFunction(_MDAccumSMoistChg) == CMfailed)) return (CMfailed);
+        ((_MDOutAccSMoistChgID = MFVarGetID (MDVarAux_AccSoilMoistChange, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction(_MDAccumSMoistChg) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Accumulate Soil Moisture Change");
 	return (_MDOutAccSMoistChgID);	
@@ -113,9 +113,9 @@ int MDAccumGrdWatChgDef() {
 	if (_MDOutAccGrdWatChgID != MFUnset) return (_MDOutAccGrdWatChgID);
 
 	MFDefEntering ("Accumulate Groundwater Change");
-	if (((_MDInGrdWatChgID     = MFVarGetID (MDVarGroundWaterChange,    "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutAccGrdWatChgID = MFVarGetID (MDVarAccGroundWaterChange, "m3/s", MFRoute,  MFState, MFBoundary))  == CMfailed) ||
-	    (MFModelAddFunction (_MDAccumGrdWatChg) == CMfailed)) return (CMfailed);
+	if (((_MDInGrdWatChgID     = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutAccGrdWatChgID = MFVarGetID (MDVarAux_AccGroundWaterChange, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDAccumGrdWatChg) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Accumulate Groundwater Change");
 	return (_MDOutAccGrdWatChgID);	
@@ -139,8 +139,8 @@ int MDAccumRunoffDef() {
 
 	MFDefEntering ("Accumulate Runoff");
 	if (((_MDInRunoffVolumeID  = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDOutAccRunoffID    = MFVarGetID (MDVarAccRunoff, "m3/s", MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDAccumRunoff) == CMfailed)) return (CMfailed);
+        ((_MDOutAccRunoffID    = MFVarGetID (MDVarAux_AccRunoff, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDAccumRunoff) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Accumulate Runoff");
 	return (_MDOutAccRunoffID);	

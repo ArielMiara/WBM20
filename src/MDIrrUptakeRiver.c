@@ -27,7 +27,7 @@ int MDIrrUptakeRiverDef() {
 	if ((optID == MDnone) || (_MDOutIrrUptakeRiverID != MFUnset)) return (_MDOutIrrUptakeRiverID);
 
 	if (optID == MDcalculate)
-		return (MFVarGetID (MDVarIrrUptakeRiver,    "mm",  MFOutput, MFFlux,  MFBoundary));
+		return (MFVarGetID (MDVarIrrigation_UptakeRiver, "mm", MFOutput, MFFlux, MFBoundary));
 	else MFOptionMessage (optName, optStr, options);
 	return (CMfailed);
 }

@@ -96,7 +96,7 @@ enum { MDinput, MDLCSAGEVeg, MDLCTEMVeg };
 
 int MDLandCoverDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarWBMCover;
+	const char *optStr, *optName = MDVarCore_LandCoverWBM;
 	const char *options [] = { MDInputStr, "SAGEVeg", "TEMVeg",(char *) NULL };
 
 	if (_MDOutCoverID != MFUnset) return (_MDOutCoverID);
@@ -104,16 +104,16 @@ int MDLandCoverDef () {
 	MFDefEntering ("Landcover");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput: _MDOutCoverID = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFInput, MFState, MFBoundary); break;
+		case MDinput: _MDOutCoverID = MFVarGetID (MDVarCore_LandCoverWBM, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDLCSAGEVeg:
-			  if (((_MDInSAGEVegID  = MFVarGetID (MDVarSAGEVegCover, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			      ((_MDOutCoverID   = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary)) == CMfailed) ||
-			      (MFModelAddFunction (_MDLCSAGEVegToCover) == CMfailed)) return (CMfailed);
+			  if (((_MDInSAGEVegID  = MFVarGetID (MDVarCore_LandCoverSAGE, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+                  ((_MDOutCoverID   = MFVarGetID (MDVarCore_LandCoverWBM, MFNoUnit, MFByte, MFState, MFBoundary)) == CMfailed) ||
+                  (MFModelAddFunction (_MDLCSAGEVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		case MDLCTEMVeg:
-			  if (((_MDInTEMVegID   = MFVarGetID (MDVarTEMVegCover,  MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
-			      ((_MDOutCoverID   = MFVarGetID (MDVarWBMCover,     MFNoUnit, MFByte,  MFState, MFBoundary))  == CMfailed) ||
-			      (MFModelAddFunction (_MDLCTEMVegToCover) == CMfailed)) return (CMfailed);
+			  if (((_MDInTEMVegID   = MFVarGetID (MDVarCore_LandCoverTEM, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+                  ((_MDOutCoverID   = MFVarGetID (MDVarCore_LandCoverWBM, MFNoUnit, MFByte, MFState, MFBoundary)) == CMfailed) ||
+                  (MFModelAddFunction (_MDLCTEMVegToCover) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

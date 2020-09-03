@@ -74,7 +74,7 @@ enum { MDinput, MDstandard,  MDOtto };
 
 int MDGrossRadDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarGrossRadiance;
+	const char *optStr, *optName = MDVarCore_GrossRadiance;
 	const char *options [] = { MDInputStr, "standard", "Otto", (char *) NULL };
 	float par;
 
@@ -84,16 +84,16 @@ int MDGrossRadDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutGrossRadID = MFVarGetID (MDVarGrossRadiance, "MJ/m^2", MFInput,  MFFlux,  MFBoundary); break;
+		case MDinput: _MDOutGrossRadID = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFInput, MFFlux, MFBoundary); break;
 		case MDstandard:
 			if (((optStr = MFOptionGet (MDParGrossRadTAU)) != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDGrossRadStdTAU = par;
-			if (((_MDOutGrossRadID    = MFVarGetID (MDVarGrossRadiance, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-				(MFModelAddFunction (_MDGrossRadianceStd)  == CMfailed)) return (CMfailed);
+			if (((_MDOutGrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDGrossRadianceStd)  == CMfailed)) return (CMfailed);
 			break;
 		case MDOtto:
-			if (((_MDOutGrossRadID    = MFVarGetID (MDVarGrossRadiance, "MJ/m^2", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-				(MFModelAddFunction (_MDGrossRadianceOtto) == CMfailed)) return (CMfailed);
+			if (((_MDOutGrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDGrossRadianceOtto) == CMfailed)) return (CMfailed);
 			break;
 		default:  MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

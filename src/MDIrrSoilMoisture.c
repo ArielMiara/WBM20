@@ -28,6 +28,6 @@ int MDIrrSoilMoistureDef() {
 
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if (ret == MFUnset) return (MFUnset);
-	_MDOutIrrSoilMoistureID = MFVarGetID (MDVarIrrSoilMoisture,     "mm",   MFInput, MFFlux,  MFBoundary);
+	_MDOutIrrSoilMoistureID = MFVarGetID (MDVarIrrigation_SoilMoisture, "mm", MFInput, MFFlux, MFBoundary);
     return (_MDOutIrrSoilMoistureID);
 }

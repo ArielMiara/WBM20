@@ -37,7 +37,7 @@ static void _MDSoilAvailWaterCap (int itemID) {
 enum { MDinput, MDcalculate};
 int MDSoilAvailWaterCapDef () {
 	int  optID = MFUnset;
-	const char *optStr, *optName = MDOptSoilAvailableWaterCapacity;
+	const char *optStr, *optName = MDOptSoilWaterCapacity;
 	const char *options [] = { MDInputStr, MDCalculateStr,  (char *) NULL };
 	
 	if (_MDOutSoilAvailWaterCapID != MFUnset) return (_MDOutSoilAvailWaterCapID);
@@ -46,13 +46,13 @@ int MDSoilAvailWaterCapDef () {
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		switch (optID) {
-		case MDinput: _MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap,         "mm",     MFInput,  MFState, MFBoundary); break;
+		case MDinput: _MDOutSoilAvailWaterCapID = MFVarGetID (MDVarCore_SoilAvailWaterCap, "mm", MFInput, MFState, MFBoundary); break;
 		case MDcalculate:
-			if (((_MDInSoilFieldCapacityID  = MFVarGetID (MDVarSoilFieldCapacity, "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInSoilWiltingPointID   = MFVarGetID (MDVarSoilWiltingPoint,  "mm/m", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDInSoilRootingDepthID   = MFVarGetID (MDVarSoilRootingDepth,  "mm",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutSoilAvailWaterCapID = MFVarGetID (MDVarSoilAvailWaterCap, "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDSoilAvailWaterCap) == CMfailed)) return (CMfailed);
+			if (((_MDInSoilFieldCapacityID  = MFVarGetID (MDVarCore_SoilFieldCapacity, "mm/m", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInSoilWiltingPointID   = MFVarGetID (MDVarCore_SoilWiltingPoint, "mm/m", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInSoilRootingDepthID   = MFVarGetID (MDVarCore_SoilRootingDepth, "mm", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutSoilAvailWaterCapID = MFVarGetID (MDVarCore_SoilAvailWaterCap, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDSoilAvailWaterCap) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}

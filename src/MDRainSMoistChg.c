@@ -93,33 +93,23 @@ int MDRainSMoistChgDef () {
 	if (_MDOutSMoistChgID != MFUnset) return (_MDOutSMoistChgID);
 	const char *soilTemperatureOptions [] = { "none", "calculate", (char *) NULL };
 
-	int soilTemperatureID;
-	if (((optStr = MFOptionGet (MDOptSoilTemperature))  == (char *) NULL) ||
-	    ((soilTemperatureID = CMoptLookup (soilTemperatureOptions, optStr, true)) == CMfailed)) {
-		CMmsgPrint(CMmsgUsrError," Soil TemperatureOption not specifed! Options = 'none' or 'calculate'\n");
-		return CMfailed;
-	}
 	if (((optStr = MFOptionGet (MDParSoilMoistALPHA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDSoilMoistALPHA = par;
 	
 	MFDefEntering ("Rainfed Soil Moisture");
-	if (soilTemperatureID == MFcalculate ) {
-		if (((_MDInRelativeIceContent    = MFVarGetID ("SoilIceContent_01",     "mm",   MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-			((_MDOutLiquidSoilMoistureID = MFVarGetID (MDVarLiquidSoilMoisture, "-",    MFOutput,  MFState, MFBoundary)) == CMfailed)) return CMfailed;
-	}
 
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset) && ((_MDInIrrAreaFracID = MDIrrigatedAreaDef ())==  CMfailed) ) return (CMfailed);
 
 	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
-	    ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||
-	    ((_MDInPotETID             = MDRainPotETDef         ()) == CMfailed) ||
-	    ((_MDInInterceptID         = MDRainInterceptDef     ()) == CMfailed) ||
-	    ((_MDInSoilAvailWaterCapID = MDSoilAvailWaterCapDef ()) == CMfailed) ||
-	    ((_MDInAirTMeanID          = MFVarGetID (MDVarAirTemperature,             "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
- 	    ((_MDOutEvaptrsID          = MFVarGetID (MDVarRainEvapotranspiration,     "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
- 	  	((_MDOutSoilMoistCellID    = MFVarGetID (MDVarRainSoilMoistureCell,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutSoilMoistID        = MFVarGetID (MDVarRainSoilMoisture,           "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutSMoistChgID        = MFVarGetID (MDVarRainSoilMoistChange,        "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||
+        ((_MDInPotETID             = MDRainPotETDef         ()) == CMfailed) ||
+        ((_MDInInterceptID         = MDRainInterceptDef     ()) == CMfailed) ||
+        ((_MDInSoilAvailWaterCapID = MDSoilAvailWaterCapDef ()) == CMfailed) ||
+        ((_MDInAirTMeanID          = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutEvaptrsID          = MFVarGetID (MDVarCore_RainEvapotranspiration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutSoilMoistCellID    = MFVarGetID (MDVarCore_RainSoilMoistureCell, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDOutSoilMoistID        = MFVarGetID (MDVarCore_RainSoilMoisture, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSMoistChgID        = MFVarGetID (MDVarCore_RainSoilMoistChange, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDRainSMoistChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Rainfed Soil Moisture");
 	return (_MDOutSMoistChgID);

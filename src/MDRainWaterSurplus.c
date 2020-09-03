@@ -55,11 +55,11 @@ int MDRainWaterSurplusDef () {
         return (CMfailed);
 
     if (((_MDInRainSMoistChgID     = MDRainSMoistChgDef ()) == CMfailed) ||
-	    ((_MDInPrecipID            = MDPrecipitationDef ()) == CMfailed) ||
-	    ((_MDInSPackChgID          = MDSPackChgDef      ()) == CMfailed) ||
-	    ((_MDInRainEvapoTransID    = MFVarGetID (MDVarRainEvapotranspiration, "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutRainWaterSurplusID = MFVarGetID (MDVarRainWaterSurplus,       "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainWaterSurplus) == CMfailed)) return (CMfailed);
+        ((_MDInPrecipID            = MDPrecipitationDef ()) == CMfailed) ||
+        ((_MDInSPackChgID          = MDSPackChgDef      ()) == CMfailed) ||
+        ((_MDInRainEvapoTransID    = MFVarGetID (MDVarCore_RainEvapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutRainWaterSurplusID = MFVarGetID (MDVarCore_RainWaterSurplus, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDRainWaterSurplus) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Rainfed Water Surplus");
 	return (_MDOutRainWaterSurplusID);
 }

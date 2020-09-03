@@ -113,13 +113,13 @@ int MDWTempGrdWaterDef () {
 	MFDefEntering ("Groundwater temperature");
 
 	if (((_MDInWTempSurfRunoffID = MDWTempSurfRunoffDef ()) == CMfailed) ||
-	    ((_MDInRainRechargeID    = MDRainInfiltrationDef ()) == CMfailed) ||
-	    ((_MDInIrrReturnFlowID   = MDIrrReturnFlowDef    ()) == CMfailed) ||
-	    ((_MDOutGrdWaterID         = MDBaseFlowDef         ()) == CMfailed) ||
-            ((_MDInGW_TempID         = MFVarGetID (MDVarGW_Temp,  "degC", MFInput,  MFState, MFBoundary))  == CMfailed) ||    
-	    ((_MDInAirTempID         = MFVarGetID (MDVarAirTemperature,  "degC", MFInput,  MFState, MFBoundary))  == CMfailed) ||
-	    ((_MDOutWTempGrdWaterID  = MFVarGetID (MDVarWTempGrdWater, "degC", MFOutput, MFState,  MFInitial)) == CMfailed) ||
-	    (MFModelAddFunction (_MDWTempGrdWater) == CMfailed)) return (CMfailed);
+        ((_MDInRainRechargeID    = MDRainInfiltrationDef ()) == CMfailed) ||
+        ((_MDInIrrReturnFlowID   = MDIrrReturnFlowDef    ()) == CMfailed) ||
+        ((_MDOutGrdWaterID         = MDBaseFlowDef         ()) == CMfailed) ||
+        ((_MDInGW_TempID         = MFVarGetID (MDVarTP2M_GW_Temp, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInAirTempID         = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutWTempGrdWaterID  = MFVarGetID (MDVarTP2M_WTempGrdWater, "degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
+		(MFModelAddFunction (_MDWTempGrdWater) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Groundwater temperature");
 	return (_MDOutWTempGrdWaterID);

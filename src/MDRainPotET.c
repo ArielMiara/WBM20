@@ -19,7 +19,7 @@ enum { MDinput, MDHamon, MDJensen, MDPsTaylor, MDPstd, MDPMday, MDPMdn, MDSWGday
 
 int MDRainPotETDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarRainPotEvapotrans;
+	const char *optStr, *optName = MDVarCore_RainPotEvapotrans;
 	const char *options [] = { MDInputStr, "Hamon", "Jensen", "PsTaylor", "Pstd", "PMday", "PMdn", "SWGday", "SWGdn", "Turc", (char *) NULL };
 
 	if (_MDPotETID != MFUnset) return (_MDPotETID);
@@ -28,7 +28,7 @@ int MDRainPotETDef () {
 	MFDefEntering ("Rainfed Potential Evapotranspiration");
 
 	switch (optID) {
-		case MDinput:    _MDPotETID = MFVarGetID (MDVarRainPotEvapotrans, "mm", MFInput, MFFlux, false); break;
+		case MDinput:    _MDPotETID = MFVarGetID (MDVarCore_RainPotEvapotrans, "mm", MFInput, MFFlux, false); break;
 		case MDHamon:    _MDPotETID = MDRainPotETHamonDef    (); break;
 		case MDJensen:   _MDPotETID = MDRainPotETJensenDef   (); break;
 		case MDPsTaylor: _MDPotETID = MDRainPotETPsTaylorDef (); break;

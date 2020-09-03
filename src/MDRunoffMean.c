@@ -34,7 +34,7 @@ enum { MDinput, MDcalculate };
 
 int MDRunoffMeanDef () {
 	int  optID = MFUnset;
-	const char *optStr, *optName = MDVarRunoffMean;
+	const char *optStr, *optName = MDVarCore_RunoffMean;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutRunoffMeanID != MFUnset) return (_MDOutRunoffMeanID);
@@ -43,12 +43,12 @@ int MDRunoffMeanDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutRunoffMeanID  = MFVarGetID (MDVarRunoffMean, "mm/d", MFInput,  MFState, MFBoundary); break;
+		case MDinput: _MDOutRunoffMeanID  = MFVarGetID (MDVarCore_RunoffMean, "mm/d", MFInput, MFState, MFBoundary); break;
 		case MDcalculate:
 			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
-			    ((_MDInRunoffID  = MDRunoffDef ()) == CMfailed) ||
-			    ((_MDOutRunoffMeanID      = MFVarGetID (MDVarRunoffMean, "mm/d", MFOutput, MFState, MFInitial))  == CMfailed) ||
-			    (MFModelAddFunction (_MDRunoffMean) == CMfailed)) return (CMfailed);
+                ((_MDInRunoffID  = MDRunoffDef ()) == CMfailed) ||
+                ((_MDOutRunoffMeanID      = MFVarGetID (MDVarCore_RunoffMean, "mm/d", MFOutput, MFState, MFInitial)) == CMfailed) ||
+                (MFModelAddFunction (_MDRunoffMean) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

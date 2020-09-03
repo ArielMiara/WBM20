@@ -62,7 +62,7 @@ enum { MDnone, MDinput, MDcalc };
 
 int MDRainInterceptDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarRainInterception;
+	const char *optStr, *optName = MDVarCore_RainInterception;
 	const char *options [] = { MDNoneStr, MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
@@ -72,16 +72,16 @@ int MDRainInterceptDef () {
 	MFDefEntering ("Rainfed Intercept");
 
 	switch (optID) {
-		case MDinput: _MDOutInterceptID = MFVarGetID (MDVarRainInterception,  "mm", MFInput, MFFlux, false); break;
+		case MDinput: _MDOutInterceptID = MFVarGetID (MDVarCore_RainInterception, "mm", MFInput, MFFlux, false); break;
 		case MDcalc:
 			if (((_MDInPrecipID        = MDPrecipitationDef ()) == CMfailed) ||
-			    
-	    	    ((_MDInSPackChgID      = MDSPackChgDef      ()) == CMfailed) ||
-			    ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||
-			    ((_MDInStemAreaIndexID = MDStemAreaIndexDef ()) == CMfailed) ||
-			    ((_MDInPetID           = MDRainPotETDef     ()) == CMfailed) ||
-			    ((_MDOutInterceptID    = MFVarGetID (MDVarRainInterception,   "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDRainIntercept) == CMfailed)) return (CMfailed);
+
+                ((_MDInSPackChgID      = MDSPackChgDef      ()) == CMfailed) ||
+                ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||
+                ((_MDInStemAreaIndexID = MDStemAreaIndexDef ()) == CMfailed) ||
+                ((_MDInPetID           = MDRainPotETDef     ()) == CMfailed) ||
+                ((_MDOutInterceptID    = MFVarGetID (MDVarCore_RainInterception, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDRainIntercept) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

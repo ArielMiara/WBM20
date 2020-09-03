@@ -38,15 +38,15 @@ int MDEvapotranspirationDef () {
 	MFDefEntering ("Evapotranspiration");
 	if (((ret = MDIrrGrossDemandDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
-	     ((_MDInIrrEvapotranspID = MFVarGetID (MDVarIrrEvapotranspiration,  "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
+	     ((_MDInIrrEvapotranspID = MFVarGetID (MDVarIrrigation_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
 	if (((ret = MDSmallReservoirReleaseDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
-	     ((_MDInSmallResEvapoID  = MFVarGetID (MDVarSmallResEvaporation,    "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
+	     ((_MDInSmallResEvapoID  = MFVarGetID (MDVarReservoir_FarmPondEvaporation, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed)))
 		return (CMfailed);
-	if (((_MDInRainEvapotranspID = MFVarGetID (MDVarRainEvapotranspiration, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed) ||
-	    ((_MDOutEvapotranspID    = MFVarGetID (MDVarEvapotranspiration,     "mm",   MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-        (MFModelAddFunction (_MDEvapotransp) == CMfailed)) return (CMfailed);
+	if (((_MDInRainEvapotranspID = MFVarGetID (MDVarCore_RainEvapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+		((_MDOutEvapotranspID    = MFVarGetID (MDVarCore_Evapotranspiration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+		(MFModelAddFunction (_MDEvapotransp) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Evapotranspiration");
 	return (_MDOutEvapotranspID);
 }

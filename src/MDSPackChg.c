@@ -97,34 +97,23 @@ int MDSPackChgDef () {
 	if (_MDOutSPackChgID != MFUnset) return (_MDOutSPackChgID);
 	MFDefEntering ("Snow Pack Change");
 	const char *optStr;
-	const char *soilTemperatureOptions [] = { "none", "calculate", (char *) NULL };
-	int soilTemperatureID;
 	float par;
+
 	if (((optStr = MFOptionGet (MDParSnowMeltThreshold))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 		_MDSnowMeltThreshold = par;
 	
-	if (((optStr = MFOptionGet (MDParFallThreshold))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
+	if (((optStr = MFOptionGet (MDParSnowFallThreshold)) != (char *) NULL) && (sscanf (optStr, "%f", &par) == 1))
 		_MDFallThreshold= par;
 
-	if (((optStr = MFOptionGet (MDOptSoilTemperature))  == (char *) NULL) || ((soilTemperatureID = CMoptLookup (soilTemperatureOptions, optStr, true)) == CMfailed)) {
-					CMmsgPrint(CMmsgUsrError," Soil TemperatureOption not specifed! Options = 'none' or 'calculate'\n");
-					return CMfailed;
-				}
-
-	if (soilTemperatureID == 1 ){
-		_MDCalculateSoilTempID=1;
-		if ((_MDInWinterOnsetID    = MFVarGetID (MDVarWinterOnsetDoy, "DoY", MFInput,  MFState, MFBoundary)) == CMfailed) return CMfailed;
-	}
-
 	if (((_MDInPrecipID       = MDPrecipitationDef ()) == CMfailed) ||
-	    ((_MDInAtMeanID       = MFVarGetID (MDVarAirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowFallID    = MFVarGetID (MDVarSnowFall,       "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowMeltID    = MFVarGetID (MDVarSnowMelt,       "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowDensityID = MFVarGetID (MDVarSnowDensity,    "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowDepthID   = MFVarGetID (MDVarSnowDepth,      "mm",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutSnowPackID    = MFVarGetID (MDVarSnowPack,       "mm",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutSPackChgID    = MFVarGetID (MDVarSnowPackChange, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
+        ((_MDInAtMeanID       = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSnowFallID    = MFVarGetID (MDVarCommon_SnowFall, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutSnowMeltID    = MFVarGetID (MDVarCore_SnowMelt, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutSnowDensityID = MFVarGetID (MDVarCommon_SnowDensity, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSnowDepthID   = MFVarGetID (MDVarCommon_SnowDepth, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutSnowPackID    = MFVarGetID (MDVarCore_SnowPack, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDOutSPackChgID    = MFVarGetID (MDVarCore_SnowPackChange, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDSPackChg) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Snow Pack Change");
 	return (_MDOutSPackChgID);
 }
@@ -134,7 +123,7 @@ int MDSPackMeltDef () {
 	if (_MDOutSnowMeltID != MFUnset) return (_MDOutSnowMeltID);
 
 	if ((MDSPackChgDef () == CMfailed) ||
-	    ((_MDOutSnowMeltID   = MFVarGetID (MDVarSnowMelt, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
+	    ((_MDOutSnowMeltID   = MFVarGetID (MDVarCore_SnowMelt, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
 		return (CMfailed);
 	return (_MDOutSnowMeltID);
 }

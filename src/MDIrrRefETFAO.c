@@ -97,15 +97,15 @@ int MDIrrRefEvapotransFAODef () {
 
 	MFDefEntering ("Irrigation Reference ETP (FAO)");
 	if (((_MDInDayLengthID          = MDSRadDayLengthDef ()) == CMfailed) ||
-		 ((_MDInI0HDayID            = MDSRadI0HDayDef    ()) == CMfailed) ||
-		 ((_MDInSolRadID            = MDSolarRadDef      ()) == CMfailed) ||
-	     ((_MDInElevationID         = MFVarGetID (MDVarMeanElevation,     "m",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMeanID            = MFVarGetID (MDVarAirTemperature,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMinID             = MFVarGetID (MDVarAirTempMinimum,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInAtMaxID             = MFVarGetID (MDVarAirTempMaximum,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInVPressID            = MFVarGetID (MDVarVaporPressure,     "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDInWSpeedID            = MFVarGetID (MDVarWindSpeed,         "m/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		 ((_MDOutIrrRefEvapotransID = MFVarGetID (MDVarIrrRefEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed)) return (CMfailed);
+		((_MDInI0HDayID            = MDSRadI0HDayDef    ()) == CMfailed) ||
+		((_MDInSolRadID            = MDSolarRadDef      ()) == CMfailed) ||
+		((_MDInElevationID         = MFVarGetID (MDVarCommon_MeanElevation, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDInAtMeanID            = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDInAtMinID             = MFVarGetID (MDVarCommon_AirTempMinimum, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDInAtMaxID             = MFVarGetID (MDVarCommon_AirTempMaximum, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDInVPressID            = MFVarGetID (MDVarCore_VaporPressure, "kPa", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDInWSpeedID            = MFVarGetID (MDVarCommon_WindSpeed, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDOutIrrRefEvapotransID = MFVarGetID (MDVarIrrigation_RefEvapotrans, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed)) return (CMfailed);
     if (MFModelAddFunction (_MDIrrRefEvapotransFAO)== CMfailed) return (CMfailed);
 
 	MFDefLeaving ("Irrigation Reference ETP (FAO)");

@@ -1238,7 +1238,7 @@ enum { MDnone, MDinput };
 
 int MDThermalInputsDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDOptThermalInputs3;
+	const char *optStr, *optName = MDOptTP2M_ThermalInputs;
 	const char *options [] = { MDNoneStr, MDInputStr, (char *) NULL };
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
@@ -1248,104 +1248,104 @@ int MDThermalInputsDef () {
 		case MDinput:
    
 			if (
-         ((_MDPlaceHolderID           = MDWTempRiverRouteDef ()) == CMfailed) ||
-				 ((_MDInDischargeID           = MDDischargeDef ())       == CMfailed) ||
-         ((_MDInWetBulbTempID        = MDWetBulbTempDef())       == CMfailed) ||
+                    ((_MDPlaceHolderID           = MDWTempRiverRouteDef ()) == CMfailed) ||
+                    ((_MDInDischargeID           = MDDischargeDef ())       == CMfailed) ||
+                            ((_MDInWetBulbTempID        = MDWetBulbTempDef())       == CMfailed) ||
          
-//				((_MDOutDischargeID         = MFVarGetID (MDVarDischarge,        "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||		//RJS 113012
+//				((_MDOutDischargeID         = MFVarGetID (MDVarRouting_Discharge,        "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||		//RJS 113012
 //				((_MDInEnergyDemand1ID       = MDEnergyDemandDef ()) == CMfailed) ||
 //				((_MDInEnergyDemand1ID      = MFVarGetID (MDVarEnergyDemand,   "MW", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDInDischargeIncomingID  = MFVarGetID (MDVarDischarge0,          "m3/s", MFInput,  MFState,  MFInitial)) == CMfailed) ||		// changed from flux to state, and boundary to initial 113012,
-				((_MDFluxMixing_QxTID       = MFVarGetID (MDVarFluxMixing_QxT, "m3*degC/d", MFInput,  MFFlux,  MFBoundary)) == CMfailed)   ||
-				((_MDFlux_QxTID             = MFVarGetID (MDVarFlux_QxT,       "m3*degC/d", MFInput,  MFFlux,  MFBoundary)) == CMfailed)   ||
-		//		((_MDWTempMixing_QxTID      = MFVarGetID (MDVarWTempMixing_QxT,   "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDWTemp_QxTID            = MFVarGetID (MDVarWTemp_QxT,         "degC",  MFOutput, MFState, MFBoundary)) == CMfailed) ||	//RJS 013112
-				((_MDInAirTemperatureID     = MFVarGetID (MDVarAirTemperature,     "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDInNamePlate1ID         = MFVarGetID (MDVarNamePlate1,          "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDInFuelType1ID          = MFVarGetID (MDVarFuelType1,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDInTechnology1ID        = MFVarGetID (MDVarTechnology1,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDInEfficiency1ID        = MFVarGetID (MDVarEfficiency1,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDInLakeOcean1ID         = MFVarGetID (MDVarLakeOcean1,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInDemand1ID            = MFVarGetID (MDVarDemand1,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
+				((_MDInDischargeIncomingID  = MFVarGetID (MDVarRouting_Discharge0, "m3/s", MFInput, MFState, MFInitial)) == CMfailed) ||		// changed from flux to state, and boundary to initial 113012,
+				((_MDFluxMixing_QxTID       = MFVarGetID (MDVarTP2M_FluxMixing_QxT, "m3*degC/d", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                            ((_MDFlux_QxTID             = MFVarGetID (MDVarTP2M_Flux_QxT, "m3*degC/d", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+		//		((_MDWTempMixing_QxTID      = MFVarGetID (MDVarTP2M_WTempMixing_QxT,   "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+				((_MDWTemp_QxTID            = MFVarGetID (MDVarTP2M_Temp_QxT, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||	//RJS 013112
+				((_MDInAirTemperatureID     = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInNamePlate1ID         = MFVarGetID (MDVarTP2M_NamePlate1, "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInFuelType1ID          = MFVarGetID (MDVarTP2M_FuelType1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInTechnology1ID        = MFVarGetID (MDVarTP2M_Technology1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInEfficiency1ID        = MFVarGetID (MDVarTP2M_Efficiency1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInLakeOcean1ID         = MFVarGetID (MDVarTP2M_LakeOcean1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInDemand1ID            = MFVarGetID (MDVarTP2M_Demand1, "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-                                ((_MDInNamePlate2ID         = MFVarGetID (MDVarNamePlate2,          "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInFuelType2ID          = MFVarGetID (MDVarFuelType2,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInTechnology2ID        = MFVarGetID (MDVarTechnology2,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInEfficiency2ID        = MFVarGetID (MDVarEfficiency2,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInDemand2ID            = MFVarGetID (MDVarDemand2,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInNamePlate2ID         = MFVarGetID (MDVarTP2M_NamePlate2, "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInFuelType2ID          = MFVarGetID (MDVarTP2M_FuelType2, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInTechnology2ID        = MFVarGetID (MDVarTP2M_Technology2, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInEfficiency2ID        = MFVarGetID (MDVarTP2M_Efficiency2, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInDemand2ID            = MFVarGetID (MDVarTP2M_Demand2, "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-                                ((_MDInNamePlate3ID         = MFVarGetID (MDVarNamePlate3,          "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInFuelType3ID          = MFVarGetID (MDVarFuelType3,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInTechnology3ID        = MFVarGetID (MDVarTechnology3,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInEfficiency3ID        = MFVarGetID (MDVarEfficiency3,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInDemand3ID            = MFVarGetID (MDVarDemand3,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInNamePlate3ID         = MFVarGetID (MDVarTP2M_NamePlate3, "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInFuelType3ID          = MFVarGetID (MDVarTP2M_FuelType3, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInTechnology3ID        = MFVarGetID (MDVarTP2M_Technology3, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInEfficiency3ID        = MFVarGetID (MDVarTP2M_Efficiency3, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInDemand3ID            = MFVarGetID (MDVarTP2M_Demand3, "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-                                ((_MDInNamePlate4ID         = MFVarGetID (MDVarNamePlate4,          "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                                ((_MDInFuelType4ID          = MFVarGetID (MDVarFuelType4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInTechnology4ID        = MFVarGetID (MDVarTechnology4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInEfficiency4ID        = MFVarGetID (MDVarEfficiency4,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInDemand4ID            = MFVarGetID (MDVarDemand4,          "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInNamePlate4ID         = MFVarGetID (MDVarTP2M_NamePlate4, "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInFuelType4ID          = MFVarGetID (MDVarTP2M_FuelType4, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                            ((_MDInTechnology4ID        = MFVarGetID (MDVarTP2M_Technology4, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInEfficiency4ID        = MFVarGetID (MDVarTP2M_Efficiency4, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInDemand4ID            = MFVarGetID (MDVarTP2M_Demand4, "MWh", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
-                 ((_MDInCWA_DeltaID          = MFVarGetID (MDVarCWA_Delta,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInCWA_LimitID          = MFVarGetID (MDVarCWA_Limit,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInCWA_OnOffID          = MFVarGetID (MDVarCWA_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInDownstream_OnOffID   = MFVarGetID (MDVarDownstream_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                 ((_MDInCWA_316b_OnOffID   = MFVarGetID (MDVarCWA_316b_OnOff,          "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_DeltaID          = MFVarGetID (MDVarTP2M_CWA_Delta, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_LimitID          = MFVarGetID (MDVarTP2M_CWA_Limit, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_OnOffID          = MFVarGetID (MDVarTP2M_CWA_OnOff, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInDownstream_OnOffID   = MFVarGetID (MDVarTP2M_Downstream_OnOff, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDInCWA_316b_OnOffID   = MFVarGetID (MDVarTP2M_CWA_316b_OnOff, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
 
                  ((_MDOutLossToWaterID       = MFVarGetID (MDVarTP2M_LossToWater, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                  ((_MDOutLossToInletID       = MFVarGetID (MDVarTP2M_LossToInlet, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
 
-//				((_MDOutDischargeID    	      = MFVarGetID (MDVarDischarge,  "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||		// late night discharge test 113012 -
-				((_MDOutAvgEfficiencyID       = MFVarGetID (MDVarAvgEfficiency,  "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutAvgDeltaTempID        = MFVarGetID (MDVarAvgDeltaTemp,  "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutTotalEvaporationID    = MFVarGetID (MDVarTotalEvaporation,  "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalExternalWaterID  = MFVarGetID (MDVarTotalExternalWater, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-			    ((_MDOutTotalThermalWdlsID    = MFVarGetID (MDVarTotalThermalWdls, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalOptThermalWdlsID = MFVarGetID (MDVarTotalOptThermalWdls, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutPowerOutput1ID        = MFVarGetID (MDVarPowerOutput1,       "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutPowerDeficit1ID       = MFVarGetID (MDVarPowerDeficit1,       "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutPowerPercent1ID       = MFVarGetID (MDVarPowerPercent1,       "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutPowerOutputTotalID    = MFVarGetID (MDVarPowerOutputTotal,    "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutPowerOutputTotal1ID    = MFVarGetID (MDVarPowerOutputTotal1,    "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutPowerOutputTotal2ID    = MFVarGetID (MDVarPowerOutputTotal2,    "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutPowerOutputTotal3ID    = MFVarGetID (MDVarPowerOutputTotal3,    "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutPowerOutputTotal4ID    = MFVarGetID (MDVarPowerOutputTotal4,    "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+//				((_MDOutDischargeID    	      = MFVarGetID (MDVarRouting_Discharge,  "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||		// late night discharge test 113012 -
+				((_MDOutAvgEfficiencyID       = MFVarGetID (MDVarTP2M_AvgEfficiency, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutAvgDeltaTempID        = MFVarGetID (MDVarTP2M_AvgDeltaTemp, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalEvaporationID    = MFVarGetID (MDVarTP2M_TotalEvaporation, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalExternalWaterID  = MFVarGetID (MDVarTP2M_TotalExternalWater, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalThermalWdlsID    = MFVarGetID (MDVarTP2M_TotalThermalWdls, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalOptThermalWdlsID = MFVarGetID (MDVarTP2M_TotalOptThermalWdls, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutput1ID        = MFVarGetID (MDVarTP2M_PowerOutput1, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerDeficit1ID       = MFVarGetID (MDVarTP2M_PowerDeficit1, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerPercent1ID       = MFVarGetID (MDVarTP2M_PowerPercent1, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutputTotalID    = MFVarGetID (MDVarTP2M_PowerOutputTotal, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutputTotal1ID    = MFVarGetID (MDVarTP2M_PowerOutputTotal1, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutputTotal2ID    = MFVarGetID (MDVarTP2M_PowerOutputTotal2, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutputTotal3ID    = MFVarGetID (MDVarTP2M_PowerOutputTotal3, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerOutputTotal4ID    = MFVarGetID (MDVarTP2M_PowerOutputTotal4, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 
-                                ((_MDOutGenerationID    = MFVarGetID (MDVarGeneration,    "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutGeneration1ID    = MFVarGetID (MDVarGeneration1,    "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutGeneration2ID    = MFVarGetID (MDVarGeneration2,    "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutGeneration3ID    = MFVarGetID (MDVarGeneration3,    "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                                ((_MDOutGeneration4ID    = MFVarGetID (MDVarGeneration4,    "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutGenerationID    = MFVarGetID (MDVarTP2M_Generation, "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutGeneration1ID    = MFVarGetID (MDVarTP2M_Generation1, "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutGeneration2ID    = MFVarGetID (MDVarTP2M_Generation2, "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutGeneration3ID    = MFVarGetID (MDVarTP2M_Generation3, "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutGeneration4ID    = MFVarGetID (MDVarTP2M_Generation4, "MWh", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
 
-				((_MDOutPowerDeficitTotalID   = MFVarGetID (MDVarPowerDeficitTotal,   "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutPowerPercentTotalID   = MFVarGetID (MDVarPowerPercentTotal,   "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalEnergyDemandID   = MFVarGetID (MDVarTotalEnergyDemand,   "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalReturnFlowID	  = MFVarGetID (MDVarTotalReturnFlow,     "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed)	||
-				((_MDOutLHFractID             = MFVarGetID (MDVarLHFract,             "-",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutLHFractPostID         = MFVarGetID (MDVarLHFractPost,         "-",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutQpp1ID                = MFVarGetID (MDVarQpp1,                "-",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutOptQO1ID              = MFVarGetID (MDVarOptQO1,              "-",  MFOutput, MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalHeatToRivID	  = MFVarGetID (MDVarHeatToRiv,           "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalHeatToSinkID	  = MFVarGetID (MDVarHeatToSink,          "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalHeatToEngID      = MFVarGetID (MDVarHeatToEng,           "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalHeatToElecID     = MFVarGetID (MDVarHeatToElec,           "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutTotalHeatToEvapID     = MFVarGetID (MDVarHeatToEvap,           "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-				((_MDOutCondenserInletID      = MFVarGetID (MDVarCondenserInlet,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||		// added 122112
-                                ((_MDOutCondenserInlet1ID      = MFVarGetID (MDVarCondenserInlet1,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutCondenserInlet2ID      = MFVarGetID (MDVarCondenserInlet2,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutCondenserInlet3ID      = MFVarGetID (MDVarCondenserInlet3,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutCondenserInlet4ID      = MFVarGetID (MDVarCondenserInlet4,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutHeatToRiver1ID      = MFVarGetID (MDVarHeatToRiver1,       "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutHeatToRiver2ID      = MFVarGetID (MDVarHeatToRiver2,       "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutHeatToRiver3ID      = MFVarGetID (MDVarHeatToRiver3,       "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutHeatToRiver4ID      = MFVarGetID (MDVarHeatToRiver4,       "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                 ((_MDOutPowerDeficitTotalID   = MFVarGetID (MDVarTP2M_PowerDeficitTotal, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutPowerPercentTotalID   = MFVarGetID (MDVarTP2M_PowerPercentTotal, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalEnergyDemandID   = MFVarGetID (MDVarTP2M_TotalEnergyDemand, "MW", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalReturnFlowID	  = MFVarGetID (MDVarTP2M_TotalReturnFlow, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutLHFractID             = MFVarGetID (MDVarTP2M_LHFract, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutLHFractPostID         = MFVarGetID (MDVarTP2M_LHFractPost, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutQpp1ID                = MFVarGetID (MDVarTP2M_Qpp1, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutOptQO1ID              = MFVarGetID (MDVarTP2M_OptQO1, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalHeatToRivID	  = MFVarGetID (MDVarTP2M_HeatToRiv, "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalHeatToSinkID	  = MFVarGetID (MDVarTP2M_HeatToSink, "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalHeatToEngID      = MFVarGetID (MDVarTP2M_HeatToEng, "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalHeatToElecID     = MFVarGetID (MDVarTP2M_HeatToElec, "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutTotalHeatToEvapID     = MFVarGetID (MDVarTP2M_HeatToEvap, "GJ", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                 ((_MDOutCondenserInletID      = MFVarGetID (MDVarTP2M_CondenserInlet, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||		// added 122112
+                                ((_MDOutCondenserInlet1ID      = MFVarGetID (MDVarTP2M_CondenserInlet1, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutCondenserInlet2ID      = MFVarGetID (MDVarTP2M_CondenserInlet2, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutCondenserInlet3ID      = MFVarGetID (MDVarTP2M_CondenserInlet3, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutCondenserInlet4ID      = MFVarGetID (MDVarTP2M_CondenserInlet4, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutHeatToRiver1ID      = MFVarGetID (MDVarTP2M_HeatToRiver1, "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutHeatToRiver2ID      = MFVarGetID (MDVarTP2M_HeatToRiver2, "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutHeatToRiver3ID      = MFVarGetID (MDVarTP2M_HeatToRiver3, "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutHeatToRiver4ID      = MFVarGetID (MDVarTP2M_HeatToRiver4, "MJ", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
 
-				((_MDOutSimEfficiencyID       = MFVarGetID (MDVarSimEfficiency,        "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||			// added 122112
-				((_MDOutTotalHoursRunID       = MFVarGetID (MDVarTotalHoursRun,        "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||			// added 030213
-                                ((_MDOutLossToInlet1ID      = MFVarGetID (MDVarLossToInlet1,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutLossToInlet2ID      = MFVarGetID (MDVarLossToInlet2,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutLossToInlet3ID      = MFVarGetID (MDVarLossToInlet3,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
-                                ((_MDOutLossToInlet4ID      = MFVarGetID (MDVarLossToInlet4,       "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+				((_MDOutSimEfficiencyID       = MFVarGetID (MDVarTP2M_SimEfficiency, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||			// added 122112
+				((_MDOutTotalHoursRunID       = MFVarGetID (MDVarTP2M_TotalHoursRun, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||			// added 030213
+                                ((_MDOutLossToInlet1ID      = MFVarGetID (MDVarTP2M_LossToInlet1, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutLossToInlet2ID      = MFVarGetID (MDVarTP2M_LossToInlet2, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutLossToInlet3ID      = MFVarGetID (MDVarTP2M_LossToInlet3, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
+                                ((_MDOutLossToInlet4ID      = MFVarGetID (MDVarTP2M_LossToInlet4, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||          // added 122112
 
 
 

@@ -27,8 +27,8 @@ int MDAvgNStepsDef () {
 
 	if (_MDOutAvgNStepsID != MFUnset) return (_MDOutAvgNStepsID);
 	MFDefEntering ("Average NSteps");
-	if (((_MDOutAvgNStepsID = MFVarGetID (MDVarAvgNSteps, MFNoUnit, MFInt,    MFState,  MFInitial)) == CMfailed) ||
-	    (MFModelAddFunction(_MDAvgNSteps) == CMfailed)) return (CMfailed);
+	if (((_MDOutAvgNStepsID = MFVarGetID (MDVarAux_AvgNSteps, MFNoUnit, MFInt, MFState, MFInitial)) == CMfailed) ||
+        (MFModelAddFunction(_MDAvgNSteps) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Average NSteps");
 	return (_MDOutAvgNStepsID);
 }

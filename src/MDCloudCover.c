@@ -77,13 +77,13 @@ int MDCloudCoverDef() {
     switch (optID) {
         case MDnone:
         case MDinput:
-            if      ((_MDOutCloudCoverID = MFVarGetID(MDVarWeather_CloudCover, "fraction", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if      ((_MDOutCloudCoverID = MFVarGetID(MDVarCommon_CloudCover, "fraction", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
             if (((_MDInGrossRadID        = MDGrossRadDef ()) == CMfailed) ||
-                ((_MDInSolarRadID        = MFVarGetID(MDVarSolarRadiation,   	"MJ/m2",  	MFInput, MFState, MFBoundary)) == CMfailed) ||
-//                    ((_MDInPrecipitationID     = MFVarGetID (MDVarPrecipitation,     "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDOutCloudCoverID     = MFVarGetID(MDVarWeather_CloudCover, "%", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInSolarRadID        = MFVarGetID(MDVarCore_SolarRadiation, "MJ/m2", MFInput, MFState, MFBoundary)) == CMfailed) ||
+//                    ((_MDInPrecipitationID     = MFVarGetID (MDVarCommon_Precipitation,     "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDOutCloudCoverID     = MFVarGetID(MDVarCommon_CloudCover, "%", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction(_MDCloudCover) == CMfailed))
                     ) return (CMfailed);
             break;

@@ -153,21 +153,21 @@ int MDBQARTpreprocessDef() {
 	MFDefEntering ("QBARTpreprocess");
 	
 	if (((_MDInDischMeanID           = MDDischMeanDef ()) == CMfailed) ||
-	    ((_MDInDischargeID           = MDDischargeDef ()) == CMfailed) || 
-	    ((_MDInAirTempID             = MFVarGetID (MDVarAirTemperature,         "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInContributingAreaAccID = MFVarGetID (MDVarContributingAreaAcc,    "km2",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarAirTemperatureAcc_time, "degC",  MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarAirTemperatureAcc_space,"degC",  MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInDischargeAccID        = MFVarGetID (MDVarDischargeAcc,           "m3/s",  MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInTimeStepsID           = MFVarGetID (MDVarTimeSteps,              MFNoUnit,MFOutput, MFState, MFInitial))  == CMfailed) ||
+            ((_MDInDischargeID           = MDDischargeDef ()) == CMfailed) ||
+            ((_MDInAirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
+            ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space, "degC", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInDischargeAccID        = MFVarGetID (MDVarSediment_DischargeAcc, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
+            ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps, MFNoUnit, MFOutput, MFState, MFInitial)) == CMfailed) ||
 
         // output
-	    ((_MDOutBQART_AID  	         = MFVarGetID (MDVarBQART_A,                "km2",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutBQART_RID            = MFVarGetID (MDVarBQART_R,                "km" ,   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-            ((_MDOutBQART_Qbar_m3sID     = MFVarGetID (MDVarBQART_Qbar_m3s,         "m3s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDOutBQART_Qbar_km3yID    = MFVarGetID (MDVarBQART_Qbar_km3y,        "km3/y", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-  	    ((_MDOutBQART_TID            = MFVarGetID (MDVarBQART_T, 	            "degC",  MFOutput, MFState, MFBoundary)) == CMfailed) || 
-	    (MFModelAddFunction (_MDQBARTpreprocess) == CMfailed)) return (CMfailed);
+	    ((_MDOutBQART_AID  	         = MFVarGetID (MDVarSediment_BQART_A, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDOutBQART_RID            = MFVarGetID (MDVarSediment_BQART_R, "km" , MFRoute, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDOutBQART_Qbar_m3sID     = MFVarGetID (MDVarSediment_BQART_Qbar_m3s, "m3s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDOutBQART_Qbar_km3yID    = MFVarGetID (MDVarSediment_BQART_Qbar_km3y, "km3/y", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDOutBQART_TID            = MFVarGetID (MDVarSediment_QART_T, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+            (MFModelAddFunction (_MDQBARTpreprocess) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("QBARTpreprocess");
 	return (_MDOutBQART_TID);
 }

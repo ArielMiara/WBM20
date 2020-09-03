@@ -116,12 +116,12 @@ int MDReservoirDef () {
 	switch (optID) {
 		case MDcalculate:
 			if (((_MDInDischMeanID      = MDDischMeanDef ())   == CMfailed) ||
-			    ((_MDInDischargeID      = MDDischLevel2Def ()) == CMfailed) ||
-			    ((_MDInResCapacityID    = MFVarGetID (MDVarReservoirCapacity,      "km3",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutResStorageID    = MFVarGetID (MDVarReservoirStorage,       "km3",  MFOutput, MFState, MFInitial))  == CMfailed) ||
-			    ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoirStorageChange, "km3",  MFOutput, MFState, MFBoundary)) == CMfailed) ||		//RJS, changed MFBoundary o MFIniial
-			    ((_MDOutResReleaseID    = MFVarGetID (MDVarReservoirRelease,       "m3/s", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDReservoir) == CMfailed)) return (CMfailed);
+                ((_MDInDischargeID      = MDDischLevel2Def ()) == CMfailed) ||
+                ((_MDInResCapacityID    = MFVarGetID (MDVarReservoir_Capacity, "km3", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutResStorageID    = MFVarGetID (MDVarReservoir_Storage, "km3", MFOutput, MFState, MFInitial)) == CMfailed) ||
+                ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoir_StorageChange, "km3", MFOutput, MFState, MFBoundary)) == CMfailed) ||		//RJS, changed MFBoundary o MFIniial
+			    ((_MDOutResReleaseID    = MFVarGetID (MDVarReservoir_Release, "m3/s", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDReservoir) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

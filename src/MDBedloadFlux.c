@@ -58,14 +58,14 @@ int MDBedloadFluxDef() {
 	
 	MFDefEntering ("BedloadFlux");
 	
-	if (((_MDInDischargeID  = MDDischargeBFDef    ())			 == CMfailed) || 
-	((_MDInMinSlopeID  		= MFVarGetID (MDVarMinSlope,  " ",	MFInput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDInUpStreamQbID  	= MFVarGetID (MDVarUpStreamQb,  " ",	MFRoute, MFState, MFBoundary)) == CMfailed) ||
+	if (((_MDInDischargeID  = MDDischargeBFDef    ())			 == CMfailed) ||
+        ((_MDInMinSlopeID  		= MFVarGetID (MDVarSediment_MinSlope, " ", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInUpStreamQbID  	= MFVarGetID (MDVarSediment_UpStreamQb, " ", MFRoute, MFState, MFBoundary)) == CMfailed) ||
 
 	// output
- 	((_MDOutBedloadFluxID	= MFVarGetID (MDVarBedloadFlux, "kg/s",MFOutput, MFState, MFBoundary)) == CMfailed) ||
- 	((_MDOutDeltaBedloadID	= MFVarGetID (MDDeltaBedload  , "kg/s",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	(MFModelAddFunction (_MDBedloadFlux) == CMfailed)) return (CMfailed);
+ 	((_MDOutBedloadFluxID	= MFVarGetID (MDVarSediment_BedloadFlux, "kg/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutDeltaBedloadID	= MFVarGetID (MDVarSediment_DeltaBedload  , "kg/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDBedloadFlux) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving  ("BedloadFlux");
 	return (_MDOutBedloadFluxID);

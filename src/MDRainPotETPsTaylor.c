@@ -76,13 +76,13 @@ int MDRainPotETPsTaylorDef () {
 
 	MFDefEntering ("Rainfed Potential Evapotranspiration (Priestley - Taylor)");
 	if (((_MDInDayLengthID     = MDSRadDayLengthDef ()) == CMfailed) ||
-	    ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
-	    ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
-	    ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
-	    ((_MDInAtMeanID  = MFVarGetID (MDVarAirTemperature, "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInVPressID  = MFVarGetID (MDVarVaporPressure,  "kPa",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID    = MFVarGetID (MDVarRainPotEvapotrans,  "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainPotETPsTaylor) == CMfailed)) return (CMfailed);
+        ((_MDInI0HDayID        = MDSRadI0HDayDef    ()) == CMfailed) ||
+        ((_MDInCParamAlbedoID  = MDCParamAlbedoDef  ()) == CMfailed) ||
+        ((_MDInSolRadID        = MDSolarRadDef      ()) == CMfailed) ||
+        ((_MDInAtMeanID  = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInVPressID  = MFVarGetID (MDVarCore_VaporPressure, "kPa", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutPetID    = MFVarGetID (MDVarCore_RainPotEvapotrans, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDRainPotETPsTaylor) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Priestley - Taylor)");
 	return (_MDOutPetID);
 }

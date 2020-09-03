@@ -40,9 +40,9 @@ int MDRainPotETJensenDef () {
 
 	MFDefEntering ("Rainfed Potential Evapotranspiration (Jensen)");
 	if (((_MDInSolRadID = MDSolarRadDef ()) == CMfailed) ||
-	    ((_MDInAtMeanID = MFVarGetID (MDVarAirTemperature,    "degC",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID   = MFVarGetID (MDVarRainPotEvapotrans, "mm",    MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainPotETJensen) == CMfailed)) return (CMfailed);
+		((_MDInAtMeanID = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDOutPetID   = MFVarGetID (MDVarCore_RainPotEvapotrans, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDRainPotETJensen) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Jensen)");
 	return (_MDOutPetID);
 }

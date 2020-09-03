@@ -38,12 +38,12 @@ int MDSurfRunoffDef () {
 	 
 	if (((ret = MDSmallReservoirReleaseDef ()) != MFUnset) &&
 	    ((ret == CMfailed) ||
-	     ((_MDInSmallResUptakeID = MFVarGetID (MDVarSmallResUptake, "mm",   MFInput,  MFFlux, MFBoundary)) == CMfailed)))
+	     ((_MDInSmallResUptakeID = MFVarGetID (MDVarReservoir_FarmPontUptake, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
 	
 	if (((_MDInRainSurfRunoffID  = MDRainSurfRunoffDef ()) == CMfailed) ||
-	    ((_MDOutSurfRunoffID     = MFVarGetID (MDVarSurfRunoff,     "mm",   MFOutput, MFFlux,  MFBoundary))  == CMfailed) ||
-       (MFModelAddFunction (_MDSurfRunoff) == CMfailed)) return (CMfailed);
+        ((_MDOutSurfRunoffID     = MFVarGetID (MDVarCore_SurfRunoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDSurfRunoff) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Surface runoff");
 	return (_MDOutSurfRunoffID);
 }

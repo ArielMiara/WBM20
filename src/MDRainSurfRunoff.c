@@ -22,7 +22,7 @@ int MDRainSurfRunoffDef () {
 	if (_MDOutRainSurfRunoffID != MFUnset) return (_MDOutRainSurfRunoffID);
 	
 	if (((_MDOutRainInfiltrationID = MDRainInfiltrationDef ()) == CMfailed) ||
-	    ((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarRainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
+	    ((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
 		return (CMfailed);
 	return (_MDOutRainSurfRunoffID);
 }

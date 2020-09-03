@@ -31,7 +31,7 @@ enum { MDinput, MDcalculate };
 
 int MDRunoffVolumeDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarRunoffVolume;
+	const char *optStr, *optName = MDVarCore_RunoffVolume;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutRunoffVolumeID != MFUnset) return (_MDOutRunoffVolumeID);
@@ -40,12 +40,12 @@ int MDRunoffVolumeDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 	switch (optID) {
 		case MDinput:
-			_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFInput, MFState, MFBoundary);
+			_MDOutRunoffVolumeID = MFVarGetID (MDVarCore_RunoffVolume, "m3/s", MFInput, MFState, MFBoundary);
 			break;
 		case MDcalculate:
 			if (((_MDInRunoffID        = MDRunoffDef ()) == CMfailed) ||
-			    ((_MDOutRunoffVolumeID = MFVarGetID (MDVarRunoffVolume, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDRunoffVolume) == CMfailed)) return (CMfailed);
+                ((_MDOutRunoffVolumeID = MFVarGetID (MDVarCore_RunoffVolume, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDRunoffVolume) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

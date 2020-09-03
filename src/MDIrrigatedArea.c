@@ -64,15 +64,15 @@ int MDIrrigatedAreaDef () {
 	switch (optionID) {
         default:
         case FAO:
-            if ((_MDOutIrrigatedAreaFracID = MFVarGetID (MDVarIrrAreaFraction, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if ((_MDOutIrrigatedAreaFracID = MFVarGetID (MDVarIrrigation_AreaFraction, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
 		case IWMI:
-		    if (((_MDOutIrrigatedAreaFracID    = MFVarGetID (MDVarIrrAreaFraction,        MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
-		        ((_MDInIrrAreaFracSeason1ID = MFVarGetID (MDVarIrrAreaFractionSeason1, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		        ((_MDInIrrAreaFracSeason2ID = MFVarGetID (MDVarIrrAreaFractionSeason2, MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		        ((_MDInGrowingSeason1ID     = MFVarGetID (MDVarIrrGrowingSeason1Start, "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		        ((_MDInGrowingSeason2ID     = MFVarGetID (MDVarIrrGrowingSeason2Start, "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-		        (MFModelAddFunction (_MDIrrigatedAreaIWMI) == CMfailed)) return (CMfailed);
+		    if (((_MDOutIrrigatedAreaFracID    = MFVarGetID (MDVarIrrigation_AreaFraction, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInIrrAreaFracSeason1ID = MFVarGetID (MDVarIrrigation_AreaFractionSeason1, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInIrrAreaFracSeason2ID = MFVarGetID (MDVarIrrigation_AreaFractionSeason2, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInGrowingSeason1ID     = MFVarGetID (MDVarIrrigation_GrowingSeason1Start, "DoY", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInGrowingSeason2ID     = MFVarGetID (MDVarIrrigation_GrowingSeason2Start, "DoY", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDIrrigatedAreaIWMI) == CMfailed)) return (CMfailed);
 		    break;
 	}
 	MFDefLeaving ("IrrigatedArea");

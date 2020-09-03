@@ -97,33 +97,33 @@ int MDWaterBalanceDef() {
  
 	MFDefEntering ("WaterBalance");
 	if ((                                  MDAccumBalanceDef     ()  == CMfailed) ||
-	    ((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
-	    ((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
-	 
-	    ((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
-	    ((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
-	    ((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
-	    ((_MDInEvaptrsID                 = MFVarGetID (MDVarEvapotranspiration,      "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDInGrdWatChgID               = MFVarGetID (MDVarGroundWaterChange,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutWaterBalanceID           = MFVarGetID (MDVarWaterBalance,            "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction(_MDWaterBalance) == CMfailed))
+		((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
+		((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
+
+		((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
+		((_MDInSoilMoistChgID            = MDSoilMoistChgDef     ()) == CMfailed) ||
+		((_MDInRunoffID                  = MDRunoffDef           ()) == CMfailed) ||
+		((_MDInEvaptrsID                 = MFVarGetID (MDVarCore_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+		((_MDInGrdWatChgID               = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+		((_MDOutWaterBalanceID           = MFVarGetID (MDVarCore_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+		(MFModelAddFunction(_MDWaterBalance) == CMfailed))
 	    return (CMfailed);
 	if ((_MDInIrrGrossDemandID           = MDIrrGrossDemandDef    ()) != MFUnset) {
 		if ((_MDInIrrGrossDemandID == CMfailed) ||
-	        ((_MDInIrrUptakeRiverID      = MDIrrUptakeRiverDef    ()) == CMfailed) ||
-	        ((_MDInIrrUptakeGrdWaterID   = MDIrrUptakeGrdWaterDef ()) == CMfailed) ||
-	        ((_MDInIrrSoilMoistChgID     = MDIrrSoilMoistChgDef   ()) == CMfailed) ||
-	        ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef     ())==  CMfailed) ||
-	        ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrEvapotranspiration, "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-	        ((_MDInIrrReturnFlowID       = MFVarGetID (MDVarIrrReturnFlow,         "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) || 
-	        ((_MDInIrrUptakeExcessID     = MFVarGetID (MDVarIrrUptakeExcess,       "mm",   MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeBalanceID   = MFVarGetID (MDVarIrrUptakeBalance,      "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrWaterBalanceID    = MFVarGetID (MDVarIrrWaterBalance,       "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+            ((_MDInIrrUptakeRiverID      = MDIrrUptakeRiverDef    ()) == CMfailed) ||
+            ((_MDInIrrUptakeGrdWaterID   = MDIrrUptakeGrdWaterDef ()) == CMfailed) ||
+            ((_MDInIrrSoilMoistChgID     = MDIrrSoilMoistChgDef   ()) == CMfailed) ||
+            ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef     ())==  CMfailed) ||
+            ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrigation_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDInIrrReturnFlowID       = MFVarGetID (MDVarIrrigation_ReturnFlow, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDInIrrUptakeExcessID     = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDOutIrrUptakeBalanceID   = MFVarGetID (MDVarIrrigation_UptakeBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDOutIrrWaterBalanceID    = MFVarGetID (MDVarIrrigation_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 	    	return (CMfailed);		
 		if ((_MDInSmallResReleaseID        = MDSmallReservoirReleaseDef ()) != MFUnset) {
 			if (( _MDInSmallResReleaseID == CMfailed) ||
-			    ((_MDInSmallResEvapoID      = MFVarGetID (MDVarSmallResEvaporation,   "mm", MFInput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDInSmallResStorageChgID = MFVarGetID (MDVarSmallResStorageChange, "mm", MFInput, MFState, MFInitial))  == CMfailed))
+                ((_MDInSmallResEvapoID      = MFVarGetID (MDVarReservoir_FarmPondEvaporation, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                ((_MDInSmallResStorageChgID = MFVarGetID (MDVarReservoir_FarmPondStorageChange, "mm", MFInput, MFState, MFInitial)) == CMfailed))
 			    return (CMfailed);
 		}
 	}

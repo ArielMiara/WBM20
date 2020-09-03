@@ -90,8 +90,8 @@ int MDDischLevel2Def() {
 			case MDcalculate:
 				if  ((_MDOutIrrUptakeRiverID   = MDIrrUptakeRiverDef ()) == CMfailed) return (CMfailed);
 			case MDnone:
-				if (((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm",  MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-				    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrUptakeExcess,   "mm",  MFOutput, MFFlux,  MFBoundary)) == CMfailed))
+				if (((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 					return (CMfailed);
 				break;
 			default: MFOptionMessage (optName, optStr, options); return (CMfailed);

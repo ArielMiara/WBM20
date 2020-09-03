@@ -79,7 +79,7 @@ enum { MDinput, MDwetdays, MDfraction };
 
 int MDPrecipitationDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDVarPrecipitation;
+	const char *optStr, *optName = MDVarCommon_Precipitation;
 	const char *options [] = { MDInputStr, "wetdays", "fraction",(char *) NULL };
 
 	if (_MDOutPrecipID != MFUnset) return (_MDOutPrecipID);
@@ -90,18 +90,18 @@ int MDPrecipitationDef () {
  
 	switch (optID)
 		{
-		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarPrecipitation, "mm", MFInput,  MFFlux,  MFBoundary); break;
+		case MDinput: _MDOutPrecipID = MFVarGetID (MDVarCommon_Precipitation, "mm", MFInput, MFFlux, MFBoundary); break;
 		case MDwetdays:
 			if (((_MDInWetDaysID    = MDWetDaysDef ()) == CMfailed) ||
-			    ((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDPrecipWetDays) == CMfailed)) return (CMfailed);
+                ((_MDInPrecipID     = MFVarGetID (MDVarCommon_PrecipMonthly, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                ((_MDOutPrecipID    = MFVarGetID (MDVarCommon_Precipitation, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDPrecipWetDays) == CMfailed)) return (CMfailed);
 			break;
 		case MDfraction:
-			if (((_MDInPrecipID     = MFVarGetID (MDVarPrecipMonthly,  "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-			    ((_MDInPrecipFracID = MFVarGetID (MDVarPrecipFraction, "mm", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-			    ((_MDOutPrecipID    = MFVarGetID (MDVarPrecipitation,  "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-			    (MFModelAddFunction (_MDPrecipFraction) == CMfailed)) return (CMfailed);
+			if (((_MDInPrecipID     = MFVarGetID (MDVarCommon_PrecipMonthly, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                ((_MDInPrecipFracID = MFVarGetID (MDVarCommon_PrecipFraction, "mm", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutPrecipID    = MFVarGetID (MDVarCommon_Precipitation, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDPrecipFraction) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}

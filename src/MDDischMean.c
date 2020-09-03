@@ -34,7 +34,7 @@ enum { MDinput, MDcalculate };
 
 int MDDischMeanDef () {
 	int  optID = MFUnset;
-	const char *optStr, *optName = MDVarDischMean;
+	const char *optStr, *optName = MDVarAux_DischMean;
 	const char *options [] = { MDInputStr, MDCalculateStr, (char *) NULL };
 
 	if (_MDOutDischMeanID != MFUnset) return (_MDOutDischMeanID);
@@ -43,12 +43,12 @@ int MDDischMeanDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutDischMeanID  = MFVarGetID (MDVarDischMean, "m3/s", MFInput,  MFState, MFBoundary); break;
+		case MDinput: _MDOutDischMeanID  = MFVarGetID (MDVarAux_DischMean, "m3/s", MFInput, MFState, MFBoundary); break;
 		case MDcalculate:
 			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
-			    ((_MDInAccumDischargeID  = MDAccumRunoffDef ()) == CMfailed) ||
-			    ((_MDOutDischMeanID      = MFVarGetID (MDVarDischMean, "m3/s", MFOutput, MFState, MFInitial))  == CMfailed) ||
-			    (MFModelAddFunction (_MDDischMean) == CMfailed)) return (CMfailed);
+                ((_MDInAccumDischargeID  = MDAccumRunoffDef ()) == CMfailed) ||
+                ((_MDOutDischMeanID      = MFVarGetID (MDVarAux_DischMean, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
+                (MFModelAddFunction (_MDDischMean) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}

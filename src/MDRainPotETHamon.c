@@ -43,9 +43,9 @@ int MDRainPotETHamonDef () {
 
 	MFDefEntering ("Rainfed Potential Evapotranspiration (Hamon)");
 	if (((_MDInDayLengthID = MDSRadDayLengthDef ()) == CMfailed) ||
-	    ((_MDInAtMeanID    = MFVarGetID (MDVarAirTemperature,    "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutPetID      = MFVarGetID (MDVarRainPotEvapotrans, "mm",   MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRainPotETHamon) == CMfailed)) return (CMfailed);
+		((_MDInAtMeanID    = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+		((_MDOutPetID      = MFVarGetID (MDVarCore_RainPotEvapotrans, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDRainPotETHamon) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("Rainfed Potential Evapotranspiration (Hamon)");
 	return (_MDOutPetID);
 }

@@ -174,15 +174,15 @@ int MDBankfullQcalcDef() {
 	MFDefEntering ("BankfullQcalc");
 	if ( 
        // output
-    ((_MDOutBankfullQ2ID  		= MFVarGetID (MDVarBankfullQ2, 		"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ5ID  		= MFVarGetID (MDVarBankfullQ5, 		"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ10ID  		= MFVarGetID (MDVarBankfullQ10, 	"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ25ID  		= MFVarGetID (MDVarBankfullQ25, 	"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ50ID  		= MFVarGetID (MDVarBankfullQ50, 	"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ100ID  	= MFVarGetID (MDVarBankfullQ100, 	"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-    ((_MDOutBankfullQ200ID  	= MFVarGetID (MDVarBankfullQ200, 	"m2s", 	  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-        
-       (MFModelAddFunction (_MDBankfullQcalc) == CMfailed)) return (CMfailed);
+    ((_MDOutBankfullQ2ID  		= MFVarGetID (MDVarSediment_BankfullQ2, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ5ID  		= MFVarGetID (MDVarSediment_BankfullQ5, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ10ID  		= MFVarGetID (MDVarSediment_BankfullQ10, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ25ID  		= MFVarGetID (MDVarSediment_BankfullQ25, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ50ID  		= MFVarGetID (MDVarSediment_BankfullQ50, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ100ID  	= MFVarGetID (MDVarSediment_BankfullQ100, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+    ((_MDOutBankfullQ200ID  	= MFVarGetID (MDVarSediment_BankfullQ200, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+
+    (MFModelAddFunction (_MDBankfullQcalc) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("BankfullQcalc");
 	return (_MDOutBankfullQ5ID);
 }

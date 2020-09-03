@@ -23,361 +23,336 @@ extern "C" {
 #define MDCalculateStr "calculate"
 
 // Configuration options
-#define MDOptConfig_Discharge                       "Discharge"
-#define MDOptConfig_Irrigation                      "Irrigation"
-#define MDOptConfig_Model                           "Model"
-#define MDOptConfig_Reservoirs                      "Reservoirs"
-#define MDOptConfig_Routing                         "Routing"
+#define MDOptConfig_Discharge                   "Discharge"
+#define MDOptConfig_Irrigation                  "Irrigation"
+#define MDOptConfig_Model                       "Model"
+#define MDOptConfig_Reservoirs                  "Reservoirs"
+#define MDOptConfig_Routing                     "Routing"
 
-#define MDOptIrrigation_AreaMap                "IrrigatedAreaMap"
-#define MDOptIrrigation_ReferenceET                  "IrrReferenceETP"
+// Irrigation options
+#define MDOptIrrigation_AreaMap                 "IrrigatedAreaMap"
+#define MDOptIrrigation_ReferenceET             "IrrReferenceETP"
 
-#define MDOptRouting_Muskingum                       "Muskingum"
-#define MDOptRouting_Riverbed                        "Riverbed"
-#define MDOptSoilMoisture					 "SoilMoisture"
-#define MDOptSoilTemperature				 "SoilTemperature"
+// River routing options
+#define MDOptRouting_Muskingum                  "Muskingum"
+#define MDOptRouting_Riverbed                   "Riverbed"
+#define MDOptSoilWaterCapacity		            "SoilWaterCapacity"
 
-#define MDOptSoilAvailableWaterCapacity		 "SoilWaterCapacity"
-#define MDOptThermalInputs3					 "ThermalInputs3" //change to thermalinputs3 - AM 042415
+// Weather options
+#define MDOptWeather_CloudCover		            "CloudCover"
+#define MDOptWeather_SpecificHumidity           "SpecificHumidity"
+#define MDOptWeather_RelativeHumidity           "RelativeHumidity" //for wet bulb
+#define MDOptWeather_WetBulbTemp                "WetBulbTemp"
 
-#define MDOptWeather_CloudCover		                 "CloudCover"
-#define MDOptWeather_WetBulbTemp             "WetBulbTemp"
-#define MDOptWeather_SpecificHumidity                 "SpecificHumidity"
-#define MDOptWeather_RelativeHumidity                 "RelativeHumidity" //for wet bulb
+// Constant parameters
+#define MDParGrossRadTAU                        "GrossRadTAU"
+#define MDParGroundWatBETA                      "GroundWaterBETA"
+#define MDParInfiltrationFrac                   "InfiltrationFraction"
+#define MDParSoilMoistALPHA                     "SoilMoistureALPHA"
+#define	MDParSnowFallThreshold				    "SnowFallThreshold"
+#define MDParSnowMeltThreshold                  "SnowMeltThreshold"
 
-// Weather
-#define MDVarWeather_CloudCover		     "CloudCover"	//cloud cover fraction AM sep2015
-#define MDVarWeather_SpecificHumidity        "SpecificHumidity" //for wet bulb
-#define MDVarWeather_AirPressure             "AirPressure"      //for wet bulb
-#define MDVarWeather_WetBulbTemp             "WetBulbTemp"      //for wet bulb
-#define MDVarWeather_RelativeHumidity        "RelativeHumidity" //for wet bulb
+// Auxiliary variables
+#define MDVarAux_AccBalance                     "AccumBalance"
+#define MDVarAux_AccEvapotranspiration          "AccumEvapotranspiration"
+#define MDVarAux_AccSoilMoistChange             "AccumSoilMoistureChange"
+#define MDVarAux_AccGroundWaterChange           "AccumGroundWaterChange"
+#define MDVarAux_AccPrecipitation               "AccumPrecipitation"
+#define MDVarAux_AccRunoff                      "AccumRunoff"
+#define MDVarAux_AvgNSteps                      "AverageNSteps"
+#define MDVarAux_DischMean                      "DischargeMean"
 
-//SOLAR TO CLOUD
+// Common variables
+#define MDVarCommon_AirTemperature              "AirTemperature"
+#define MDVarCommon_AirTempMinimum              "AirTempMinimum"
+#define MDVarCommon_AirTempMaximum              "AirTempMaximum"
+#define MDVarCommon_AirPressure                 "AirPressure"
+#define MDVarCommon_CloudCover		            "CloudCover"
+#define MDVarCommon_HumiditySpecific            "SpecificHumidity"
+#define MDVarCommon_HumidityRelative            "RelativeHumidity"
+#define MDVarCommon_IceCover		            "IceCover"
+#define	MDVarCommon_MeanElevation               "Elevation"
+#define MDVarCommon_Precipitation               "Precipitation"
+#define MDVarCommon_PrecipFraction              "PrecipitationFraction"
+#define MDVarCommon_PrecipMonthly               "MonthlyPrecipitation"
+#define MDVarCommon_SnowDepth                   "SnowDepth"
+#define MDVarCommon_SnowDensity                 "SnowDensity"
+#define MDVarCommon_SnowFall                    "SnowFall"
+#define MDVarCommon_WetBulbTemp                 "WetBulbTemp"
+#define MDVarCommon_WetDays                     "WetDays"
+#define MDVarCommon_WindSpeed                   "WindSpeed"
 
-//TP2M
+// Core variables
+#define MDVarCore_BaseFlow                      "BaseFlow"
+#define MDVarCore_Evapotranspiration            "Evapotranspiration"
+#define MDVarCore_GrossRadiance                 "GrossRadiance"
+#define MDVarCore_GroundWater                   "GroundWater"
+#define MDVarCore_GroundWaterChange             "GroundWaterChange"
+#define MDVarCore_GroundWaterRecharge           "GroundWaterRecharge"
+#define MDVarCore_GroundWaterUptake             "GroundWaterUptake"
+#define MDVarCore_LandCoverSAGE                 "SAGEVegCover"
+#define MDVarCore_LandCoverTEM                  "TEMVegCover"
+#define MDVarCore_LandCoverWBM                  "WBMCover"
+#define MDVarCore_LeafAreaIndex                 "LeafAreaIndex"
+#define MDVarCore_RainEvapotranspiration        "RainEvapotranspiration"
+#define MDVarCore_RainInfiltration              "RainInfiltration"
+#define MDVarCore_RainInterception              "RainInterception"
+#define MDVarCore_RainPotEvapotrans             "RainPET"
+#define MDVarCore_RainSoilMoisture              "RainSoilMoisture"
+#define MDVarCore_RainSoilMoistureCell          "RainSoilMoistureCell"
+#define MDVarCore_RainSoilMoistChange           "RainSoilMoistureChange"
+#define MDVarCore_RainSurfRunoff                "RainSurfRunoff"
+#define MDVarCore_RainWaterSurplus              "RainWaterSurplus"
+#define MDVarCore_RelSoilMoisture               "RelativeSoilMoisture"
+#define MDVarCore_Runoff                        "Runoff"
+#define MDVarCore_RunoffMean                    "RunoffMean"
+#define MDVarCore_RunoffVolume                  "RunoffVolume"
+#define MDVarCore_SnowMelt                      "SnowMelt"
+#define MDVarCore_SnowPack                      "SnowPack"
+#define MDVarCore_SnowPackChange                "SnowPackChange"
+#define MDVarCore_SolarRadiation                "SolarRadiation"
+#define MDVarCore_SolarRadDayLength             "DayLength"
+#define MDVarCore_SolarRadI0HDay                "I0HDay"
+#define MDVarCore_SoilAvailWaterCap             "AvailableWaterCapacity"
+#define MDVarCore_SoilFieldCapacity             "FieldCapacity"
+#define MDVarCore_SoilRootingDepth              "RootingDepth"
+#define MDVarCore_SoilMoisture                  "SoilMoisture"
+#define MDVarCore_SoilMoistChange               "SoilMoistureChange"
+#define MDVarCore_SoilWiltingPoint              "WiltingPoint"
+#define MDVarCore_StemAreaIndex                 "StemAreaIndex"
+#define MDVarCore_SunShine                      "SunShine"
+#define MDVarCore_SurfRunoff                    "SurfaceRunoff"
+#define MDVarCore_VaporPressure                 "VaporPressure"
+#define MDVarCore_WaterBalance                  "WaterBalance"
+
+// Data assimilation variables
+#define MDVarDataAssim_DischObserved            "DischargeObserved"
+#define MDVarDataAssim_RunoffCorretion          "RunoffCorrection"
+
+// Irrigation variables
+#define MDVarIrrigation_AreaFraction            "IrrigatedAreaFraction"
+#define MDVarIrrigation_AreaFractionSeason1     "IrrigatedAreaFractionSeason1"
+#define MDVarIrrigation_AreaFractionSeason2     "IrrigatedAreaFractionSeason2"
+
+#define MDVarIrrigation_Efficiency              "IrrigationEfficiency"
+#define MDVarIrrigation_Evapotranspiration      "IrrEvapotranspiration"
+#define MDVarIrrigation_GrossDemand             "IrrGrossDemand"
+#define MDVarIrrigation_GrowingSeason1Start     "GrowingSeason1_Start"
+#define MDVarIrrigation_GrowingSeason2Start     "GrowingSeason2_Start"
+
+#define MDVarIrrigation_Intensity               "IrrigationIntensity"
+#define MDVarIrrigation_NetWaterDemand          "IrrNetWaterDemand"
+#define MDVarIrrigation_Precipitation           "IrrPrecipitation"
+#define MDVarIrrigation_RefEvapotrans           "IrrReferenceETP"
+#define MDVarIrrigation_ReturnFlow              "IrrReturnFlow"
+#define MDVarIrrigation_SoilMoisture            "IrrSoilMoisture"
+#define MDVarIrrigation_SoilMoistChange         "IrrSoilMoistChange"
+#define MDVarIrrigation_UptakeBalance           "IrrUptakeBalance"
+#define MDVarIrrigation_UptakeExternal          "IrrUptakeExternal"
+#define MDVarIrrigation_UptakeExcess            "IrrUptakeExcess"
+#define MDVarIrrigation_UptakeGrdWater          "IrrUptakeGroundWater"
+#define MDVarIrrigation_UptakeRiver             "IrrUptakeRiver"
+#define MDVarIrrigation_WaterBalance            "IrrWaterBalance"
+#define MDVarIrrigation_DailyRicePerolationRate "RicePercolationRate"
+#define MDVarIrrigation_RicePondingDepth        "RicePondingDepth"
+
+// Varying Parameters
+#define MDVarParam_Albedo                       "Albedo"
+#define MDVarParam_CHeight                      "CanopyHeight"
+#define MDVarParam_LWidth                       "LeafWidth"
+#define MDVarParam_RSS                          "CParamRSS"
+#define MDVarParam_R5                           "CParamR5"
+#define MDVarParam_CD                           "CParamCD"
+#define MDVarParam_CR                           "CParamCR"
+#define MDVarParam_GLMax                        "CParamGLMax"
+#define MDVarParam_LPMax                        "CParamLPMax"
+#define MDVarParam_Z0g                          "CParamZ0g"
+#define MDVarParam_WetDaysAlpha                 "WetDaysAlpha"
+#define MDVarParam_WetDaysBeta                  "WetDaysBeta"
+
+// Reservoir variables
+#define MDVarReservoir_FarmPondStorageFrac      "SmallReservoirStorageFraction"
+#define MDVarReservoir_FarmPondSmallResCapacity "SmallReservoirCapacity"
+#define MDVarReservoir_FarmPondRelease          "SmallReservoirRelease"
+#define MDVarReservoir_FarmPondStorage          "SmallReservoirStorage"
+#define MDVarReservoir_FarmPondStorageChange    "SmallReservoirStorageChange"
+#define MDVarReservoir_FarmPontUptake           "SmallReservoirUptake"
+#define MDVarReservoir_FarmPondEvaporation      "SmallReservoirEvaporation"
+#define MDVarReservoir_Capacity                 "ReservoirCapacity"
+#define MDVarReservoir_Release                  "ReservoirRelease"
+#define MDVarReservoir_Storage                  "ReservoirStorage"
+#define MDVarReservoir_StorageChange            "ReservoirStorageChange"
+
+// Routing variables
+#define MDVarRouting_Discharge                  "Discharge"
+#define MDVarRouting_Discharge0                 "Discharge0"
+#define MDVarRouting_Discharge1                 "Discharge1"
+#define MDVarRouting_MuskingumC0                "MuskingumC0"
+#define MDVarRouting_MuskingumC1                "MuskingumC1"
+#define MDVarRouting_MuskingumC2                "MuskingumC2"
+#define MDVarRouting_RiverbedAvgDepthMean       "RiverbedAvgDepthMean"
+#define MDVarRouting_RiverbedSlope              "RiverbedSlope"
+#define MDVarRouting_RiverbedShapeExponent      "RiverbedShapeExponent"
+#define MDVarRouting_RiverbedWidthMean          "RiverbedWidthMean"
+
+#define MDVarRouting_RiverbedVelocityMean       "RiverbedVelocityMean"
+#define MDVarRouting_RiverDepth                 "RiverDepth"
+#define MDVarRouting_RiverStorage               "RiverStorage"
+#define MDVarRouting_RiverStorageChg            "RiverStorageChange"
+#define MDVarRouting_RiverWidth                 "RiverbedWidth"
+
+//TP2M Variables
 #define MDVarTP2M_LossToWater					"LossToWater"
-#define MDVarTP2M_LossToInlet                                        "LossToInlet"
+#define MDVarTP2M_LossToInlet                   "LossToInlet"
+#define MDOptTP2M_ThermalInputs					"ThermalInputs3"
+#define MDVarTP2M_AvgEfficiency                 "AvgEfficiency"
+#define MDVarTP2M_AvgDeltaTemp                  "AvgDeltaTemp"
+#define MDVarTP2M_Efficiency1                   "Efficiency1"
+#define MDVarTP2M_Efficiency2                   "Efficiency2"
+#define MDVarTP2M_Efficiency3                   "Efficiency3"
+#define MDVarTP2M_Efficiency4                   "Efficiency4"
+#define MDVarTP2M_HeatToRiv                     "HeatToRiv"
+#define MDVarTP2M_HeatToSink                    "HeatToSink"
+#define MDVarTP2M_HeatToEng                     "HeatToEng"
+#define MDVarTP2M_HeatToElec                    "HeatToElec"
+#define MDVarTP2M_HeatToEvap                    "HeatToEvap"
+#define MDVarTP2M_LakeOcean1                    "LakeOcean1"
+#define MDVarTP2M_LHFract                       "LHFract"
+#define MDVarTP2M_LHFractPost                   "LHFractPost"
+#define MDVarTP2M_NamePlate1                    "NamePlate1"
+#define MDVarTP2M_NamePlate2                    "NamePlate2"
+#define MDVarTP2M_NamePlate3                    "NamePlate3"
+#define MDVarTP2M_NamePlate4                    "NamePlate4"
 
-#define MDVarAvgEfficiency                                       "AvgEfficiency"                // RJS 062012
-#define MDVarAvgDeltaTemp                                        "AvgDeltaTemp"                 // RJS 062012
-#define MDVarEfficiency1                                         "Efficiency1"                  // RJS 062012
-#define MDVarEfficiency2                                         "Efficiency2"                  // RJS 062012
-#define MDVarEfficiency3                                         "Efficiency3"                  // RJS 062012
-#define MDVarEfficiency4                                         "Efficiency4"                  // RJS 062012
-#define MDVarHeatToRiv                                           "HeatToRiv"                    // RJS 112712
-#define MDVarHeatToSink                                          "HeatToSink"                   // RJS 112712
-#define MDVarHeatToEng                                           "HeatToEng"                    // RJS 112712
-#define MDVarHeatToElec                                          "HeatToElec"                   // RJS 112912
-#define MDVarHeatToEvap                                          "HeatToEvap"                   // RJS 120212
-#define MDVarLakeOcean1                                          "LakeOcean1"           // RJS 062012
-#define MDVarLHFract                                             "LHFract"                      // RJS 071112
-#define MDVarLHFractPost                                         "LHFractPost"          // RJS 071112
+#define MDVarTP2M_Demand1                       "Demand1"
+#define MDVarTP2M_Demand2                       "Demand2"
+#define MDVarTP2M_Demand3                       "Demand3"
+#define MDVarTP2M_Demand4                       "Demand4"
+#define MDVarTP2M_FuelType1						"FuelType1"
+#define MDVarTP2M_FuelType2						"FuelType2"
+#define MDVarTP2M_FuelType3						"FuelType3"
+#define MDVarTP2M_FuelType4						"FuelType4"
+#define MDVarTP2M_Generation                    "Generation"
+#define MDVarTP2M_Generation1                   "Generation1"
+#define MDVarTP2M_Generation2                   "Generation2"
+#define MDVarTP2M_Generation3                   "Generation3"
+#define MDVarTP2M_Generation4                   "Generation4"
+#define MDVarTP2M_PowerOutput1                  "PowerOutput1"
+#define MDVarTP2M_PowerDeficit1                 "PowerDeficit1"
+#define MDVarTP2M_PowerPercent1                 "PowerPercent1"
+#define MDVarTP2M_PowerOutputTotal              "PowerOutputTotal"
+#define MDVarTP2M_PowerOutputTotal1             "PowerOutputTotal1"
+#define MDVarTP2M_PowerOutputTotal2             "PowerOutputTotal2"
+#define MDVarTP2M_PowerOutputTotal3             "PowerOutputTotal3"
+#define MDVarTP2M_PowerOutputTotal4             "PowerOutputTotal4"
 
-#define MDVarNamePlate1                                          "NamePlate1"           //RJS 013012
-#define MDVarNamePlate2                                          "NamePlate2"           //RJS 013012
-#define MDVarNamePlate3                                          "NamePlate3"           //RJS 013012
-#define MDVarNamePlate4                                          "NamePlate4"           //RJS 013012
+#define MDVarTP2M_PowerDeficitTotal             "PowerDeficitTotal"
+#define MDVarTP2M_PowerPercentTotal             "PowerPercentTotal"
+#define MDVarTP2M_Qpp1                          "Qpp1"
+#define MDVarTP2M_OptQO1                        "OptQO1"
+#define MDVarTP2M_Technology1                   "Technology1"
+#define MDVarTP2M_Technology2                   "Technology2"
+#define MDVarTP2M_Technology3                   "Technology3"
+#define MDVarTP2M_Technology4                   "Technology4"
+#define MDVarTP2M_CWA_316b_OnOff                "CWA_316b_OnOff"
+#define MDVarTP2M_Downstream_OnOff              "Downstream_OnOff"
+#define MDVarTP2M_CWA_OnOff                     "CWA_OnOff"
+#define MDVarTP2M_CWA_Delta                     "CWA_Delta"
+#define MDVarTP2M_CWA_Limit                     "CWA_Limit"
+#define MDVarTP2M_GW_Temp					    "GW_Temp"
+#define MDVarTP2M_Equil_Temp                    "Equil_Temp"
 
-#define MDVarDemand1                                          "Demand1"           //RJS 013012
-#define MDVarDemand2                                          "Demand2"           //RJS 013012
-#define MDVarDemand3                                          "Demand3"           //RJS 013012
-#define MDVarDemand4                                          "Demand4"           //RJS 013012
-#define MDVarPowerOutput1                                        "PowerOutput1"         //RJS 013112
-#define MDVarPowerDeficit1                                       "PowerDeficit1"                //RJS 013112
-#define MDVarPowerPercent1                                       "PowerPercent1"                //RJS 013112
-#define MDVarPowerOutputTotal                            "PowerOutputTotal"             //RJS 013112
-#define MDVarPowerOutputTotal1                            "PowerOutputTotal1"             //RJS 013112
-#define MDVarPowerOutputTotal2                            "PowerOutputTotal2"             //RJS 013112
-#define MDVarPowerOutputTotal3                            "PowerOutputTotal3"             //RJS 013112
-#define MDVarPowerOutputTotal4                            "PowerOutputTotal4"             //RJS 013112
+#define MDVarTP2M_TotalHoursRun                 "TotalHoursRun"
+#define MDVarTP2M_TotalThermalWdls              "TotalThermalWdls"
+#define MDVarTP2M_TotalOptThermalWdls           "TotalOptThermalWdls"
+#define MDVarTP2M_TotalEvaporation              "TotalEvaporation"
+#define MDVarTP2M_TotalEnergyDemand             "TotalEnergyDemand"
+#define MDVarTP2M_TotalReturnFlow               "TotalReturnFlow"
+#define MDVarTP2M_CondenserInlet                "CondenserInlet"
+#define MDVarTP2M_CondenserInlet1               "CondenserInlet1"
+#define MDVarTP2M_CondenserInlet2               "CondenserInlet2"
+#define MDVarTP2M_CondenserInlet3               "CondenserInlet3"
+#define MDVarTP2M_CondenserInlet4               "CondenserInlet4"
+#define MDVarTP2M_SimEfficiency                 "SimEfficiency"
+#define MDVarTP2M_TotalExternalWater			"TotalExternalWater"
 
-#define MDVarGeneration                            "Generation"             //RJS 013112
-#define MDVarGeneration1                            "Generation1"             //RJS 013112
-#define MDVarGeneration2                            "Generation2"             //RJS 013112
-#define MDVarGeneration3                            "Generation3"             //RJS 013112
-#define MDVarGeneration4                            "Generation4"             //RJS 013112
+#define MDVarTP2M_LossToInlet1                  "LossToInlet1"
+#define MDVarTP2M_LossToInlet2                  "LossToInlet2"
+#define MDVarTP2M_LossToInlet3                  "LossToInlet3"
+#define MDVarTP2M_LossToInlet4                  "LossToInlet4"
 
-#define MDVarPowerDeficitTotal                           "PowerDeficitTotal"    //RJS 013112
-#define MDVarPowerPercentTotal                           "PowerPercentTotal"    //RJS 013112
-#define MDVarQpp1                                                        "Qpp1"                 //RJS 071112
-#define MDVarOptQO1                                                      "OptQO1"               //RJS 071112
-#define MDVarTechnology1                                                 "Technology1"          // RJS 062012
-#define MDVarTechnology2                                                 "Technology2"          // RJS 062012
-#define MDVarTechnology3                                                 "Technology3"          // RJS 062012
-#define MDVarTechnology4                                                 "Technology4"          // RJS 062012
-#define MDVarCWA_316b_OnOff                                           "CWA_316b_OnOff"
-#define MDVarDownstream_OnOff                                           "Downstream_OnOff"
-#define MDVarCWA_OnOff                                           "CWA_OnOff"
-#define MDVarCWA_Delta                                           "CWA_Delta"
-#define MDVarCWA_Limit                                           "CWA_Limit"
-#define MDVarGW_Temp						 "GW_Temp"
-#define MDVarEquil_Temp                                             "Equil_Temp"
+#define MDVarTP2M_HeatToRiver1                  "HeatToRiver1"
+#define MDVarTP2M_HeatToRiver2                  "HeatToRiver2"
+#define MDVarTP2M_HeatToRiver3                  "HeatToRiver3"
+#define MDVarTP2M_HeatToRiver4                  "HeatToRiver4"
 
-#define MDVarTotalHoursRun                                               "TotalHoursRun"        // RJS 030213
-#define MDVarTotalThermalWdls                            "TotalThermalWdls"             //RJS 013112
-#define MDVarTotalOptThermalWdls                         "TotalOptThermalWdls"  //RJS 020212
-#define MDVarTotalEvaporation                            "TotalEvaporation"             // RJS 062012
-#define MDVarTotalEnergyDemand                           "TotalEnergyDemand"    // RJS 062012
-#define MDVarTotalReturnFlow                             "TotalReturnFlow"              // RJS 062012
-#define MDVarCondenserInlet                                     "CondenserInlet"                        //RJS 122112
-#define MDVarCondenserInlet1                                     "CondenserInlet1"                        //RJS 122112
-#define MDVarCondenserInlet2                                     "CondenserInlet2"                        //RJS 122112
-#define MDVarCondenserInlet3                                     "CondenserInlet3"                        //RJS 122112
-#define MDVarCondenserInlet4                                     "CondenserInlet4"                        //RJS 122112
-#define MDVarSimEfficiency                                      "SimEfficiency"                         //RJS 122112
-#define MDVarTotalExternalWater					"TotalExternalWater"		//MIARA 042815
+#define MDVarTP2M_WTempGrdWater                 "GroundWaterTemperature"
+#define MDVarTP2M_WTempRiver                    "RiverTemperature"
+#define MDVarTP2M_WTempSurfRunoff               "SurfaceROTemperature"
+#define MDVarTP2M_BgcLocalIn_QxT                "QxT_LocalIn"
+#define MDVarTP2M_Removal_QxT                   "QxT_Removal"
+#define MDVarTP2M_Flux_QxT                      "QxT_Flux"
+#define MDVarTP2M_Storage_QxT                   "QxT_Storage"
+#define MDVarTP2M_DeltaStorage_QxT              "QxT_DeltaStorage"
+#define MDVarTP2M_Temp_QxT                      "QxT_WaterTemp"
+#define MDVarTP2M_WTempDeltaT_QxT               "QxT_deltaT"
+#define MDVarTP2M_FluxMixing_QxT                "QxT_FluxMixing"
+#define MDVarTP2M_StorageMixing_QxT             "QxT_StorageMixing"
+#define MDVarTP2M_DeltaStorageMixing_QxT        "QxT_DeltaStorageMixing"
+#define MDVarTP2M_WTempMixing_QxT               "QxT_WaterTempMixing"
 
-#define MDVarLossToInlet1                                     "LossToInlet1"                        //RJS 122112
-#define MDVarLossToInlet2                                     "LossToInlet2"                        //RJS 122112
-#define MDVarLossToInlet3                                     "LossToInlet3"                        //RJS 122112
-#define MDVarLossToInlet4                                     "LossToInlet4"                        //RJS 122112
+// Sediment variable
+#define MDVarSediment_DischargeAcc	            "DischargeAcc"
+#define MDVarSediment_NewDischargeAcc	        "NewDischargeAcc"
+#define MDVarSediment_OverBankQ	                "OverBankQ"
+#define MDVarSediment_Relief                    "ReliefMax"
+#define MDVarSediment_SuspendedFlux		        "SedimentFlux"
+#define MDVarSediment_BedloadFlux		        "BedloadFlux"
+#define MDVarSediment_AirTemperatureAcc_space	"AirTempAcc_space"
+#define MDVarSediment_AirTemperatureAcc_time    "AirTempAcc_time"
+#define MDVarSediment_NewAirTemperatureAcc_time "NewAirTempAcc_time"
+#define MDVarSediment_ContributingAreaAcc       "ContributingAreaAcc"
+#define MDVarSediment_TimeSteps                 "TimeSteps"
+#define MDVarSediment_NewTimeSteps              "NewTimeSteps"
+#define MDVarSediment_NewSedimentAcc		    "NewSedimentAcc"
+#define MDVarSediment_BQART_A			        "BQART_A"
+#define MDVarSediment_BQART_B	     	        "BQART_B"
+#define MDVarSediment_BQART_Qbar_km3y           "BQART_Qbar_km3y"
+#define MDVarSediment_BQART_Qbar_m3s            "BQART_Qbar_m3s"
+#define MDVarSediment_BQART_R                   "BQART_R"
+#define MDVarSediment_QART_T                    "BQART_T"
+#define MDVarSediment_BQART_Lithology           "BQART_Lithology"
+#define MDVarSediment_BQART_GNP                 "BQART_GNP"
+#define MDVarSediment_Population                "Population"
+#define MDVarSediment_LithologyAreaAcc          "LithologyAreaAcc"
+#define MDVarSediment_LithologyMean             "LithologyMean"
+#define MDVarSediment_PopulationAcc             "PopulationAcc"
+#define MDVarSediment_PopulationDensity         "PopulationDensity"
+#define MDVarSediment_GNPAreaAcc                "GNPAreaAcc"
+#define MDVarSediment_MeanGNP                   "MeanGNP"
+#define MDVarSediment_BQART_Eh                  "BQART_Eh"
+#define MDVarSediment_BQART_Te                  "BQART_Te"
+#define MDVarSediment_TeAacc                    "TeAacc"
+#define MDVarSediment_ResStorageAcc             "ResStorageAcc"
+#define MDVarSediment_Qs_bar                    "Qs_bar"
+#define MDVarSediment_rnseed                    "rnseed"
+#define MDVarSediment_MinSlope                  "Slope-Min"
+#define MDVarSediment_UpStreamQb                "UpStreamQb"
+#define MDVarSediment_DeltaBedload              "DeltaBedload"
+#define MDVarSediment_UpStreamQs                "UpStreamQs"
+#define MDVarSediment_DeltaQs                   "DeltaQs"
+#define MDVarSediment_BankfullQ                 "BankfullQ"
+#define MDVarSediment_BankfullQ2                "BankfullQ2"
+#define MDVarSediment_BankfullQ5                "BankfullQ5"
+#define MDVarSediment_BankfullQ10               "BankfullQ10"
+#define MDVarSediment_BankfullQ25               "BankfullQ25"
+#define MDVarSediment_BankfullQ50               "BankfullQ50"
+#define MDVarSediment_BankfullQ100              "BankfullQ100"
+#define MDVarSediment_BankfullQ200              "BankfullQ200"
+#define MDVarSediment_Bankfull_Qn               "Bankfull_Qn"
+#define MDVarSediment_FlowCoefficient           "FlowCoefficient"
 
-#define MDVarHeatToRiver1                                     "HeatToRiver1"                        //RJS 122112
-#define MDVarHeatToRiver2                                     "HeatToRiver2"                        //RJS 122112
-#define MDVarHeatToRiver3                                     "HeatToRiver3"                        //RJS 122112
-#define MDVarHeatToRiver4                                     "HeatToRiver4"                        //RJS 122112
-
-#define MDVarWTempGrdWater                   "GroundWaterTemperature"
-#define MDVarWTempRiver                      "RiverTemperature"
-#define MDVarWTempSurfRunoff                 "SurfaceROTemperature"
-#define MDVarBgcLocalIn_QxT                  "QxT_LocalIn"
-#define MDVarRemoval_QxT                     "QxT_Removal"
-#define MDVarFlux_QxT                        "QxT_Flux"
-#define MDVarStorage_QxT                     "QxT_Storage"
-#define MDVarDeltaStorage_QxT                "QxT_DeltaStorage"
-#define MDVarWTemp_QxT                       "QxT_WaterTemp"
-#define MDVarWTempDeltaT_QxT                 "QxT_deltaT"
-#define MDVarFluxMixing_QxT                  "QxT_FluxMixing"
-#define MDVarStorageMixing_QxT               "QxT_StorageMixing"
-#define MDVarDeltaStorageMixing_QxT          "QxT_DeltaStorageMixing"
-#define MDVarWTempMixing_QxT                 "QxT_WaterTempMixing"
-
-//REST
-#define MDVarAccBalance                      "AccumBalance"
-#define MDVarAccPrecipitation                "AccumPrecipitation"
-#define MDVarAccEvapotranspiration           "AccumEvapotranspiration"
-#define MDVarAccSoilMoistChange              "AccumSoilMoistureChange"
-#define MDVarAccGroundWaterChange            "AccumGroundWaterChange"
-#define MDVarAccRunoff                       "AccumRunoff"
-#define MDVarAccBalance                      "AccumBalance"
-#define MDVarAirTemperature                  "AirTemperature"
-#define MDVarAirTempMinimum                  "AirTempMinimum"
-#define MDVarAirTempMaximum                  "AirTempMaximum"
-#define MDVarAirTemperatureAcc_space		"AirTempAcc_space"
-#define MDVarAirTemperatureAcc_time		"AirTempAcc_time"
-#define MDVarNewAirTemperatureAcc_time		"NewAirTempAcc_time"
-#define MDVarAvgNSteps                       "AverageNSteps"
-#define MDVarContributingAreaAcc                       "ContributingAreaAcc"
-
-#define MDVarBaseFlow                        "BaseFlow"
-
-#define MDVarCParamAlbedo                    "Albedo"
-#define MDVarCParamCHeight                   "CanopyHeight"
-#define MDVarCParamLWidth                    "LeafWidth"
-#define MDVarCParamRSS                       "CParamRSS"
-#define MDVarCParamR5                        "CParamR5"
-#define MDVarCParamCD                        "CParamCD"
-#define MDVarCParamCR                        "CParamCR"
-#define MDVarCParamGLMax                     "CParamGLMax"
-#define MDVarCParamLPMax                     "CParamLPMax"
-#define MDVarCParamZ0g                       "CParamZ0g"
-
-#define MDVarDischarge                       "Discharge"
-#define MDVarDischarge0                      "Discharge0"
-#define MDVarDischarge1                      "Discharge1"
-#define MDVarDischObserved                   "DischargeObserved"
-#define MDVarDischMean                       "DischargeMean"
-#define MDVarDischargeAcc	"DischargeAcc"
-#define MDVarNewDischargeAcc	"NewDischargeAcc"
-#define MDVarOverBankQ	"OverBankQ"
-
-#define MDVarEvapotranspiration              "Evapotranspiration"
-#define MDVarFuelType1						 "FuelType1"			//RJS 013012
-#define MDVarFuelType2						 "FuelType2"			//RJS 013012
-#define MDVarFuelType3						 "FuelType3"			//RJS 013012
-#define MDVarFuelType4						 "FuelType4"			//RJS 013012
-#define MDVarGrossRadiance                   "GrossRadiance"
-#define MDVarGroundWater                     "GroundWater"
-#define MDVarGroundWaterChange               "GroundWaterChange"
-#define MDVarGroundWaterRecharge             "GroundWaterRecharge"
-#define MDVarGroundWaterUptake               "GroundWaterUptake"
-#define MDVarLeafAreaIndex                   "LeafAreaIndex"
-
-#define MDVarIceCover		              	"IceCover"
-
-#define MDVarIrrAreaFraction                 "IrrigatedAreaFraction"
-
-#define MDVarIrrAreaFractionSeason1          "IrrigatedAreaFractionSeason1"
-#define MDVarIrrAreaFractionSeason2          "IrrigatedAreaFractionSeason2"
-
-#define MDVarIrrEfficiency                   "IrrigationEfficiency"
-#define MDVarIrrEvapotranspiration           "IrrEvapotranspiration"
-#define MDVarIrrGrossDemand                  "IrrGrossDemand"
-#define MDVarIrrGrowingSeason1Start          "GrowingSeason1_Start"
-#define MDVarIrrGrowingSeason2Start          "GrowingSeason2_Start"
-
-#define MDVarIrrIntensity                    "IrrigationIntensity"
-#define MDVarIrrNetWaterDemand               "IrrNetWaterDemand"
-#define MDVarIrrPrecipitation                "IrrPrecipitation"
-#define MDVarIrrRefEvapotrans                "IrrReferenceETP"
-#define MDVarIrrReturnFlow                   "IrrReturnFlow"
-#define MDVarIrrSoilMoisture                 "IrrSoilMoisture"
-#define MDVarIrrSoilMoistChange              "IrrSoilMoistChange"
-#define MDVarIrrUptakeBalance                "IrrUptakeBalance"
-#define MDVarIrrUptakeExternal               "IrrUptakeExternal"
-#define MDVarIrrUptakeExcess                 "IrrUptakeExcess"
-#define MDVarIrrUptakeGrdWater               "IrrUptakeGroundWater"
-#define MDVarIrrUptakeRiver                  "IrrUptakeRiver"       
-#define MDVarIrrWaterBalance                 "IrrWaterBalance"
-#define MDVarIrrDailyRicePerolationRate      "RicePercolationRate"
-#define MDVarIrrRicePondingDepth			 "RicePondingDepth"
-#define	MDVarMeanElevation                   "Elevation"
-#define MDVarMuskingumC0                     "MuskingumC0"
-#define MDVarMuskingumC1                     "MuskingumC1"
-#define MDVarMuskingumC2                     "MuskingumC2"
-
-#define MDVarNamePlate1						 "NamePlate1"		//RJS 013012
-#define MDVarNamePlate2						 "NamePlate2"		//RJS 013012
-#define MDVarNamePlate3						 "NamePlate3"		//RJS 013012
-#define MDVarNamePlate4						 "NamePlate4"		//RJS 013012
-#define MDVarPowerOutput1					 "PowerOutput1"		//RJS 013112
-#define MDVarPowerDeficit1					 "PowerDeficit1"		//RJS 013112
-#define MDVarPowerPercent1					 "PowerPercent1"		//RJS 013112
-#define MDVarPowerOutputTotal				 "PowerOutputTotal"		//RJS 013112
-#define MDVarPowerDeficitTotal				 "PowerDeficitTotal"	//RJS 013112
-#define MDVarPowerPercentTotal				 "PowerPercentTotal"	//RJS 013112
-
-#define MDVarPrecipitation                   "Precipitation"
-#define MDVarPrecipFraction                  "PrecipitationFraction"
-#define MDVarPrecipMonthly                   "MonthlyPrecipitation"
-
-#define MDVarRainEvapotranspiration          "RainEvapotranspiration"
-#define MDVarRainInfiltration                "RainInfiltration"
-#define MDVarRainInterception                "RainInterception"
-#define MDVarRainPotEvapotrans               "RainPET"
-#define MDVarRainSoilMoisture                "RainSoilMoisture"
-#define MDVarRainSoilMoistureCell            "RainSoilMoistureCell"
-#define MDVarRainSoilMoistChange             "RainSoilMoistureChange"
-#define MDVarRainSurfRunoff                  "RainSurfRunoff"
-#define MDVarRainWaterSurplus                "RainWaterSurplus"
-
-#define MDVarReservoirCapacity               "ReservoirCapacity"
-#define MDVarReservoirRelease                "ReservoirRelease"
-#define MDVarReservoirStorage                "ReservoirStorage" 
-#define MDVarReservoirStorageChange          "ReservoirStorageChange"
-#define MDVarRelief                          "ReliefMax"
-
-#define MDVarRelSoilMoisture                 "RelativeSoilMoisture"	
-#define MDVarRiverbedAvgDepthMean            "RiverbedAvgDepthMean"
-#define MDVarRiverbedSlope                   "RiverbedSlope"
-#define MDVarRiverbedShapeExponent           "RiverbedShapeExponent"
-#define MDVarRiverbedWidthMean               "RiverbedWidthMean"
-
-#define MDVarRiverbedVelocityMean            "RiverbedVelocityMean"
-#define MDVarRiverDepth                      "RiverDepth"
-#define MDVarRiverStorage                    "RiverStorage"
-#define MDVarRiverStorageChg                 "RiverStorageChange"
-#define MDVarRiverWidth                      "RiverbedWidth"
-
-#define MDVarRunoff                          "Runoff"
-#define MDVarRunoffMean                      "RunoffMean"
-#define MDVarRunoffCorretion                 "RunoffCorrection"
-#define MDVarRunoffVolume                    "RunoffVolume"
-
-#define MDVarSedimentFlux		     "SedimentFlux"
-#define MDVarBedloadFlux		     "BedloadFlux"
-
-#define MDVarNewSedimentAcc		"NewSedimentAcc"
-#define MDVarBQART_A			     "BQART_A"
-#define MDVarBQART_B	     	     "BQART_B"
-#define MDVarBQART_Qbar_km3y	"BQART_Qbar_km3y"
-#define MDVarBQART_Qbar_m3s	"BQART_Qbar_m3s"
-#define MDVarBQART_R	     	     "BQART_R"
-#define MDVarBQART_T	     	     "BQART_T"
-#define MDVarBQART_Lithology	     "BQART_Lithology"
-#define MDVarBQART_GNP	     	     "BQART_GNP"
-#define MDVarPopulation	     	     "Population"
-#define MDVarLithologyAreaAcc	"LithologyAreaAcc"
-#define MDVarLithologyMean	"LithologyMean"
-#define MDVarPopulationAcc	"PopulationAcc"
-#define MDVarPopulationDensity  "PopulationDensity"
-#define MDVarGNPAreaAcc		"GNPAreaAcc"
-#define MDVarMeanGNP		"MeanGNP"
-#define MDVarBQART_Eh		"BQART_Eh"
-#define MDVarBQART_Te		"BQART_Te"
-#define MDVarTeAacc		"TeAacc"
-#define MDVarResStorageAcc	"ResStorageAcc"
-#define MDVarBQART_Te		"BQART_Te"
-#define MDVarQs_bar		"Qs_bar"
-#define MDVarrnseed		"rnseed"
-#define MDVarMinSlope		"Slope-Min"
-#define MDVarUpStreamQb		"UpStreamQb"
-#define MDDeltaBedload		"DeltaBedload"
-#define MDVarUpStreamQs		"UpStreamQs"
-#define MDDeltaQs		"DeltaQs"
-#define MDVarBankfullQ		"BankfullQ"
-#define MDVarBankfullQ2		"BankfullQ2"
-#define MDVarBankfullQ5		"BankfullQ5"
-#define MDVarBankfullQ10	"BankfullQ10"
-#define MDVarBankfullQ25		"BankfullQ25"
-#define MDVarBankfullQ50		"BankfullQ50"
-#define MDVarBankfullQ100		"BankfullQ100"
-#define MDVarBankfullQ200		"BankfullQ200"
-#define MDVarBankfull_Qn		"Bankfull_Qn"
-#define MDVarFlowCoefficient		"FlowCoefficient"
-
-#define MDVarSAGEVegCover                    "SAGEVegCover"
-#define MDVarSmallReservoirStorageFrac       "SmallReservoirStorageFraction"	
-#define MDVarSmallResCapacity                "SmallReservoirCapacity"
-#define MDVarSmallResRelease                 "SmallReservoirRelease"
-#define MDVarSmallResStorage                 "SmallReservoirStorage" 
-#define MDVarSmallResStorageChange           "SmallReservoirStorageChange"	
-#define MDVarSmallResUptake                  "SmallReservoirUptake"
-#define MDVarSmallResEvaporation             "SmallReservoirEvaporation"
-#define MDVarSnowFall                        "SnowFall"
-#define MDVarSnowMelt                        "SnowMelt"
-#define MDVarSnowPack                        "SnowPack"
-#define MDVarSnowPackChange                  "SnowPackChange"
-#define MDVarSoilAvailWaterCap               "AvailableWaterCapacity"
-#define MDVarSoilFieldCapacity               "FieldCapacity"
-#define MDVarSoilRootingDepth                "RootingDepth"
-#define MDVarSoilMoisture                    "SoilMoisture"
-#define MDVarSoilMoistChange                 "SoilMoistureChange"
-#define MDVarSoilWiltingPoint                "WiltingPoint"
-#define MDVarTotalThermalWdls				 "TotalThermalWdls"	//RJS 013112
-#define MDVarTotalOptThermalWdls			 "TotalOptThermalWdls" //RJS 020212
-#define MDVarTimeSteps			"TimeSteps"
-#define MDVarNewTimeSteps		"NewTimeSteps"
-
-#define MDVarSolarRadiation                  "SolarRadiation"
-#define MDVarSRadDayLength                   "DayLength"
-#define MDVarSRadI0HDay                      "I0HDay"
-#define MDVarStemAreaIndex                   "StemAreaIndex"
-#define MDVarSunShine                        "SunShine"
-#define MDVarSurfRunoff                      "SurfaceRunoff"
-#define MDVarVaporPressure                   "VaporPressure"
-#define MDVarTEMVegCover                     "TEMVegCover"
-#define MDVarWBMCover                        "WBMCover"
-#define MDVarWaterBalance                    "WaterBalance"
-#define MDVarWetDays                         "WetDays"
-#define MDVarWetDaysAlpha                    "WetDaysAlpha"
-#define MDVarWetDaysBeta                     "WetDaysBeta"
-#define MDVarWindSpeed                       "WindSpeed"
-
-#define	MDVarSaturationExcessflow			"SaturationExcessFlow"
-
-#define MDParGrossRadTAU                     "GrossRadTAU"
-#define MDParGroundWatBETA                   "GroundWaterBETA"
-#define MDParSoilMoistALPHA                  "SoilMoistureALPHA"
-#define MDParInfiltrationFrac                "InfiltrationFraction"
-#define MDVarLiquidSoilMoisture			     "LiquidSoilMoisture"
-#define MDVarSnowDepth                       "SnowDepth"
-#define MDVarSnowDensity                     "SnowDensity"
-#define MDVarWinterOnsetDoy                  "WinterOnsetDoY"
-#define MDParInfiltrationFracSpatial         "InfiltrationFractionSpatial"
-#define MDParSnowMeltThreshold               "SnowMeltThreshold"	
-#define	MDParFallThreshold				     "SnowFallThreshold"
-
+// Hardwired constants
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
 #define MDConstInterceptCH 10.0    // Interception canopy height constant 
 #define MDConstInterceptD   0.2    // Interception rain fraction of the day

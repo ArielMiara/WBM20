@@ -113,18 +113,18 @@ int MDBaseFlowDef () {
 
 	if ( _MDInIrrGrossDemandID != MFUnset) {
 		if (((_MDInSmallResReleaseID    = MDSmallReservoirReleaseDef ()) == CMfailed) ||
-		    ((_MDInIrrAreaFracID        = MDIrrigatedAreaDef         ()) ==  CMfailed) ||
-		 	((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrReturnFlow,     "mm", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrUptakeExternal, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-		    ((_MDOutIrrUptakeGrdWaterID = MDIrrUptakeGrdWaterDef     ()) == CMfailed))
+            ((_MDInIrrAreaFracID        = MDIrrigatedAreaDef         ()) ==  CMfailed) ||
+            ((_MDInIrrReturnFlowID      = MFVarGetID (MDVarIrrigation_ReturnFlow, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDOutIrrUptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDOutIrrUptakeGrdWaterID = MDIrrUptakeGrdWaterDef     ()) == CMfailed))
 			return CMfailed;
 	}
-	if (((_MDOutGrdWatID                = MFVarGetID (MDVarGroundWater,         "mm", MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutGrdWatChgID             = MFVarGetID (MDVarGroundWaterChange,   "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutGrdWatRechargeID        = MFVarGetID (MDVarGroundWaterRecharge, "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutGrdWatUptakeID          = MFVarGetID (MDVarGroundWaterUptake,   "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutBaseFlowID              = MFVarGetID (MDVarBaseFlow,            "mm", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDBaseFlow) == CMfailed)) return (CMfailed);
+	if (((_MDOutGrdWatID                = MFVarGetID (MDVarCore_GroundWater, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDOutGrdWatChgID             = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutGrdWatRechargeID        = MFVarGetID (MDVarCore_GroundWaterRecharge, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutGrdWatUptakeID          = MFVarGetID (MDVarCore_GroundWaterUptake, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutBaseFlowID              = MFVarGetID (MDVarCore_BaseFlow, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDBaseFlow) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Base flow ");
 	return (_MDOutBaseFlowID);

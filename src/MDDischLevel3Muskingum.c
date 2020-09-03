@@ -68,16 +68,16 @@ int MDDischLevel3MuskingumDef () {
 	MFDefEntering ("Discharge Muskingum");
 
 	if (((_MDInRunoffVolumeID  = MDRunoffVolumeDef ()) == CMfailed) ||
-	    ((_MDInMuskingumC0ID   = MDDischLevel3MuskingumCoeffDef ()) == CMfailed) ||
-	    ((_MDInMuskingumC1ID   = MFVarGetID (MDVarMuskingumC1,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInMuskingumC2ID   = MFVarGetID (MDVarMuskingumC2,      MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInDischargeID     = MFVarGetID (MDVarDischarge,        "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutDischAux0ID    = MFVarGetID (MDVarDischarge0,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutDischAux1ID    = MFVarGetID (MDVarDischarge1,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDOutDischLevel3ID  = MFVarGetID ("__DischLevel3",       "m3/s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDOutRiverStorChgID = MFVarGetID (MDVarRiverStorageChg,  "m3",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-	    ((_MDOutRiverStorageID = MFVarGetID (MDVarRiverStorage,     "m3",     MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    (MFModelAddFunction(_MDDischLevel3Muskingum) == CMfailed)) return (CMfailed);
+        ((_MDInMuskingumC0ID   = MDDischLevel3MuskingumCoeffDef ()) == CMfailed) ||
+        ((_MDInMuskingumC1ID   = MFVarGetID (MDVarRouting_MuskingumC1, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInMuskingumC2ID   = MFVarGetID (MDVarRouting_MuskingumC2, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInDischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutDischAux0ID    = MFVarGetID (MDVarRouting_Discharge0, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDOutDischAux1ID    = MFVarGetID (MDVarRouting_Discharge1, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDOutDischLevel3ID  = MFVarGetID ("__DischLevel3",       "m3/s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutRiverStorChgID = MFVarGetID (MDVarRouting_RiverStorageChg, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutRiverStorageID = MFVarGetID (MDVarRouting_RiverStorage, "m3", MFOutput, MFState, MFInitial)) == CMfailed) ||
+		(MFModelAddFunction(_MDDischLevel3Muskingum) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Discharge Muskingum");
 	return (_MDOutDischLevel3ID);
 }
