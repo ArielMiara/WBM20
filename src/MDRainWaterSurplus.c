@@ -17,7 +17,7 @@ bfekete@gc.cuny.edu
 static int _MDInSPackChgID          = MFUnset;
 static int _MDInRainSMoistChgID     = MFUnset;
 static int _MDInRainEvapoTransID    = MFUnset;
-static int _MDInPrecipID            = MFUnset;
+static int _MDInCommon_PrecipID            = MFUnset;
 static int _MDInIrrAreaFracID       = MFUnset;
 // Output
 static int _MDOutRainWaterSurplusID = MFUnset;
@@ -36,7 +36,7 @@ static void _MDRainWaterSurplus (int itemID) {
 	sPackChg    = MFVarGetFloat (_MDInSPackChgID,       itemID, 0.0) * (1.0 - irrAreaFrac);
 	sMoistChg   = MFVarGetFloat (_MDInRainSMoistChgID,  itemID, 0.0);
 	evapoTrans  = MFVarGetFloat (_MDInRainEvapoTransID, itemID, 0.0);
-	precip      = MFVarGetFloat (_MDInPrecipID,         itemID, 0.0) * (1.0 - irrAreaFrac);
+	precip      = MFVarGetFloat (_MDInCommon_PrecipID,         itemID, 0.0) * (1.0 - irrAreaFrac);
 
 	surplus = precip - sPackChg - evapoTrans - sMoistChg;
 
@@ -55,7 +55,7 @@ int MDRainWaterSurplusDef () {
         return (CMfailed);
 
     if (((_MDInRainSMoistChgID     = MDRainSMoistChgDef ()) == CMfailed) ||
-        ((_MDInPrecipID            = MDPrecipitationDef ()) == CMfailed) ||
+        ((_MDInCommon_PrecipID            = MDPrecipitationDef ()) == CMfailed) ||
         ((_MDInSPackChgID          = MDSPackChgDef      ()) == CMfailed) ||
         ((_MDInRainEvapoTransID    = MFVarGetID (MDVarCore_RainEvapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
         ((_MDOutRainWaterSurplusID = MFVarGetID (MDVarCore_RainWaterSurplus, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||

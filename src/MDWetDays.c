@@ -15,7 +15,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInPrecipID   = MFUnset;
+static int _MDInCommon_PrecipID   = MFUnset;
 static int _MDInAlphaID    = MFUnset;
 static int _MDInBetaID     = MFUnset;
 // Output
@@ -32,11 +32,11 @@ static void _MDWetDays (int itemID)
 // Local 
 	int nDays;
 
-	if (MFVarTestMissingVal (_MDInPrecipID, itemID) ||
+	if (MFVarTestMissingVal (_MDInCommon_PrecipID, itemID) ||
 		 MFVarTestMissingVal (_MDInAlphaID,  itemID) ||
 		 MFVarTestMissingVal (_MDInBetaID,   itemID)) { MFVarSetMissingVal (_MDOutWetDaysID,itemID); return; }
 
-	precip = MFVarGetFloat (_MDInPrecipID, itemID, 0.0);
+	precip = MFVarGetFloat (_MDInCommon_PrecipID, itemID, 0.0);
 	alpha  = MFVarGetFloat (_MDInAlphaID,  itemID, 1.0);
 	beta   = MFVarGetFloat (_MDInBetaID,   itemID, 0.0);
 
@@ -65,7 +65,7 @@ int MDWetDaysDef ()
 		{
 		case MDinput: _MDOutWetDaysID = MFVarGetID (MDVarCommon_WetDays, MFNoUnit, MFInput, MFState, MFBoundary); break;
 		case MDlbg:
-			if (((_MDInPrecipID   = MFVarGetID (MDVarCommon_PrecipMonthly, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+			if (((_MDInCommon_PrecipID   = MFVarGetID (MDVarCommon_PrecipMonthly, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
                 ((_MDInAlphaID    = MFVarGetID (MDVarParam_WetDaysAlpha, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDInBetaID     = MFVarGetID (MDVarParam_WetDaysBeta, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutWetDaysID = MFVarGetID (MDVarCommon_WetDays, MFNoUnit, MFOutput, MFFlux, MFBoundary)) == CMfailed) ||

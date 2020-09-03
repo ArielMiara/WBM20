@@ -18,7 +18,7 @@ static float _MDSoilMoistALPHA = 5.0;
 
 // Input
 static int _MDInAirTMeanID            = MFUnset;
-static int _MDInPrecipID              = MFUnset;
+static int _MDInCommon_PrecipID              = MFUnset;
 static int _MDInPotETID               = MFUnset;
 static int _MDInInterceptID           = MFUnset;
 static int _MDInSPackChgID            = MFUnset;
@@ -53,7 +53,7 @@ static void _MDRainSMoistChg (int itemID) {
 	float gm;
 	float iceContent;
 	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
-	precip       = MFVarGetFloat (_MDInPrecipID,            itemID, 0.0);
+	precip       = MFVarGetFloat (_MDInCommon_PrecipID,            itemID, 0.0);
  	sPackChg     = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
 	pet          = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
 	awCap        = MFVarGetFloat (_MDInSoilAvailWaterCapID, itemID, 0.0);
@@ -100,7 +100,7 @@ int MDRainSMoistChgDef () {
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
 	if ((ret != MFUnset) && ((_MDInIrrAreaFracID = MDIrrigatedAreaDef ())==  CMfailed) ) return (CMfailed);
 
-	if (((_MDInPrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
+	if (((_MDInCommon_PrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
         ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||
         ((_MDInPotETID             = MDRainPotETDef         ()) == CMfailed) ||
         ((_MDInInterceptID         = MDRainInterceptDef     ()) == CMfailed) ||

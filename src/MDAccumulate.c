@@ -14,7 +14,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 //Input;
-static int _MDInPrecipID     = MFUnset;
+static int _MDInCommon_PrecipID     = MFUnset;
 
 //Output
 static int _MDOutAccPrecipID = MFUnset;
@@ -22,7 +22,7 @@ static int _MDOutAccPrecipID = MFUnset;
 static void _MDAccumPrecip (int itemID) {
 	float accum;
 	
-	accum = MFVarGetFloat(_MDInPrecipID, itemID, 0.0);
+	accum = MFVarGetFloat(_MDInCommon_PrecipID, itemID, 0.0);
 	accum = accum * MFModelGetArea (itemID) / 86400000.0;
 	MFVarSetFloat(_MDOutAccPrecipID, itemID, MFVarGetFloat (_MDOutAccPrecipID, itemID, 0.0) + accum);
 }
@@ -32,7 +32,7 @@ int MDAux_AccumPrecipDef() {
 	if (_MDOutAccPrecipID != MFUnset) return (_MDOutAccPrecipID);
 
 	MFDefEntering ("Accumulate Precipitation");
-	if (((_MDInPrecipID     = MDPrecipitationDef ()) == CMfailed) ||
+	if (((_MDInCommon_PrecipID     = MDPrecipitationDef ()) == CMfailed) ||
         ((_MDOutAccPrecipID = MFVarGetID (MDVarAux_AccPrecipitation, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction(_MDAccumPrecip) == CMfailed)) return (CMfailed);
 

@@ -33,7 +33,7 @@ static MDIrrigatedCrop *_MDirrigCropStruct = (MDIrrigatedCrop *) NULL;
 //Input
 static int  _MDInIrrAreaFracID          = MFUnset;
 static int *_MDInCropFractionIDs        = (int *) NULL;
-static int  _MDInPrecipID               = MFUnset;
+static int  _MDInCommon_PrecipID               = MFUnset;
 static int  _MDInSPackChgID             = MFUnset;
 static int  _MDInIrrRefEvapotransID     = MFUnset;
 static int  _MDInFldCapaID              = MFUnset;
@@ -232,7 +232,7 @@ static void _MDIrrGrossDemand (int itemID) {
 		irrEfficiency       = MFVarGetFloat (_MDInIrrEfficiencyID,       itemID,  38.00);
         seasStart [0]       = MFVarGetFloat (_MDInGrowingSeason1ID,      itemID, -100);
         seasStart [1]       = MFVarGetFloat (_MDInGrowingSeason2ID,      itemID, -100);
-		precip              = MFVarGetFloat (_MDInPrecipID,              itemID,   0.00);
+		precip              = MFVarGetFloat (_MDInCommon_PrecipID,              itemID,   0.00);
 		snowpackChg         = MFVarGetFloat (_MDInSPackChgID,            itemID,   0.00);
         ricePondingDepth    = MFVarGetFloat (_MDInRicePondingDepthID,    itemID,   2.00);
 	 	ricePercolation     = MFVarGetFloat (_MDInRicePercolationRateID, itemID,   3.00);
@@ -362,7 +362,7 @@ int MDIrrGrossDemandDef () {
 				return (CMfailed);
 			break;
 		case MDcalculate:
-			if (((_MDInPrecipID              = MDPrecipitationDef    ()) == CMfailed) ||
+			if (((_MDInCommon_PrecipID              = MDPrecipitationDef    ()) == CMfailed) ||
                 ((_MDInSPackChgID            = MDSPackChgDef         ()) == CMfailed) ||
                 ((_MDInIrrRefEvapotransID    = MDIrrRefEvapotransDef ()) == CMfailed) ||
                 ((_MDInIrrAreaFracID         = MDIrrigatedAreaDef    ()) == CMfailed) ||

@@ -15,7 +15,7 @@ bfekete@gc.cuny.edu
 
 static int _MDInSPackChgID      = MFUnset;
 static int _MDInPetID           = MFUnset;
-static int _MDInPrecipID        = MFUnset;
+static int _MDInCommon_PrecipID        = MFUnset;
 static int _MDInCParamCHeightID = MFUnset;
 static int _MDInLeafAreaIndexID = MFUnset;
 static int _MDInStemAreaIndexID = MFUnset;
@@ -37,7 +37,7 @@ static void _MDRainIntercept (int itemID) {
 // Output
 	float intercept; // estimated interception [mm] 
 
-	precip   = MFVarGetFloat (_MDInPrecipID,        itemID, 0.0);
+	precip   = MFVarGetFloat (_MDInCommon_PrecipID,        itemID, 0.0);
 	pet      = MFVarGetFloat (_MDInPetID,           itemID, 0.0);
 
 	intercept = 0.0;
@@ -74,7 +74,7 @@ int MDRainInterceptDef () {
 	switch (optID) {
 		case MDinput: _MDOutInterceptID = MFVarGetID (MDVarCore_RainInterception, "mm", MFInput, MFFlux, false); break;
 		case MDcalc:
-			if (((_MDInPrecipID        = MDPrecipitationDef ()) == CMfailed) ||
+			if (((_MDInCommon_PrecipID        = MDPrecipitationDef ()) == CMfailed) ||
 
                 ((_MDInSPackChgID      = MDSPackChgDef      ()) == CMfailed) ||
                 ((_MDInLeafAreaIndexID = MDLeafAreaIndexDef ()) == CMfailed) ||

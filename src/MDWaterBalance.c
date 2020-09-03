@@ -16,7 +16,7 @@ NOT include any water that is flowing laterally and should not be used to call B
 #include <MD.h>
 
 // Input
-static int _MDInPrecipID             = MFUnset;
+static int _MDInCommon_PrecipID             = MFUnset;
 static int _MDInEvaptrsID            = MFUnset;
 static int _MDInSnowPackChgID        = MFUnset;
 static int _MDInSoilMoistChgID       = MFUnset;
@@ -43,7 +43,7 @@ static int _MDOutIrrWaterBalanceID   = MFUnset;
 
 static void _MDWaterBalance(int itemID) {
 // Input
-	float precip       = MFVarGetFloat(_MDInPrecipID,         itemID, 0.0);
+	float precip       = MFVarGetFloat(_MDInCommon_PrecipID,         itemID, 0.0);
 	float etp          = MFVarGetFloat(_MDInEvaptrsID,        itemID, 0.0);	
 	float snowPackChg  = MFVarGetFloat(_MDInSnowPackChgID,    itemID, 0.0);	
 	float soilMoistChg = MFVarGetFloat(_MDInSoilMoistChgID,   itemID, 0.0);
@@ -97,7 +97,7 @@ int MDWaterBalanceDef() {
  
 	MFDefEntering ("WaterBalance");
 	if ((MDAux_AccumBalanceDef() == CMfailed) ||
-        ((_MDInPrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
+        ((_MDInCommon_PrecipID                  = MDPrecipitationDef    ()) == CMfailed) ||
         ((_MDInDischargeID               = MDDischargeDef        ()) == CMfailed) ||
 
         ((_MDInSnowPackChgID             = MDSPackChgDef         ()) == CMfailed) ||
