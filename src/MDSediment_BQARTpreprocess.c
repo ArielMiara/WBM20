@@ -23,7 +23,7 @@ last update: May 16 2011
 static int _MDInDischargeID   	   = MFUnset;
 static int _MDInDischargeAccID	   = MFUnset;
 static int _MDInDischMeanID	   = MFUnset;
-static int _MDInAirTempID   	   = MFUnset;
+static int _MDInCommon_AirTempID   	   = MFUnset;
 static int _MDInAirTempAcc_spaceID = MFUnset;
 static int _MDInAirTempAcc_timeID = MFUnset;
 static int _MDInTimeStepsID 	   = MFUnset;
@@ -98,7 +98,7 @@ static void _MDQBARTpreprocess (int itemID) {
 //Geting the values of these parameters
 	
 	Qbar = MFVarGetFloat (_MDInDischMeanID   , itemID, 0.0);	// in m3/s
-	Tday = MFVarGetFloat (_MDInAirTempID     , itemID, 0.0);	// in C	
+	Tday = MFVarGetFloat (_MDInCommon_AirTempID     , itemID, 0.0);	// in C	
 //	A    = MFVarGetFloat (_MDInContributingAreaID, 	itemID, 0.0);	//in km2
 	A = MFVarGetFloat (_MDInContributingAreaAccID, itemID, 0.0) + (MFModelGetArea (itemID)/(pow(1000,2)));// convert from m2 to km2  //calculating the contributing area
 	MFVarSetFloat (_MDInContributingAreaAccID, itemID, A);
@@ -154,7 +154,7 @@ int MDBQARTpreprocessDef() {
 	
 	if (((_MDInDischMeanID           = MDDischMeanDef ()) == CMfailed) ||
             ((_MDInDischargeID           = MDDischargeDef ()) == CMfailed) ||
-            ((_MDInAirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInCommon_AirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
             ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||
             ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
             ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space, "degC", MFRoute, MFState, MFBoundary)) == CMfailed) ||

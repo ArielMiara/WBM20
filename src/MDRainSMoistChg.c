@@ -23,7 +23,7 @@ static int _MDInPotETID               = MFUnset;
 static int _MDInInterceptID           = MFUnset;
 static int _MDInSPackChgID            = MFUnset;
 static int _MDInSoilAvailWaterCapID   = MFUnset;
-static int _MDInIrrAreaFracID         = MFUnset;
+static int _MDInIrrigation_AreaFracID         = MFUnset;
 static int _MDInRelativeIceContent    = MFUnset;
 // Output
 static int _MDOutEvaptrsID            = MFUnset;
@@ -60,7 +60,7 @@ static void _MDRainSMoistChg (int itemID) {
 	sMoist       = MFVarGetFloat (_MDOutSoilMoistCellID,    itemID, 0.0);
 	iceContent   = _MDInRelativeIceContent != MFUnset ? MFVarGetFloat (_MDInRelativeIceContent,  itemID, 0.0) : 0.0;
 	intercept    = _MDInInterceptID        != MFUnset ? MFVarGetFloat (_MDInInterceptID,         itemID, 0.0) : 0.0;
-	irrAreaFrac  = _MDInIrrAreaFracID      != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID,       itemID, 0.0) : 0.0;
+	irrAreaFrac  = _MDInIrrigation_AreaFracID      != MFUnset ? MFVarGetFloat (_MDInIrrigation_AreaFracID,       itemID, 0.0) : 0.0;
 
 	waterIn = precip - intercept - sPackChg;
 	pet = pet > intercept ? pet - intercept : 0.0;
@@ -98,7 +98,7 @@ int MDRainSMoistChgDef () {
 	MFDefEntering ("Rainfed Soil Moisture");
 
 	if ((ret = MDIrrGrossDemandDef ()) == CMfailed) return (CMfailed);
-	if ((ret != MFUnset) && ((_MDInIrrAreaFracID = MDIrrigatedAreaDef ())==  CMfailed) ) return (CMfailed);
+	if ((ret != MFUnset) && ((_MDInIrrigation_AreaFracID = MDIrrigatedAreaDef ())==  CMfailed) ) return (CMfailed);
 
 	if (((_MDInCommon_PrecipID            = MDPrecipitationDef     ()) == CMfailed) ||
         ((_MDInSPackChgID          = MDSPackChgDef          ()) == CMfailed) ||

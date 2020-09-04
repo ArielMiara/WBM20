@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
-MDAccBalance.c
+MDAux_AccBalance.c
 
 bfekete@gc.cuny.edu
 
@@ -23,7 +23,7 @@ static int _MDInAux_AccRunoffID    = MFUnset;
 //Output
 static int _MDOutAux_AccBalanceID  = MFUnset;
 
-static void _MDAux_ccumBalance (int itemID)
+static void _MDAux_AccumBalance (int itemID)
 {
 // Input
 	double precip;    // Precipitation [mm/dt]
@@ -59,7 +59,7 @@ int MDAux_AccumBalanceDef() {
         ((_MDInAux_AccSMoistChgID = MDAux_AccumSMoistChgDef()) == CMfailed) ||
         ((_MDInAux_AccEvapID      = MDAux_AccumEvapDef()) == CMfailed) ||
         ((_MDOutAux_AccBalanceID  = MFVarGetID (MDVarAux_AccBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-        (MFModelAddFunction(_MDAux_ccumBalance) == CMfailed)) return CMfailed;
+        (MFModelAddFunction(_MDAux_AccumBalance) == CMfailed)) return CMfailed;
 
 	MFDefLeaving ("Accumulated Balance");
 	return (_MDOutAux_AccBalanceID);

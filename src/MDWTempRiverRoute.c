@@ -29,7 +29,7 @@ static int _MDInWTempRiverID           = MFUnset;
 static int _MDInRiverWidthID           = MFUnset;
 static int _MDInRiverStorageChgID      = MFUnset;
 static int _MDInRiverStorageID         = MFUnset;
-static int _MDInSolarRadID             = MFUnset;
+static int _MDInCommon_SolarRadID             = MFUnset;
 static int _MDInWindSpeedID            = MFUnset;
 static int _MDInCloudCoverID           = MFUnset;
 static int _MDInAirTemperatureID       = MFUnset;
@@ -131,7 +131,7 @@ static void _MDWTempRiverRoute (int itemID) {
      waterStorageChange    = MFVarGetFloat ( _MDInRiverStorageChgID,  itemID, 0.0);
    	 waterStorage          = MFVarGetFloat ( _MDInRiverStorageID,     itemID, 0.0);
    	 channelWidth          = MFVarGetFloat ( _MDInRiverWidthID,       itemID, 0.0);
- 	 solarRad              = MFVarGetFloat ( _MDInSolarRadID,         itemID, 0.0); //MJ/m2/d - CHECK UNITS
+ 	 solarRad              = MFVarGetFloat ( _MDInCommon_SolarRadID,         itemID, 0.0); //MJ/m2/d - CHECK UNITS
  	 windSpeed             = MFVarGetFloat ( _MDInWindSpeedID,        itemID, 0.0);
      cloudCover            = MFVarGetFloat ( _MDInCloudCoverID,       itemID, 0.0);
      Tair                  = MFVarGetFloat ( _MDInAirTemperatureID,   itemID, 0.0);
@@ -396,12 +396,12 @@ int MDWTempRiverRouteDef () {
 	//input
 	if (((_MDInDischargeID            = MDDischargeDef     ()) == CMfailed) ||
         (( waterBalanceID             = MDWaterBalanceDef  ()) == CMfailed) ||
-        ((_MDInSolarRadID             = MDSolarRadDef      ()) == CMfailed) ||
+        ((_MDInCommon_SolarRadID             = MDSolarRadDef      ()) == CMfailed) ||
         ((_MDInWTempRiverID           = MDWTempRiverDef    ()) == CMfailed) ||
         ((_MDInRelativeHumidityID     = MDRelativeHumidityDef ()) == CMfailed) ||
         ((_MDInRiverWidthID           = MDRiverWidthDef    ()) == CMfailed) ||
         ((_MDInRunoffVolumeID         = MDRunoffVolumeDef  ()) == CMfailed) ||
-        ((_MDInCloudCoverID           = MDCloudCoverDef ()) == CMfailed) ||
+        ((_MDInCloudCoverID           = MDCommon_CloudCoverDef()) == CMfailed) ||
  //      ((_MDInWdl_QxTID	             = MDThermalInputsDef ()) == CMfailed) ||	//RJS 072011	// commented out 013112
        ((_MDInDischargeIncomingID    = MFVarGetID (MDVarRouting_Discharge0, "m3/s", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
         ((_MDInWindSpeedID            = MFVarGetID (MDVarCommon_WindSpeed, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||

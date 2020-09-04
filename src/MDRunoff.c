@@ -49,7 +49,7 @@ int MDRunoffDef () {
 			if ((_MDInRunoffCorrID  = MFVarGetID (MDVarDataAssim_RunoffCorretion, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:		
-			if (((_MDInBaseFlowID   = MDBaseFlowDef   ()) == CMfailed) ||
+			if (((_MDInBaseFlowID   = MDCore_BaseFlowDef()) == CMfailed) ||
                 ((_MDInSurfRunoffID = MDSurfRunoffDef ()) == CMfailed) ||
                 ((_MDOutRunoffID    = MFVarGetID (MDVarCore_Runoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction (_MDRunoff) == CMfailed)) return (CMfailed);

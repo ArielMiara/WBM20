@@ -16,7 +16,7 @@ dominik.wisser@unh.edu
 //Input
 static int _MDInIrrAreaID                    = MFUnset;
 static int _MDInRainSurfRunoffID             = MFUnset;
-static int _MDInIrrGrossDemandID             = MFUnset;
+static int _MDInIrrigation_GrossDemandID             = MFUnset;
 
 //Output
 static int _MDOutRainSurfRunoffAccumulatedID = MFUnset;
@@ -37,7 +37,7 @@ static void _MDSmallReservoirCapacity (int itemID) {
     if ((irrAreaFraction = MFVarGetFloat (_MDInIrrAreaID, itemID, 0.0)) > 0.0) {
  		accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID,          itemID, 0.0) *
  		                   MFVarGetFloat (_MDInSmallResStorageFractionID, itemID, 1.0);
- 		accumIrrDemand   = MFVarGetFloat (_MDInIrrGrossDemandID,          itemID, 0.0);
+ 		accumIrrDemand   = MFVarGetFloat (_MDInIrrigation_GrossDemandID,          itemID, 0.0);
  		smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID,       itemID, 0.0); 
  		 
  		if (MFDateGetDayOfYear () > 1) { 
@@ -67,14 +67,14 @@ int MDSmallReservoirCapacityDef () {
 	if ((optID == MDnone) || (_MDOutSmallResCapacityID != MFUnset)) return (_MDOutSmallResCapacityID);
 
 	MFDefEntering("SmallReservoirCapacity");
-	if ((_MDInIrrGrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
+	if ((_MDInIrrigation_GrossDemandID = MDIrrGrossDemandDef  ()) != MFUnset) {
 		switch (optID) {
 			case MDinput:
 			    if ((_MDOutSmallResCapacityID       = MFVarGetID (MDVarReservoir_FarmPondSmallResCapacity, "mm", MFInput, MFState, MFBoundary)) == CMfailed)
 			    	return (CMfailed);
 			    break;
 			case MDcalculate:
-				if ((_MDInIrrGrossDemandID == CMfailed) ||
+				if ((_MDInIrrigation_GrossDemandID == CMfailed) ||
                     ((_MDInIrrAreaID                    = MDIrrigatedAreaDef ())==  CMfailed) ||
                     ((_MDInRainSurfRunoffID             = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
                     ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||

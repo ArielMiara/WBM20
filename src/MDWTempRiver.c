@@ -50,9 +50,9 @@ int MDWTempRiverDef () {
 	MFDefEntering ("River temperature");
 
 	if (((_MDInSurfRunoffID      = MDRainSurfRunoffDef  ()) == CMfailed) ||
-        ((_MDInBaseFlowID        = MDBaseFlowDef        ()) == CMfailed) ||
+        ((_MDInBaseFlowID        = MDCore_BaseFlowDef()) == CMfailed) ||
         ((_MDInWTempSurfRunoffID = MDWTempSurfRunoffDef ()) == CMfailed) ||
-        ((_MDInWTempGrdWaterID   = MDWTempGrdWaterDef   ()) == CMfailed) ||
+        ((_MDInWTempGrdWaterID   = MDTP2M_WTempGrdWaterDef()) == CMfailed) ||
         ((_MDOutWTempRiverID     = MFVarGetID (MDVarTP2M_WTempRiver, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDWTempRiver) == CMfailed)) return (CMfailed);
 

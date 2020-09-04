@@ -388,9 +388,10 @@ int MDAux_AccumGrdWatChgDef ();
 int MDAux_AccumPrecipDef ();
 int MDAux_AccumRunoffDef ();
 int MDAux_AccumSMoistChgDef ();
-int MDAvgNStepsDef ();
+int MDAux_AvgNStepsDef ();
 
-int MDBaseFlowDef ();
+int MDCommon_CloudCoverDef ();
+int MDCore_BaseFlowDef ();
 
 int MDBQARTpreprocessDef (); //NEW !!!!!  (S.C)
 int MDBankfullQcalcDef ();//NEW !!!!!  (S.C)
@@ -398,7 +399,6 @@ int MDBedloadFluxDef ();//NEW !!!!!  (S.C)
 int MDSedimentFluxDef (); //NEW !!!!!  (S.C)
 int MDDischargeBFDef ();
 
-int MDCloudCoverDef ();
 int MDRelativeHumidityDef ();
 int MDSpecificHumidityDef ();
 int MDWetBulbTempDef ();
@@ -473,7 +473,7 @@ int MDWaterBalanceDef ();
 int MDPrecipitationDef ();
 int MDWetDaysDef ();
 int MDPermafrostDef ();
-int MDWTempGrdWaterDef ();
+int MDTP2M_WTempGrdWaterDef ();
 int MDWTempRiverDef ();
 int MDWTempRiverRouteDef ();
 int MDThermalInputsDef ();  //changed AM 042415

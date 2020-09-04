@@ -45,7 +45,7 @@ int MDRunoffMeanDef () {
 	switch (optID) {
 		case MDinput: _MDOutRunoffMeanID  = MFVarGetID (MDVarCore_RunoffMean, "mm/d", MFInput, MFState, MFBoundary); break;
 		case MDcalculate:
-			if (((_MDInAvgNStepsID       = MDAvgNStepsDef ())   == CMfailed) ||
+			if (((_MDInAvgNStepsID       = MDAux_AvgNStepsDef()) == CMfailed) ||
                 ((_MDInRunoffID  = MDRunoffDef ()) == CMfailed) ||
                 ((_MDOutRunoffMeanID      = MFVarGetID (MDVarCore_RunoffMean, "mm/d", MFOutput, MFState, MFInitial)) == CMfailed) ||
                 (MFModelAddFunction (_MDRunoffMean) == CMfailed)) return (CMfailed);

@@ -18,7 +18,7 @@ static int _MDInSPackChgID          = MFUnset;
 static int _MDInRainSMoistChgID     = MFUnset;
 static int _MDInRainEvapoTransID    = MFUnset;
 static int _MDInCommon_PrecipID            = MFUnset;
-static int _MDInIrrAreaFracID       = MFUnset;
+static int _MDInIrrigation_AreaFracID       = MFUnset;
 // Output
 static int _MDOutRainWaterSurplusID = MFUnset;
 
@@ -32,7 +32,7 @@ static void _MDRainWaterSurplus (int itemID) {
 // Output
 	float surplus;
  
-	irrAreaFrac = _MDInIrrAreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrAreaFracID, itemID, 0.0) : 0.0;
+	irrAreaFrac = _MDInIrrigation_AreaFracID != MFUnset ? MFVarGetFloat (_MDInIrrigation_AreaFracID, itemID, 0.0) : 0.0;
 	sPackChg    = MFVarGetFloat (_MDInSPackChgID,       itemID, 0.0) * (1.0 - irrAreaFrac);
 	sMoistChg   = MFVarGetFloat (_MDInRainSMoistChgID,  itemID, 0.0);
 	evapoTrans  = MFVarGetFloat (_MDInRainEvapoTransID, itemID, 0.0);
@@ -51,7 +51,7 @@ int MDRainWaterSurplusDef () {
 
 	MFDefEntering ("Rainfed Water Surplus");
     if (((ret = MDIrrGrossDemandDef ()) == CMfailed) ||
-        ((ret != MFUnset) && ((_MDInIrrAreaFracID = MDIrrigatedAreaDef ()) ==  CMfailed)))
+        ((ret != MFUnset) && ((_MDInIrrigation_AreaFracID = MDIrrigatedAreaDef ()) ==  CMfailed)))
         return (CMfailed);
 
     if (((_MDInRainSMoistChgID     = MDRainSMoistChgDef ()) == CMfailed) ||
