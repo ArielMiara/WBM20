@@ -365,18 +365,18 @@ int MDIrrigation_GrossDemandDef () {
 			if (((_MDInCommon_PrecipID       = MDCommon_PrecipitationDef()) == CMfailed) ||
                 ((_MDInSPackChgID            = MDCore_SnowPackChgDef()) == CMfailed) ||
                 ((_MDInIrrRefEvapotransID    = MDIrrigation_ReferenceETDef()) == CMfailed) ||
-                ((_MDInIrrigation_AreaFracID         = MDIrrigation_IrrAreaDef()) == CMfailed) ||
-                ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrigation_Intensity,               MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrigation_Efficiency,              MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrigation_GrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrigation_GrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInWltPntID              = MFVarGetID (MDVarCore_SoilWiltingPoint,              "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInFldCapaID             = MFVarGetID (MDVarCore_SoilFieldCapacity,             "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrigation_RicePondingDepth,        "mm",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrigation_DailyRicePerolationRate, "mm/day", MFInput , MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrigation_Evapotranspiration,      "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-                ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrigation_NetWaterDemand,          "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-                ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrigation_GrossDemand,             "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                    ((_MDInIrrigation_AreaFracID         = MDIrrigation_IrrAreaDef()) == CMfailed) ||
+                    ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrigation_Intensity,               MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrigation_Efficiency,              MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrigation_GrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrigation_GrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInWltPntID              = MFVarGetID (MDVarCore_SoilWiltingPoint,              "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInFldCapaID             = MFVarGetID (MDVarCore_SoilFieldCapacity,             "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrigation_RicePondingDepth,        "mm",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrigation_DailyRicePerolationRate, "mm/day", MFInput , MFState, MFBoundary)) == CMfailed) ||
+                    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrigation_Evapotranspiration,      "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrigation_NetDemand, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrigation_GrossDemand,             "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrPrecipitationID   = MFVarGetID (MDVarIrrigation_Precipitation,           "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrigation_ReturnFlow,              "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrSMoistID          = MFVarGetID (MDVarIrrigation_SoilMoisture,            "mm",     MFOutput, MFState, MFBoundary)) == CMfailed) ||

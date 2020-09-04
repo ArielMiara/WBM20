@@ -20,7 +20,7 @@ Irrigation inputs are not accounted here.
 #include <MD.h>
 
 // Input
-static int _MDInCommon_AirTempID  = MFUnset;
+static int _MDInCommon_AirTemperatureID  = MFUnset;
 static int _MDInSnowMeltID = MFUnset;
 static int _MDInWetBulbTempID = MFUnset;
 
@@ -33,7 +33,7 @@ static void _MDWTempSurfRunoff (int itemID) {
 	float wet_b_temp;
 
     wet_b_temp         = MFVarGetFloat (_MDInWetBulbTempID,     itemID, 0.0);
-    airT               = MFVarGetFloat (_MDInCommon_AirTempID,         itemID, 0.0);
+    airT               = MFVarGetFloat (_MDInCommon_AirTemperatureID,         itemID, 0.0);
 
     SurfWatT = wet_b_temp; // CHANGED TO EQUAL WET BULB --> Feb 22 2019 MIARA
     SurfWatT = (SurfWatT >= airT) ? wet_b_temp : SurfWatT;
@@ -49,7 +49,7 @@ int MDTP2M_WTempSurfRunoffDef () {
 
 	if (((_MDInSnowMeltID     = MDCore_SnowPackMeltDef()) == CMfailed) ||
         ((_MDInWetBulbTempID  = MDCommon_WetBulbTempDef()) == CMfailed) ||
-        ((_MDInCommon_AirTempID      = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInCommon_AirTemperatureID      = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDOutWTempSurfROID = MFVarGetID (MDVarTP2M_WTempSurfRunoff,  "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDWTempSurfRunoff) == CMfailed)) return (CMfailed);
 

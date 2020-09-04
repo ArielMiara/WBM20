@@ -23,7 +23,7 @@ Irrigation return flow is assumed to have air temperature.
 #include <MD.h>
 
 // Input
-static int _MDInCommon_AirTempID = MFUnset;
+static int _MDInCommon_AirTemperatureID = MFUnset;
 static int _MDInTP2M_GW_TempID   = MFUnset;
 // Output
 static int _MDOutTP2M_WTempGrdWaterID  = MFUnset;
@@ -31,7 +31,7 @@ static int _MDOutTP2M_WTempGrdWaterID  = MFUnset;
 static void _MDWTP2M_TempGrdWater (int itemID) {
 	float airT;
 	float Gw_Temp;
-	airT               = MFVarGetFloat (_MDInCommon_AirTempID,         itemID, 0.0);
+	airT               = MFVarGetFloat (_MDInCommon_AirTemperatureID,         itemID, 0.0);
 	Gw_Temp            = MFVarGetFloat (_MDInTP2M_GW_TempID,         itemID, 0.0);
    if (Gw_Temp == 0) { Gw_Temp = airT - 5.0; }
 
@@ -44,7 +44,7 @@ int MDTP2M_WTempGrdWaterDef () {
 
 	MFDefEntering ("Groundwater temperature");
 
-	if (((_MDInCommon_AirTempID        = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	if (((_MDInCommon_AirTemperatureID        = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInTP2M_GW_TempID        = MFVarGetID (MDVarTP2M_GW_Temp,          "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDOutTP2M_WTempGrdWaterID = MFVarGetID (MDVarTP2M_WTempGrdWater,    "degC", MFOutput, MFState, MFInitial))  == CMfailed) ||
 		(MFModelAddFunction(_MDWTP2M_TempGrdWater) == CMfailed)) return (CMfailed);

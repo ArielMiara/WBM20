@@ -17,7 +17,7 @@ bfekete@gc.cuny.edu
 static float _MDSoilMoistALPHA = 5.0;
 
 // Input
-static int _MDInAirTMeanID            = MFUnset;
+static int _MDInAirTemperatureID            = MFUnset;
 static int _MDInCommon_PrecipID              = MFUnset;
 static int _MDInPotETID               = MFUnset;
 static int _MDInInterceptID           = MFUnset;
@@ -52,7 +52,7 @@ static void _MDRainSMoistChg (int itemID) {
 	float awCap;
 	float gm;
 	float iceContent;
-	airT         = MFVarGetFloat (_MDInAirTMeanID,          itemID, 0.0);
+	airT         = MFVarGetFloat (_MDInAirTemperatureID,          itemID, 0.0);
 	precip       = MFVarGetFloat (_MDInCommon_PrecipID,            itemID, 0.0);
  	sPackChg     = MFVarGetFloat (_MDInSPackChgID,          itemID, 0.0);
 	pet          = MFVarGetFloat (_MDInPotETID,             itemID, 0.0);
@@ -105,7 +105,7 @@ int MDCore_RainSMoistChgDef () {
         ((_MDInPotETID             = MDCore_RainPotETDef()) == CMfailed) ||
         ((_MDInInterceptID         = MDCore_RainInterceptDef()) == CMfailed) ||
         ((_MDInSoilAvailWaterCapID = MDCore_SoilAvailWaterCapDef()) == CMfailed) ||
-        ((_MDInAirTMeanID          = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInAirTemperatureID          = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDOutEvaptrsID          = MFVarGetID (MDVarCore_RainEvapotranspiration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
         ((_MDOutSoilMoistCellID    = MFVarGetID (MDVarCore_RainSoilMoistureCell, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||
         ((_MDOutSoilMoistID        = MFVarGetID (MDVarCore_RainSoilMoisture, "mm", MFOutput, MFState, MFBoundary)) == CMfailed) ||

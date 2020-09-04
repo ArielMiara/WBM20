@@ -13,7 +13,7 @@ dominik.wisser@unh.edu
 #include <MF.h>
 #include <MD.h>
 
-static int _MDOutIrrUptakeRiverID = MFUnset;
+static int _MDOutIrrigation_UptakeRiverID = MFUnset;
 
 enum { MDnone, MDcalculate };
 
@@ -24,7 +24,7 @@ int MDIrrigation_UptakeRiverDef() {
 
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		
-	if ((optID == MDnone) || (_MDOutIrrUptakeRiverID != MFUnset)) return (_MDOutIrrUptakeRiverID);
+	if ((optID == MDnone) || (_MDOutIrrigation_UptakeRiverID != MFUnset)) return (_MDOutIrrigation_UptakeRiverID);
 
 	if (optID == MDcalculate)
 		return (MFVarGetID (MDVarIrrigation_UptakeRiver, "mm", MFOutput, MFFlux, MFBoundary));

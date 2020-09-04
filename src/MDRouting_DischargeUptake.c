@@ -14,15 +14,15 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Inputs
-static int _MDInDischLevel3ID       = MFUnset;
-static int _MDInIrrUptakeExternalID = MFUnset;
+static int _MDInRouting_DischargeInChannelID = MFUnset;
+static int _MDInIrrigation_UptakeExternalID  = MFUnset;
 
 // Outputs
-static int _MDOutIrrUptakeRiverID   = MFUnset;
-static int _MDOutIrrUptakeExcessID  = MFUnset;
-static int _MDOutDischLevel2ID      = MFUnset;
+static int _MDOutRouting_DischargeUptakeID  = MFUnset;
+static int _MDOutIrrigation_UptakeRiverID   = MFUnset;
+static int _MDOutIrrigation_UptakeExcessID  = MFUnset;
 
-static void _MDDischLevel2 (int itemID) {
+static void _MDRouting_DischargeUptake (int itemID) {
 // Inputs
 	float discharge;       // Discharge [m3/s]
 	float irrUptakeExt;    // External irrigational water uptake [mm/dt]
@@ -31,11 +31,11 @@ static void _MDDischLevel2 (int itemID) {
 	float irrUptakeExcess; // Irrigational water uptake from unsustainable source [mm/dt]
 	float discharge_mm;
 
-	discharge = MFVarGetFloat (_MDInDischLevel3ID, itemID, 0.0);
+	discharge = MFVarGetFloat (_MDInRouting_DischargeInChannelID, itemID, 0.0);
 
-	if (_MDInIrrUptakeExternalID != MFUnset) {
-		irrUptakeExt = MFVarGetFloat (_MDInIrrUptakeExternalID, itemID, 0.0);
-		if (_MDOutIrrUptakeRiverID != MFUnset) {
+	if (_MDInIrrigation_UptakeExternalID != MFUnset) {
+		irrUptakeExt = MFVarGetFloat (_MDInIrrigation_UptakeExternalID, itemID, 0.0);
+		if (_MDOutIrrigation_UptakeRiverID != MFUnset) {
 			// River uptake is turned on
 			discharge_mm = discharge * 1000.0 * MFModelGet_dt () / MFModelGetArea (itemID);
 			if (discharge_mm > irrUptakeExt) {
@@ -50,54 +50,47 @@ static void _MDDischLevel2 (int itemID) {
 				irrUptakeExcess = irrUptakeExt - discharge_mm;
 				discharge_mm    = 0.0;
 			}
-			MFVarSetFloat (_MDOutIrrUptakeRiverID,  itemID, irrUptakeRiver);
+			MFVarSetFloat (_MDOutIrrigation_UptakeRiverID,  itemID, irrUptakeRiver);
 			discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
-			MFVarSetFloat (_MDOutDischLevel2ID,  itemID, discharge);
+			MFVarSetFloat (_MDOutRouting_DischargeUptakeID,  itemID, discharge);
 		}
 		else {
 			// River uptake is turned off all irrigational demand is from unsustainable sources
 			irrUptakeExcess = irrUptakeExt;
 		}
-		MFVarSetFloat (_MDOutIrrUptakeExcessID, itemID, irrUptakeExcess);
+		MFVarSetFloat (_MDOutIrrigation_UptakeExcessID, itemID, irrUptakeExcess);
 	}
 }
 
 enum { MDnone, MDcalculate };
 
-int MDRouting_DischLevel2Def() {
+int MDRouting_DischargeUptake () {
 	int optID = MFUnset, ret;
 	const char *optStr, *optName = "IrrUptakeRiver";
 	const char *options [] = { MDNoneStr, MDCalculateStr, (char *) NULL };
 
-	if (_MDOutDischLevel2ID != MFUnset) return (_MDOutDischLevel2ID);
+	if (_MDOutRouting_DischargeUptakeID != MFUnset) return (_MDOutRouting_DischargeUptakeID);
 
 	MFDefEntering ("Discharge Level 2");
-	if (((_MDInDischLevel3ID  = MDRouting_DischLevel3Def()) == CMfailed) ||
-        ((_MDOutDischLevel2ID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
+	if (((_MDInRouting_DischargeInChannelID  = MDRouting_DischLevel3Def()) == CMfailed) ||
+        ((_MDOutRouting_DischargeUptakeID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	
 	if ((ret = MDIrrigation_GrossDemandDef()) != MFUnset) {
 		if (ret == CMfailed) return (CMfailed);
-//		if (((optStr = MFOptionGet (MDOptIrrExcessWater)) == (char *) NULL) || ((optIDExcess = CMoptLookup (options, optStr, true)) == CMfailed)) {
-//				CMmsgPrint(CMmsgUsrError,"Excess Water Demand Option not specifed! Options = 'None', 'Calculated' or 'Input' (not yet implemented!)\n");
-//				return (CMfailed);
-//			}
-		
-	 
-		
 		if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 		switch (optID) {
 			case MDcalculate:
-				if  ((_MDOutIrrUptakeRiverID   = MDIrrigation_UptakeRiverDef()) == CMfailed) return (CMfailed);
+				if  ((_MDOutIrrigation_UptakeRiverID   = MDIrrigation_UptakeRiverDef()) == CMfailed) return (CMfailed);
 			case MDnone:
-				if (((_MDInIrrUptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-                    ((_MDOutIrrUptakeExcessID  = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
+				if (((_MDInIrrigation_UptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                    ((_MDOutIrrigation_UptakeExcessID  = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 					return (CMfailed);
 				break;
 			default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 		}
 	}
-	if (MFModelAddFunction(_MDDischLevel2) == CMfailed) return (CMfailed);
+	if (MFModelAddFunction(_MDRouting_DischargeUptake) == CMfailed) return (CMfailed);
 	MFDefLeaving ("Discharge Level 2");
-	return (_MDOutDischLevel2ID);
+	return (_MDOutRouting_DischargeUptakeID);
 }

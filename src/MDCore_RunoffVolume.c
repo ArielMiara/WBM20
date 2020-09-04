@@ -14,7 +14,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInRunoffID        = MFUnset;
+static int _MDInCore_RunoffID        = MFUnset;
 // Output
 static int _MDOutRunoffVolumeID = MFUnset;
 
@@ -22,7 +22,7 @@ static void _MDRunoffVolume (int itemID) {
 // Input
 	float runoff;
 
-	runoff = MFVarGetFloat (_MDInRunoffID, itemID, 0.0) * MFModelGetArea (itemID) / (MFModelGet_dt () * 1000.0);
+	runoff = MFVarGetFloat (_MDInCore_RunoffID, itemID, 0.0) * MFModelGetArea (itemID) / (MFModelGet_dt () * 1000.0);
 //	if((itemID == 25014) && (runoff * 86400 < -0.000009)) printf("############ runoff = %f\n", runoff * 86400);  //runoff = 0.0;							//RJS 071511
 	MFVarSetFloat (_MDOutRunoffVolumeID, itemID, runoff);
 }
@@ -43,7 +43,7 @@ int MDCore_RunoffVolumeDef () {
 			_MDOutRunoffVolumeID = MFVarGetID (MDVarCore_RunoffVolume, "m3/s", MFInput, MFState, MFBoundary);
 			break;
 		case MDcalculate:
-			if (((_MDInRunoffID        = MDCore_RunoffDef()) == CMfailed) ||
+			if (((_MDInCore_RunoffID        = MDCore_RunoffDef()) == CMfailed) ||
                 ((_MDOutRunoffVolumeID = MFVarGetID (MDVarCore_RunoffVolume, "m3/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction (_MDRunoffVolume) == CMfailed)) return (CMfailed);
 			break;

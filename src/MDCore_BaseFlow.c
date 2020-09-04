@@ -26,7 +26,7 @@ static int _MDOutCore_GrdWatRechargeID     = MFUnset;
 static int _MDOutCore_GrdWatUptakeID       = MFUnset;
 static int _MDOutCore_BaseFlowID           = MFUnset;
 static int _MDOutCore_IrrUptakeGrdWaterID  = MFUnset;
-static int _MDOutCore_IrrUptakeExternalID  = MFUnset;
+static int _MDOutCore_Irrigation_UptakeExternalID  = MFUnset;
 
 static float _MDGroundWatBETA = 0.016666667;
 
@@ -74,7 +74,7 @@ static void _MDCore_BaseFlow (int itemID) {
 			MFVarSetFloat (_MDOutCore_IrrUptakeGrdWaterID, itemID, irrUptakeGrdWater);
 		}
 		else irrUptakeExt = irrDemand;
-		MFVarSetFloat (_MDOutCore_IrrUptakeExternalID, itemID, irrUptakeExt);
+		MFVarSetFloat (_MDOutCore_Irrigation_UptakeExternalID, itemID, irrUptakeExt);
 	}
 
 	baseFlow    = grdWater * _MDGroundWatBETA;
@@ -106,7 +106,7 @@ int MDCore_BaseFlowDef () {
 		if (((_MDInReservoir_FarmPondReleaseID = MDReservoir_FarmPondReleaseDef()) == CMfailed) ||
             ((_MDInIrrigation_ReturnFlowID     = MDIrrigation_ReturnFlowDef()) == CMfailed) ||
             ((_MDOutCore_IrrUptakeGrdWaterID   = MDIrrigation_UptakeGrdWaterDef()) == CMfailed) ||
-            ((_MDOutCore_IrrUptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
+            ((_MDOutCore_Irrigation_UptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 			return CMfailed;
 	}
 	if (((_MDOutCore_GrdWatID                = MFVarGetID (MDVarCore_GroundWater, "mm", MFOutput, MFState, MFInitial)) == CMfailed) ||

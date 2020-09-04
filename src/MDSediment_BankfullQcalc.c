@@ -17,7 +17,7 @@ last update: May 16 2011
 #include <MD.h>
 
 // Input
-// static int _MDInDischargeID   	   = MFUnset;
+// static int _MDInRouting_DischargeID   	   = MFUnset;
 // Output
 static int _MDOutBankfullQ2ID   	= MFUnset;
 static int _MDOutBankfullQ5ID   	= MFUnset;

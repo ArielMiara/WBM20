@@ -133,15 +133,13 @@ extern "C" {
 #define MDVarIrrigation_AreaFraction            "IrrigatedAreaFraction"
 #define MDVarIrrigation_AreaFractionSeason1     "IrrigatedAreaFractionSeason1"
 #define MDVarIrrigation_AreaFractionSeason2     "IrrigatedAreaFractionSeason2"
-
 #define MDVarIrrigation_Efficiency              "IrrigationEfficiency"
 #define MDVarIrrigation_Evapotranspiration      "IrrEvapotranspiration"
 #define MDVarIrrigation_GrossDemand             "IrrGrossDemand"
 #define MDVarIrrigation_GrowingSeason1Start     "GrowingSeason1_Start"
 #define MDVarIrrigation_GrowingSeason2Start     "GrowingSeason2_Start"
-
 #define MDVarIrrigation_Intensity               "IrrigationIntensity"
-#define MDVarIrrigation_NetWaterDemand          "IrrNetWaterDemand"
+#define MDVarIrrigation_NetDemand               "IrrNetWaterDemand"
 #define MDVarIrrigation_Precipitation           "IrrPrecipitation"
 #define MDVarIrrigation_RefEvapotrans           "IrrReferenceETP"
 #define MDVarIrrigation_ReturnFlow              "IrrReturnFlow"
@@ -189,7 +187,6 @@ extern "C" {
 #define MDVarRouting_RiverbedSlope              "RiverbedSlope"
 #define MDVarRouting_RiverbedShapeExponent      "RiverbedShapeExponent"
 #define MDVarRouting_RiverbedWidthMean          "RiverbedWidthMean"
-
 #define MDVarRouting_RiverbedVelocityMean       "RiverbedVelocityMean"
 #define MDVarRouting_RiverDepth                 "RiverDepth"
 #define MDVarRouting_RiverStorage               "RiverStorage"
@@ -239,15 +236,47 @@ extern "C" {
 #define MDVarSediment_FlowCoefficient           "FlowCoefficient"
 
 // TP2M Variables
-#define MDVarTP2M_LossToWater					"LossToWater"
-#define MDVarTP2M_LossToInlet                   "LossToInlet"
-#define MDOptTP2M_ThermalInputs					"ThermalInputs3"
 #define MDVarTP2M_AvgEfficiency                 "AvgEfficiency"
 #define MDVarTP2M_AvgDeltaTemp                  "AvgDeltaTemp"
+#define MDVarTP2M_CondenserInlet                "CondenserInlet"
+#define MDVarTP2M_CondenserInlet1               "CondenserInlet1"
+#define MDVarTP2M_CondenserInlet2               "CondenserInlet2"
+#define MDVarTP2M_CondenserInlet3               "CondenserInlet3"
+#define MDVarTP2M_CondenserInlet4               "CondenserInlet4"
+#define MDVarTP2M_CWA_Delta                     "CWA_Delta"
+#define MDVarTP2M_CWA_Limit                     "CWA_Limit"
+#define MDVarTP2M_CWA_OnOff                     "CWA_OnOff"
+#define MDVarTP2M_CWA_316b_OnOff                "CWA_316b_OnOff"
+#define MDVarTP2M_Demand1                       "Demand1"
+#define MDVarTP2M_Demand2                       "Demand2"
+#define MDVarTP2M_Demand3                       "Demand3"
+#define MDVarTP2M_Demand4                       "Demand4"
+#define MDVarTP2M_Downstream_OnOff              "Downstream_OnOff"
+#define MDVarTP2M_Equil_Temp                    "Equil_Temp"
 #define MDVarTP2M_Efficiency1                   "Efficiency1"
 #define MDVarTP2M_Efficiency2                   "Efficiency2"
 #define MDVarTP2M_Efficiency3                   "Efficiency3"
 #define MDVarTP2M_Efficiency4                   "Efficiency4"
+#define MDVarTP2M_FuelType1						"FuelType1"
+#define MDVarTP2M_FuelType2						"FuelType2"
+#define MDVarTP2M_FuelType3						"FuelType3"
+#define MDVarTP2M_FuelType4						"FuelType4"
+#define MDVarTP2M_Generation                    "Generation"
+#define MDVarTP2M_Generation1                   "Generation1"
+#define MDVarTP2M_Generation2                   "Generation2"
+#define MDVarTP2M_Generation3                   "Generation3"
+#define MDVarTP2M_Generation4                   "Generation4"
+#define MDVarTP2M_GW_Temp					    "GW_Temp"
+#define MDVarTP2M_HeatToRiver1                  "HeatToRiver1"
+#define MDVarTP2M_HeatToRiver2                  "HeatToRiver2"
+#define MDVarTP2M_HeatToRiver3                  "HeatToRiver3"
+#define MDVarTP2M_HeatToRiver4                  "HeatToRiver4"
+#define MDVarTP2M_LossToInlet                   "LossToInlet"
+#define MDVarTP2M_LossToInlet1                  "LossToInlet1"
+#define MDVarTP2M_LossToInlet2                  "LossToInlet2"
+#define MDVarTP2M_LossToInlet3                  "LossToInlet3"
+#define MDVarTP2M_LossToInlet4                  "LossToInlet4"
+#define MDVarTP2M_LossToWater					"LossToWater"
 #define MDVarTP2M_HeatToRiv                     "HeatToRiv"
 #define MDVarTP2M_HeatToSink                    "HeatToSink"
 #define MDVarTP2M_HeatToEng                     "HeatToEng"
@@ -260,20 +289,6 @@ extern "C" {
 #define MDVarTP2M_NamePlate2                    "NamePlate2"
 #define MDVarTP2M_NamePlate3                    "NamePlate3"
 #define MDVarTP2M_NamePlate4                    "NamePlate4"
-
-#define MDVarTP2M_Demand1                       "Demand1"
-#define MDVarTP2M_Demand2                       "Demand2"
-#define MDVarTP2M_Demand3                       "Demand3"
-#define MDVarTP2M_Demand4                       "Demand4"
-#define MDVarTP2M_FuelType1						"FuelType1"
-#define MDVarTP2M_FuelType2						"FuelType2"
-#define MDVarTP2M_FuelType3						"FuelType3"
-#define MDVarTP2M_FuelType4						"FuelType4"
-#define MDVarTP2M_Generation                    "Generation"
-#define MDVarTP2M_Generation1                   "Generation1"
-#define MDVarTP2M_Generation2                   "Generation2"
-#define MDVarTP2M_Generation3                   "Generation3"
-#define MDVarTP2M_Generation4                   "Generation4"
 #define MDVarTP2M_PowerOutput1                  "PowerOutput1"
 #define MDVarTP2M_PowerDeficit1                 "PowerDeficit1"
 #define MDVarTP2M_PowerPercent1                 "PowerPercent1"
@@ -282,7 +297,6 @@ extern "C" {
 #define MDVarTP2M_PowerOutputTotal2             "PowerOutputTotal2"
 #define MDVarTP2M_PowerOutputTotal3             "PowerOutputTotal3"
 #define MDVarTP2M_PowerOutputTotal4             "PowerOutputTotal4"
-
 #define MDVarTP2M_PowerDeficitTotal             "PowerDeficitTotal"
 #define MDVarTP2M_PowerPercentTotal             "PowerPercentTotal"
 #define MDVarTP2M_Qpp1                          "Qpp1"
@@ -291,42 +305,18 @@ extern "C" {
 #define MDVarTP2M_Technology2                   "Technology2"
 #define MDVarTP2M_Technology3                   "Technology3"
 #define MDVarTP2M_Technology4                   "Technology4"
-#define MDVarTP2M_CWA_316b_OnOff                "CWA_316b_OnOff"
-#define MDVarTP2M_Downstream_OnOff              "Downstream_OnOff"
-#define MDVarTP2M_CWA_OnOff                     "CWA_OnOff"
-#define MDVarTP2M_CWA_Delta                     "CWA_Delta"
-#define MDVarTP2M_CWA_Limit                     "CWA_Limit"
-#define MDVarTP2M_GW_Temp					    "GW_Temp"
-#define MDVarTP2M_Equil_Temp                    "Equil_Temp"
-
+#define MDVarTP2M_TotalEvaporation              "TotalEvaporation"
+#define MDVarTP2M_TotalEnergyDemand             "TotalEnergyDemand"
 #define MDVarTP2M_TotalHoursRun                 "TotalHoursRun"
 #define MDVarTP2M_TotalThermalWdls              "TotalThermalWdls"
 #define MDVarTP2M_TotalOptThermalWdls           "TotalOptThermalWdls"
-#define MDVarTP2M_TotalEvaporation              "TotalEvaporation"
-#define MDVarTP2M_TotalEnergyDemand             "TotalEnergyDemand"
 #define MDVarTP2M_TotalReturnFlow               "TotalReturnFlow"
-#define MDVarTP2M_CondenserInlet                "CondenserInlet"
-#define MDVarTP2M_CondenserInlet1               "CondenserInlet1"
-#define MDVarTP2M_CondenserInlet2               "CondenserInlet2"
-#define MDVarTP2M_CondenserInlet3               "CondenserInlet3"
-#define MDVarTP2M_CondenserInlet4               "CondenserInlet4"
 #define MDVarTP2M_SimEfficiency                 "SimEfficiency"
 #define MDVarTP2M_TotalExternalWater			"TotalExternalWater"
-
-#define MDVarTP2M_LossToInlet1                  "LossToInlet1"
-#define MDVarTP2M_LossToInlet2                  "LossToInlet2"
-#define MDVarTP2M_LossToInlet3                  "LossToInlet3"
-#define MDVarTP2M_LossToInlet4                  "LossToInlet4"
-
-#define MDVarTP2M_HeatToRiver1                  "HeatToRiver1"
-#define MDVarTP2M_HeatToRiver2                  "HeatToRiver2"
-#define MDVarTP2M_HeatToRiver3                  "HeatToRiver3"
-#define MDVarTP2M_HeatToRiver4                  "HeatToRiver4"
-
 #define MDVarTP2M_WTempGrdWater                 "GroundWaterTemperature"
 #define MDVarTP2M_WTempRiver                    "RiverTemperature"
 #define MDVarTP2M_WTempSurfRunoff               "SurfaceROTemperature"
-#define MDVarTP2M_BgcLocalIn_QxT                "QxT_LocalIn"
+#define MDVarTP2M_WTLocalIn_QxT                 "QxT_LocalIn"
 #define MDVarTP2M_Removal_QxT                   "QxT_Removal"
 #define MDVarTP2M_Flux_QxT                      "QxT_Flux"
 #define MDVarTP2M_Storage_QxT                   "QxT_Storage"
@@ -337,6 +327,7 @@ extern "C" {
 #define MDVarTP2M_StorageMixing_QxT             "QxT_StorageMixing"
 #define MDVarTP2M_DeltaStorageMixing_QxT        "QxT_DeltaStorageMixing"
 #define MDVarTP2M_WTempMixing_QxT               "QxT_WaterTempMixing"
+#define MDOptTP2M_ThermalInputs					"ThermalInputs3"
 
 // Varying Parameters
 #define MDVarParam_Albedo                       "Albedo"
@@ -389,7 +380,7 @@ int MDAux_AccumPrecipDef ();
 int MDAux_AccumRunoffDef ();
 int MDAux_AccumSMoistChgDef ();
 int MDAux_AvgNStepsDef ();
-int MDAux_DischMeanDef ();
+int MDAux_MeanDiscargehDef ();
 
 int MDCommon_CloudCoverDef ();
 int MDCommon_GrossRadDef ();
@@ -441,7 +432,7 @@ int MDParam_LeafAreaIndexDef ();
 
 int MDRouting_DischargeDef ();
 int MDRouting_DischLevel1Def ();
-int MDRouting_DischLevel2Def ();
+int MDRouting_DischargeUptake ();
 int MDRouting_DischLevel3Def ();
 int MDRouting_DischLevel3AccumulateDef ();
 int MDRouting_DischLevel3CascadeDef ();
@@ -459,7 +450,7 @@ int MDSediment_FluxDef (); //NEW !!!!!  (S.C)
 int MDSediment_DischargeBFDef ();
 
 int MDCore_RunoffDef ();
-int MDAux_RunoffMeanDef ();
+int MDAux_MeanRunoffDef ();
 int MDCore_RunoffVolumeDef ();
 int MDCore_SnowPackChgDef ();
 int MDCore_SnowPackMeltDef ();

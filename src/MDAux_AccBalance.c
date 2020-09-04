@@ -18,7 +18,7 @@ static int _MDInAux_AccPrecipID    = MFUnset;
 static int _MDInAux_AccEvapID      = MFUnset;
 static int _MDInAux_AccSMoistChgID = MFUnset;
 static int _MDInAux_AccGrdWatChgID = MFUnset;
-static int _MDInAux_AccRunoffID    = MFUnset;
+static int _MDInAux_AccCore_RunoffID    = MFUnset;
 
 //Output
 static int _MDOutAux_AccBalanceID  = MFUnset;
@@ -36,13 +36,13 @@ static void _MDAux_AccumBalance (int itemID)
         MFVarTestMissingVal (_MDInAux_AccEvapID, itemID) ||
         MFVarTestMissingVal (_MDInAux_AccSMoistChgID, itemID) ||
         MFVarTestMissingVal (_MDInAux_AccGrdWatChgID, itemID) ||
-        MFVarTestMissingVal (_MDInAux_AccRunoffID, itemID)) MFVarSetMissingVal (_MDOutAux_AccBalanceID, itemID);
+        MFVarTestMissingVal (_MDInAux_AccCore_RunoffID, itemID)) MFVarSetMissingVal (_MDOutAux_AccBalanceID, itemID);
 	else {
 		precip     = MFVarGetFloat(_MDInAux_AccPrecipID, itemID, 0.0);
 		evap       = MFVarGetFloat(_MDInAux_AccEvapID, itemID, 0.0);
 		sMoistChg  = MFVarGetFloat(_MDInAux_AccSMoistChgID, itemID, 0.0);
 		grdWatChg  = MFVarGetFloat(_MDInAux_AccGrdWatChgID, itemID, 0.0);
-		runoff     = MFVarGetFloat(_MDInAux_AccRunoffID, itemID, 0.0);
+		runoff     = MFVarGetFloat(_MDInAux_AccCore_RunoffID, itemID, 0.0);
 		MFVarSetFloat(_MDOutAux_AccBalanceID, itemID, precip + evap + sMoistChg + grdWatChg + runoff);
 	}
 }
@@ -54,7 +54,7 @@ int MDAux_AccumBalanceDef() {
 	MFDefEntering ("Accumulated Balance");
 
 	if (((_MDInAux_AccPrecipID    = MDAux_AccumPrecipDef()) == CMfailed) ||
-        ((_MDInAux_AccRunoffID    = MDAux_AccumRunoffDef()) == CMfailed) ||
+        ((_MDInAux_AccCore_RunoffID    = MDAux_AccumRunoffDef()) == CMfailed) ||
         ((_MDInAux_AccGrdWatChgID = MDAux_AccumGrdWatChgDef()) == CMfailed) ||
         ((_MDInAux_AccSMoistChgID = MDAux_AccumSMoistChgDef()) == CMfailed) ||
         ((_MDInAux_AccEvapID      = MDAux_AccumEvapDef()) == CMfailed) ||

@@ -15,14 +15,14 @@ bfekete@gc.cuny.edu
 
 // Output
 static int _MDOutRainInfiltrationID = MFUnset;
-static int _MDOutRainSurfRunoffID   = MFUnset;
+static int _MDOutRainSurfCore_RunoffID   = MFUnset;
 
 int MDCore_RainSurfRunoffDef () {
 
-	if (_MDOutRainSurfRunoffID != MFUnset) return (_MDOutRainSurfRunoffID);
+	if (_MDOutRainSurfCore_RunoffID != MFUnset) return (_MDOutRainSurfCore_RunoffID);
 	
 	if (((_MDOutRainInfiltrationID = MDCore_RainInfiltrationDef()) == CMfailed) ||
-        ((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
+        ((_MDOutRainSurfCore_RunoffID   = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed))
 		return (CMfailed);
-	return (_MDOutRainSurfRunoffID);
+	return (_MDOutRainSurfCore_RunoffID);
 }

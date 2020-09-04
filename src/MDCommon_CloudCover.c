@@ -18,8 +18,8 @@ Converting solar radiation to cloud cover fraction (for use in water temperature
 #include <MD.h>
 
 //Input
-static int _MDInCommon_SolarRadID    = MFUnset;
-static int _MDInCommon_GrossRadID    = MFUnset;
+static int _MDInCommon_Common_SolarRadID    = MFUnset;
+static int _MDInCommon_Common_GrossRadID    = MFUnset;
 //Output
 static int _MDOutCommon_CloudCoverID = MFUnset;
 
@@ -32,8 +32,8 @@ static void _MDCommon_CloudCover(int itemID) {             // should it be InClo
     float b           = 0.0;
     float c           = 0.0;
 
-    net_solar_in = MFVarGetFloat(_MDInCommon_SolarRadID, itemID, 0.0); // MJ/m2/d
-    gross_rad	 = MFVarGetFloat(_MDInCommon_GrossRadID, itemID, 0.0); // MJ/m2/d
+    net_solar_in = MFVarGetFloat(_MDInCommon_Common_SolarRadID, itemID, 0.0); // MJ/m2/d
+    gross_rad	 = MFVarGetFloat(_MDInCommon_Common_GrossRadID, itemID, 0.0); // MJ/m2/d
 
     LHS = net_solar_in / gross_rad;
     a = 0.458;
@@ -66,8 +66,8 @@ int MDCommon_CloudCoverDef() {
             if ((_MDOutCommon_CloudCoverID = MFVarGetID(MDVarCommon_CloudCover, "fraction", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
-            if (((_MDInCommon_GrossRadID    = MDCommon_GrossRadDef()) == CMfailed) ||
-                ((_MDInCommon_SolarRadID    = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m2", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+            if (((_MDInCommon_Common_GrossRadID    = MDCommon_GrossRadDef()) == CMfailed) ||
+                ((_MDInCommon_Common_SolarRadID    = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m2", MFInput,  MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutCommon_CloudCoverID = MFVarGetID (MDVarCommon_CloudCover,   "%",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDCommon_CloudCover) == CMfailed))) return (CMfailed);
             break;

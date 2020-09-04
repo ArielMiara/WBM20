@@ -13,7 +13,7 @@ MDSedimentFlux.c
 #include <MD.h>
 
 // Input
-static int _MDInDischargeID   	= MFUnset;
+static int _MDInRouting_DischargeID   	= MFUnset;
 static int _MDInMinSlopeID	    = MFUnset;
 static int _MDInUpStreamQbID	    = MFUnset;
 
@@ -40,7 +40,7 @@ char string [256];
 	pixel_length = pow( MFModelGetArea(itemID), 0.5 );
 	//printf("pixel_length: %f\n",pixel_length);
 	rslope = MFVarGetFloat (_MDInMinSlopeID,itemID, 0.0)/pixel_length;// in %	
-	Qday = MFVarGetFloat (_MDInDischargeID ,itemID, 0.0);	// in m3/s	
+	Qday = MFVarGetFloat (_MDInRouting_DischargeID ,itemID, 0.0);	// in m3/s	
 	Qb_kg_sec = trnfac * rslope * pow( Qday, alphabed ); // in kg/s
 	Qb_kg_day = Qb_kg_sec * (24*60*60); // in kg/s  
 	MFVarSetFloat (_MDOutBedloadFluxID, itemID, Qb_kg_sec);
@@ -58,7 +58,7 @@ int MDSediment_BedloadFluxDef() {
 	
 	MFDefEntering ("BedloadFlux");
 	
-	if (((_MDInDischargeID  = MDSediment_DischargeBFDef()) == CMfailed) ||
+	if (((_MDInRouting_DischargeID  = MDSediment_DischargeBFDef()) == CMfailed) ||
         ((_MDInMinSlopeID  		= MFVarGetID (MDVarSediment_MinSlope, " ", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInUpStreamQbID  	= MFVarGetID (MDVarSediment_UpStreamQb, " ", MFRoute, MFState, MFBoundary)) == CMfailed) ||
 

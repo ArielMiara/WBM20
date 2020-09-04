@@ -13,11 +13,11 @@ MDSedimentFlux.c
 #include <MD.h>
 
 // Input
-static int _MDInDischargeID   	      = MFUnset;
+static int _MDInRouting_DischargeID   	      = MFUnset;
 static int _MDInDischargeAccID	      = MFUnset;
 static int _MDInResStorageID	      = MFUnset;
-static int _MDInDischMeanID	      = MFUnset;
-static int _MDInCommon_AirTempID   	      = MFUnset;
+static int _MDInAux_MeanDischargeID	      = MFUnset;
+static int _MDInCommon_AirTemperatureID   	      = MFUnset;
 static int _MDInContributingAreaAccID = MFUnset;
 static int _MDInReliefID              = MFUnset;
 static int _MDInAirTempAcc_timeID     = MFUnset;
@@ -80,9 +80,9 @@ static void _MDSedimentFlux (int itemID) {
 
 //Geting the values of these parameters
 	PixSize_km2 =(MFModelGetArea(itemID)/pow(1000,2));
-	Qday = MFVarGetFloat (_MDInDischargeID   , 	itemID, 0.0);	// in m3/s	
-	DischMean = MFVarGetFloat (_MDInDischMeanID, 	itemID, 0.0);	// in m3/s
-	Tday = MFVarGetFloat (_MDInCommon_AirTempID, 		itemID, 0.0);	// in degC	
+	Qday = MFVarGetFloat (_MDInRouting_DischargeID   , 	itemID, 0.0);	// in m3/s	
+	DischMean = MFVarGetFloat (_MDInAux_MeanDischargeID, 	itemID, 0.0);	// in m3/s
+	Tday = MFVarGetFloat (_MDInCommon_AirTemperatureID, 		itemID, 0.0);	// in degC	
 	R    = MFVarGetFloat (_MDInReliefID, 		itemID, 0.0) / 1000.0;	// in mconverted to km
 //Calculating contributing area for each pixel
 	A = MFVarGetFloat (_MDInContributingAreaAccID, itemID, 0.0)
@@ -304,11 +304,11 @@ int MDSediment_FluxDef() {
 	MFDefEntering ("SedimentFlux");
 	
 // Inputs
-	if (((_MDInDischMeanID 	         = MDAux_DischMeanDef()) == CMfailed) ||
-        ((_MDInDischargeID           = MDSediment_DischargeBFDef()) == CMfailed) ||
+	if (((_MDInAux_MeanDischargeID 	         = MDAux_MeanDiscargehDef()) == CMfailed) ||
+        ((_MDInRouting_DischargeID           = MDSediment_DischargeBFDef()) == CMfailed) ||
         ((_MDInSmallResCapacityID    = MDReservoir_FarmPondCapacityDef()) == CMfailed) ||
         ((_MDInBedloadFluxID         = MDSediment_BedloadFluxDef()) == CMfailed) ||
-        ((_MDInCommon_AirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInCommon_AirTemperatureID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInDischargeAccID        = MFVarGetID (MDVarSediment_DischargeAcc, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||

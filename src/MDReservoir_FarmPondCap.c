@@ -15,7 +15,7 @@ dominik.wisser@unh.edu
 
 //Input
 static int _MDInIrrAreaID                    = MFUnset;
-static int _MDInRainSurfRunoffID             = MFUnset;
+static int _MDInRainSurfCore_RunoffID             = MFUnset;
 static int _MDInIrrigation_GrossDemandID             = MFUnset;
 
 //Output
@@ -35,7 +35,7 @@ static void _MDSmallReservoirCapacity (int itemID) {
  	float potResCapacity;
  	
     if ((irrAreaFraction = MFVarGetFloat (_MDInIrrAreaID, itemID, 0.0)) > 0.0) {
- 		accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfRunoffID,          itemID, 0.0) *
+ 		accumSurfRunoff  = MFVarGetFloat (_MDInRainSurfCore_RunoffID,          itemID, 0.0) *
  		                   MFVarGetFloat (_MDInSmallResStorageFractionID, itemID, 1.0);
  		accumIrrDemand   = MFVarGetFloat (_MDInIrrigation_GrossDemandID,          itemID, 0.0);
  		smallResCapacity = MFVarGetFloat (_MDOutSmallResCapacityID,       itemID, 0.0); 
@@ -76,7 +76,7 @@ int MDReservoir_FarmPondCapacityDef () {
 			case MDcalculate:
 				if ((_MDInIrrigation_GrossDemandID == CMfailed) ||
                     ((_MDInIrrAreaID                    = MDIrrigation_IrrAreaDef()) == CMfailed) ||
-                    ((_MDInRainSurfRunoffID             = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+                    ((_MDInRainSurfCore_RunoffID             = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
                     ((_MDOutRainSurfRunoffAccumulatedID = MFVarGetID ("__SurfaceROAccumulated",       "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
                     ((_MDOutIrrGrossDemandAccumulatedID = MFVarGetID ("__GrossDemandAccumulated",     "mm",  MFOutput, MFState, MFInitial))  == CMfailed) ||
                     ((_MDInSmallResStorageFractionID    = MFVarGetID (MDVarReservoir_FarmPondStorageFrac, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||

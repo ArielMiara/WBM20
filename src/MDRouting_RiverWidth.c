@@ -15,7 +15,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Inputs
-static int _MDInDischargeID             = MFUnset;
+static int _MDInRouting_DischargeID             = MFUnset;
 static int _MDInRiverbedShapeExponentID = MFUnset;
 static int _MDInRiverbedAvgDepthMeanID  = MFUnset;
 static int _MDInRiverbedWidthMeanID     = MFUnset;
@@ -39,7 +39,7 @@ static void _MDRiverWidth (int itemID) {
 	float alpha;     // Shape coefficient
 	float area;      // Cross-section area [m2]
 
-	discharge = MFVarGetFloat (_MDInDischargeID,              itemID, 0.0);
+	discharge = MFVarGetFloat (_MDInRouting_DischargeID,              itemID, 0.0);
 	shapeExp  = MFVarGetFloat (_MDInRiverbedShapeExponentID,  itemID, 0.0);
 	avgDepth  = MFVarGetFloat (_MDInRiverbedAvgDepthMeanID,   itemID, 0.0);
 	avgWidth  = MFVarGetFloat (_MDInRiverbedWidthMeanID,      itemID, 0.0);
@@ -68,7 +68,7 @@ int MDRouting_RiverWidthDef () {
 
 	MFDefEntering ("River Geometry");
 
-	if (((_MDInDischargeID             = MDRouting_DischargeDef()) == CMfailed) ||
+	if (((_MDInRouting_DischargeID             = MDRouting_DischargeDef()) == CMfailed) ||
         ((_MDInRiverbedShapeExponentID = MDRouting_RiverbedShapeExponentDef()) == CMfailed) ||
         ((_MDInRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||

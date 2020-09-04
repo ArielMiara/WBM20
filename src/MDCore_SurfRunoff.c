@@ -14,25 +14,25 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInRainSurfRunoffID = MFUnset;
+static int _MDInRainSurfCore_RunoffID = MFUnset;
 static int _MDInSmallResUptakeID = MFUnset;
 static int _MDInWetlandUptakeID  = MFUnset;
 
 // Output
-static int _MDOutSurfRunoffID    = MFUnset;
+static int _MDOutSurfCore_RunoffID    = MFUnset;
 
 static void _MDSurfRunoff (int itemID) {	
 // Input
 	float surfRunoff; // Surface runoff [mm/dt]
 	// TODO: The small reservoir uptake might exceed rain surface runoff
-	surfRunoff = MFVarGetFloat (_MDInRainSurfRunoffID,     itemID, 0.0)
+	surfRunoff = MFVarGetFloat (_MDInRainSurfCore_RunoffID,     itemID, 0.0)
 	           - (_MDInSmallResUptakeID != MFUnset ? MFVarGetFloat (_MDInSmallResUptakeID, itemID, 0.0) : 0.0);
-	MFVarSetFloat (_MDOutSurfRunoffID,  itemID, surfRunoff);
+	MFVarSetFloat (_MDOutSurfCore_RunoffID,  itemID, surfRunoff);
 }
 
 int MDCore_SurfRunoffDef () {
 	int ret;
-	if (_MDOutSurfRunoffID != MFUnset) return (_MDOutSurfRunoffID);
+	if (_MDOutSurfCore_RunoffID != MFUnset) return (_MDOutSurfCore_RunoffID);
 
 	MFDefEntering ("Surface runoff");
 	 
@@ -41,9 +41,9 @@ int MDCore_SurfRunoffDef () {
 	     ((_MDInSmallResUptakeID = MFVarGetID (MDVarReservoir_FarmPontUptake, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed)))
 	     return (CMfailed);
 	
-	if (((_MDInRainSurfRunoffID  = MDCore_RainSurfRunoffDef()) == CMfailed) ||
-        ((_MDOutSurfRunoffID     = MFVarGetID (MDVarCore_SurfRunoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+	if (((_MDInRainSurfCore_RunoffID  = MDCore_RainSurfRunoffDef()) == CMfailed) ||
+        ((_MDOutSurfCore_RunoffID     = MFVarGetID (MDVarCore_SurfRunoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDSurfRunoff) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("Surface runoff");
-	return (_MDOutSurfRunoffID);
+	return (_MDOutSurfCore_RunoffID);
 }

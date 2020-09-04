@@ -16,7 +16,7 @@ dominik.wisser@unh.edu
 
 //Input
 static int _MDInIrrigation_AreaFracID         = MFUnset;
-static int _MDInRainSurfRunoffID      = MFUnset;
+static int _MDInRainSurfCore_RunoffID      = MFUnset;
 static int _MDInIrrigation_GrossDemandID      = MFUnset;
 static int _MDInSmallResCapacityID    = MFUnset;
 static int _MDInPotEvapotransID       = MFUnset;
@@ -54,7 +54,7 @@ static void _MDSmallReservoirRelease (int itemID) {
 	if ((irrAreaFraction    = MFVarGetFloat (_MDInIrrigation_AreaFracID,         itemID, 0.0)) > 0.0) {
 		smallResCapacity    = MFVarGetFloat (_MDInSmallResCapacityID,    itemID, 0.0); 
 		smallResPrevStorage = MFVarGetFloat (_MDOutSmallResStorageID,    itemID, 0.0);
-		surfRunoff          = MFVarGetFloat (_MDInRainSurfRunoffID,      itemID, 0.0);
+		surfRunoff          = MFVarGetFloat (_MDInRainSurfCore_RunoffID,      itemID, 0.0);
 		openWaterET         = MFVarGetFloat (_MDInPotEvapotransID,       itemID, 0.0);
 		grossDemand         = MFVarGetFloat (_MDInIrrigation_GrossDemandID,      itemID, 0.0);
 		smallResStorageFrac = MFVarGetFloat (_MDInSmallResStorageFracID, itemID, 1.0);
@@ -124,7 +124,7 @@ int MDReservoir_FarmPondReleaseDef () {
 	if  (_MDInSmallResCapacityID == MFUnset) return (MFUnset);
 
 	MFDefEntering("Small Reservoirs");
-    if (((_MDInRainSurfRunoffID      = MDCore_RainSurfRunoffDef()) == CMfailed) ||
+    if (((_MDInRainSurfCore_RunoffID      = MDCore_RainSurfRunoffDef()) == CMfailed) ||
         ((_MDInIrrigation_AreaFracID         = MDIrrigation_IrrAreaDef()) == CMfailed) ||
         ((_MDInPotEvapotransID       = MDIrrigation_ReferenceETDef()) == CMfailed) ||
         ((_MDInSmallResStorageFracID = MFVarGetID (MDVarReservoir_FarmPondStorageFrac, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||

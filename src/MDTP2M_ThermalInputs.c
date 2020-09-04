@@ -27,7 +27,7 @@ static int _MDInCWA_316b_OnOffID              = MFUnset;   // TODO putin
 /////////
 
 // Input
-static int _MDInDischargeID         = MFUnset;
+static int _MDInRouting_DischargeID         = MFUnset;
 static int _MDInDischargeIncomingID = MFUnset;
 static int _MDFlux_QxTID		    = MFUnset;
 static int _MDFluxMixing_QxTID	    = MFUnset;
@@ -62,7 +62,7 @@ static int _MDInDemand4ID               = MFUnset;
 //static int _MDInEnergyDemand1ID		= MFUnset;
 
 static int _MDInWetBulbTempID	  	= MFUnset;
-static int _MDInAirTemperatureID	= MFUnset;
+static int _MDInCommon_AirTemperatureID	= MFUnset;
 
 // Output
 static int _MDWTemp_QxTID            = MFUnset;
@@ -426,11 +426,11 @@ float cccc=0.0;
 placeHolder			  = MFVarGetFloat (_MDPlaceHolderID,          itemID, 0.0);	// running MDWTempRiverRoute, value is previous water Temp
 flux_QxT			  = MFVarGetFloat (_MDFlux_QxTID,             itemID, 0.0);	// reading in discharge * temp (m3*degC/day)
 fluxmixing_QxT			  = MFVarGetFloat (_MDFluxMixing_QxTID,       itemID, 0.0);	// reading in discharge * tempmixing (m3*degC/day)
-Q               	          = MFVarGetFloat (_MDInDischargeID,          itemID, 0.0);
+Q               	          = MFVarGetFloat (_MDInRouting_DischargeID,          itemID, 0.0);
 Q_incoming_1		  	  = MFVarGetFloat (_MDInDischargeIncomingID, itemID, 0.0);	// already includes local runoff, uncommented 113012
 // 	Q_incoming_1		  = MFVarGetFloat (_MDOutRouting_DischargeID,         itemID, 0.0);			// late-night discharge test (and one commented out line above), commented out 113012
 
-air_temp				  = MFVarGetFloat (_MDInAirTemperatureID,	  itemID, 0.0);	//read in air temperature (c)
+air_temp				  = MFVarGetFloat (_MDInCommon_AirTemperatureID,	  itemID, 0.0);	//read in air temperature (c)
 
 nameplate_1           = MFVarGetFloat (_MDInNamePlate1ID,         itemID, 0.0); //todo check
 fuel_type_1           = MFVarGetFloat (_MDInFuelType1ID,          itemID, 0.0);
@@ -1175,7 +1175,7 @@ printf("operational_capacity = %f, consumption_T = %f, generation = %f, Q_outgoi
 
 	 MFVarSetFloat(_MDOutLossToInletID,         itemID, loss_inlet_total);
          MFVarSetFloat(_MDOutLossToWaterID,         itemID, loss_water_total);
-	 MFVarSetFloat(_MDInDischargeID,         itemID, Q_outgoing_1);			//late-night discharge test
+	 MFVarSetFloat(_MDInRouting_DischargeID,         itemID, Q_outgoing_1);			//late-night discharge test
 //	 MFVarSetFloat(_MDInDischargeIncomingID,  itemID, Q_outgoing_1);			//		113012 added
 	 MFVarSetFloat(_MDWTemp_QxTID,            itemID, Q_outgoing_WTemp_1);
 	 MFVarSetFloat(_MDFlux_QxTID,             itemID, flux_QxT_new);
@@ -1249,7 +1249,7 @@ int MDTP2M_ThermalInputsDef () {
    
 			if (
                     ((_MDPlaceHolderID           = MDTP2M_WTempRiverRouteDef()) == CMfailed) ||
-                    ((_MDInDischargeID           = MDRouting_DischargeDef()) == CMfailed) ||
+                    ((_MDInRouting_DischargeID           = MDRouting_DischargeDef()) == CMfailed) ||
                     ((_MDInWetBulbTempID        = MDCommon_WetBulbTempDef()) == CMfailed) ||
          
 //				((_MDOutRouting_DischargeID         = MFVarGetID (MDVarRouting_Discharge,        "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||		//RJS 113012
@@ -1260,7 +1260,7 @@ int MDTP2M_ThermalInputsDef () {
                             ((_MDFlux_QxTID             = MFVarGetID (MDVarTP2M_Flux_QxT, "m3*degC/d", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
 		//		((_MDWTempMixing_QxTID      = MFVarGetID (MDVarTP2M_WTempMixing_QxT,   "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
 				((_MDWTemp_QxTID            = MFVarGetID (MDVarTP2M_Temp_QxT, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||	//RJS 013112
-				((_MDInAirTemperatureID     = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+				((_MDInCommon_AirTemperatureID     = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
                             ((_MDInNamePlate1ID         = MFVarGetID (MDVarTP2M_NamePlate1, "MW", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInFuelType1ID          = MFVarGetID (MDVarTP2M_FuelType1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInTechnology1ID        = MFVarGetID (MDVarTP2M_Technology1, "-", MFInput, MFState, MFBoundary)) == CMfailed) ||

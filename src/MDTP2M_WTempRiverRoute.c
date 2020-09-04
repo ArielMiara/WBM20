@@ -22,24 +22,21 @@ Route temperature through river network
 static int _MDWTempRiverRouteID        = MFUnset;
 
 // Input
-static int _MDInDischargeID            = MFUnset;
+static int _MDInRouting_DischargeID            = MFUnset;
 static int _MDInDischargeIncomingID    = MFUnset;
-static int _MDInRunoffVolumeID         = MFUnset;
+static int _MDInAux_RunoffVolumeID         = MFUnset;
 static int _MDInWTempRiverID           = MFUnset;
 static int _MDInRiverWidthID           = MFUnset;
 static int _MDInRiverStorageChgID      = MFUnset;
 static int _MDInRiverStorageID         = MFUnset;
-static int _MDInCommon_SolarRadID             = MFUnset;
+static int _MDInCommon_Common_SolarRadID             = MFUnset;
 static int _MDInWindSpeedID            = MFUnset;
 static int _MDInCloudCoverID           = MFUnset;
-static int _MDInAirTemperatureID       = MFUnset;
+static int _MDInCommon_AirTemperatureID       = MFUnset;
 static int _MDInCommon_SnowPackID             = MFUnset;
 static int _MDInResStorageChangeID     = MFUnset;
 static int _MDInResStorageID           = MFUnset;
 static int _MDInResCapacityID     	   = MFUnset;
-//static int _MDInWdl_QxTID              = MFUnset;	//RJS 082011	//commented out 013112
-//static int _MDInThermalWdlID           = MFUnset;	//RJS 082011	//commented out 013112
-//static int _MDInWarmingTempID          = MFUnset;	//RJS 082011	//commented out 013112
 // Output
 static int _MDLocalIn_QxTID            = MFUnset;
 static int _MDRemoval_QxTID            = MFUnset;
@@ -54,7 +51,7 @@ static int _MDDeltaStorageMixing_QxTID = MFUnset;
 static int _MDWTempMixing_QxTID        = MFUnset;
 static int _MDEquil_Temp	       = MFUnset;
 
-static int _MDInRelativeHumidityID       = MFUnset; // FOR NEW TEMP MODULE
+static int _MDInCommon_HumidityRelativeID       = MFUnset; // FOR NEW TEMP MODULE
 
 
 static void _MDWTempRiverRoute (int itemID) {
@@ -84,7 +81,7 @@ static void _MDWTempRiverRoute (int itemID) {
      float cloudCover;
      float Tair;
      float Tequil = 0;
-     float HeatLoss_int = 4396.14; // is intercept assuming no wind and clouds
+     float HeatLoss_int   = 4396.14; // is intercept assuming no wind and clouds
      float HeatLoss_slope = 1465.38; // is slope assuming no wind and clouds
      float deltaT;
      
@@ -101,22 +98,15 @@ static void _MDWTempRiverRoute (int itemID) {
      float StorexT_new_mix;  
      float DeltaStorexT_mix; 
      float QxTRemoval;
-     int day;
-     int month;
-     
      float resCapacity;		//RJS 071511	Reservoir capacity [km3]
 
-
-     day = MFDateGetCurrentDay();
-     month = MFDateGetCurrentMonth();
-
-   	 Q                     = MFVarGetFloat (_MDInDischargeID,         itemID, 0.0);
+     Q                     = MFVarGetFloat (_MDInRouting_DischargeID,         itemID, 0.0);
    	 Q_incoming            = MFVarGetFloat (_MDInDischargeIncomingID, itemID, 0.0); // already includes local runoff
-     RO_Vol                = MFVarGetFloat (_MDInRunoffVolumeID,      itemID, 0.0);
+     RO_Vol                = MFVarGetFloat (_MDInAux_RunoffVolumeID,      itemID, 0.0);
    	 RO_WTemp              = MFVarGetFloat (_MDInWTempRiverID,        itemID, 0.0);
      SnowPack              = MFVarGetFloat (_MDInCommon_SnowPackID,          itemID, 0.0);
  	
-     if (_MDInResStorageID != MFUnset){
+     if (_MDInResStorageID != MFUnset) {
          ResWaterStorageChange = MFVarGetFloat ( _MDInResStorageChangeID, itemID, 0.0) * pow(1000,3); // convert to m3/
          ResWaterStorage       = MFVarGetFloat ( _MDInResStorageID,       itemID, 0.0) * pow(1000,3); // convert to m3 
          resCapacity           = MFVarGetFloat (_MDInResCapacityID,       itemID, 0.0);	//RJS 071511
@@ -131,18 +121,15 @@ static void _MDWTempRiverRoute (int itemID) {
      waterStorageChange    = MFVarGetFloat ( _MDInRiverStorageChgID,  itemID, 0.0);
    	 waterStorage          = MFVarGetFloat ( _MDInRiverStorageID,     itemID, 0.0);
    	 channelWidth          = MFVarGetFloat ( _MDInRiverWidthID,       itemID, 0.0);
- 	 solarRad              = MFVarGetFloat ( _MDInCommon_SolarRadID,         itemID, 0.0); //MJ/m2/d - CHECK UNITS
+ 	 solarRad              = MFVarGetFloat ( _MDInCommon_Common_SolarRadID,         itemID, 0.0); //MJ/m2/d - CHECK UNITS
  	 windSpeed             = MFVarGetFloat ( _MDInWindSpeedID,        itemID, 0.0);
      cloudCover            = MFVarGetFloat ( _MDInCloudCoverID,       itemID, 0.0);
-     Tair                  = MFVarGetFloat ( _MDInAirTemperatureID,   itemID, 0.0);
+     Tair                  = MFVarGetFloat ( _MDInCommon_AirTemperatureID,   itemID, 0.0);
         	 
      QxT                   = MFVarGetFloat (_MDFlux_QxTID,            itemID, 0.0);
      StorexT               = MFVarGetFloat (_MDStorage_QxTID,         itemID, 0.0);
      QxT_mix               = MFVarGetFloat (_MDFluxMixing_QxTID,      itemID, 0.0);
      StorexT_mix           = MFVarGetFloat (_MDStorageMixing_QxTID,   itemID, 0.0);
-//     warmingTemp	   = MFVarGetFloat (_MDInWarmingTempID,    itemID, 0.0);	//RJS 072011						//commented out 013112
-//     wdl_QxT		   = MFVarGetFloat (_MDInWdl_QxTID,        itemID, 0.0);	//RJS 072011						//commented out 013112
-//     thermal_wdl	   = MFVarGetFloat (_MDInThermalWdlID, 	   itemID, 0.0)* 1000000 / 365 / 86400;	//RJS 072011	//commented out 013112
 
      if(Q < 0.0)  Q = 0.0;							//RJS 120409
      if(Q_incoming < 0.0) Q_incoming = 0.0;			//RJS 120409
@@ -185,20 +172,16 @@ static void _MDWTempRiverRoute (int itemID) {
     	 DeltaStorexT_mix = StorexT_new_mix - StorexT_mix;							//RJS 071511
     	 QxTout_mix       = Q * 86400.0 * Q_WTemp_mix; 								//RJS 071511	//m3*degC/s
 
-
-    	          //end
-
-    	          MFVarSetFloat(_MDLocalIn_QxTID, itemID, QxT_input);
-    	          MFVarSetFloat(_MDFlux_QxTID, itemID, QxTout);
-    	          MFVarSetFloat(_MDStorage_QxTID, itemID, StorexT_new);
-    	          MFVarSetFloat(_MDDeltaStorage_QxTID, itemID, DeltaStorexT);
-    	          MFVarSetFloat(_MDWTemp_QxTID, itemID, Q_WTemp_new);
-    	          MFVarSetFloat(_MDWTempDeltaT_QxTID, itemID, deltaT);
-    	          MFVarSetFloat(_MDFluxMixing_QxTID, itemID, QxTout_mix);
-    	          MFVarSetFloat(_MDStorageMixing_QxTID, itemID, StorexT_new_mix);
-    	          MFVarSetFloat(_MDDeltaStorageMixing_QxTID, itemID, DeltaStorexT_mix);
-    	          MFVarSetFloat(_MDWTempMixing_QxTID, itemID, Q_WTemp_mix);
-
+    	 MFVarSetFloat(_MDLocalIn_QxTID, itemID, QxT_input);
+    	 MFVarSetFloat(_MDFlux_QxTID, itemID, QxTout);
+    	 MFVarSetFloat(_MDStorage_QxTID, itemID, StorexT_new);
+    	 MFVarSetFloat(_MDDeltaStorage_QxTID, itemID, DeltaStorexT);
+    	 MFVarSetFloat(_MDWTemp_QxTID, itemID, Q_WTemp_new);
+    	 MFVarSetFloat(_MDWTempDeltaT_QxTID, itemID, deltaT);
+    	 MFVarSetFloat(_MDFluxMixing_QxTID, itemID, QxTout_mix);
+    	 MFVarSetFloat(_MDStorageMixing_QxTID, itemID, StorexT_new_mix);
+    	 MFVarSetFloat(_MDDeltaStorageMixing_QxTID, itemID, DeltaStorexT_mix);
+    	 MFVarSetFloat(_MDWTempMixing_QxTID, itemID, Q_WTemp_mix);
      }
 
      else{
@@ -206,9 +189,9 @@ static void _MDWTempRiverRoute (int itemID) {
     	 ReservoirVelocity = 0.0;
     	 ReservoirDepth = 0.0;
  //    }								 = %f							//RJS commented out 071511
-    
+
      //TODO: RO_Vol has been set to never be less than 0 in MDWRunoff
-     QxT_input = RO_Vol * RO_WTemp * 86400.0; //m3*degC/d 
+     QxT_input = RO_Vol * RO_WTemp * 86400.0; //m3*degC/d
 
      //note: calculation for input concentration is changed from previous iterations 
      // to use incoming Q.  Also use WaterStorage from previous time step/
@@ -266,7 +249,7 @@ initial_riverT = Q_WTemp;
 //printf("initial_riverT = %f \n", initial_riverT);
 //}
 
-relative_h = MFVarGetFloat (_MDInRelativeHumidityID,         itemID, 0.0);
+relative_h = MFVarGetFloat (_MDInCommon_HumidityRelativeID,         itemID, 0.0);
 es2 = 6.112 * exp((17.67*Tair)/(243.5+Tair));
 e2 = relative_h * es2 / 100;
 dew_point =(243.5*log(e2/6.112))/(17.67-log(e2/6.112)); //dew point temp (C)
@@ -368,12 +351,10 @@ if (isnan(Q_WTemp_new)){
   	mb = QxT_input + QxT - QxTRemoval - QxTout - DeltaStorexT;
   	mbmix = (QxT_input + QxT_mix - QxTout_mix - DeltaStorexT_mix);
      }	//RJS 071511
-
-
 }
 
 int MDTP2M_WTempRiverRouteDef () {
-   int optID = MFUnset, waterBalanceID;
+   int optID = MFUnset;
    const char *optStr;
    const char *options [] = { "none", "calculate", (char *) NULL };
   
@@ -386,48 +367,41 @@ int MDTP2M_WTempRiverRouteDef () {
       CMmsgPrint(CMmsgUsrError,"Reservoir Option not specified! Option none or calculate");
 		return CMfailed;
    }
-   if (optID==1) {
-      if ((( waterBalanceID             = MDCore_WaterBalanceDef()) == CMfailed) ||
-          ((_MDInResStorageChangeID     = MFVarGetID (MDVarReservoir_StorageChange, "km3", MFInput, MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
-          ((_MDInResStorageID           = MFVarGetID (MDVarReservoir_Storage, "km3", MFInput, MFState, MFInitial)) == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
-          ((_MDInResCapacityID          = MFVarGetID (MDVarReservoir_Capacity, "km3", MFInput, MFState, MFBoundary)) == CMfailed))
+   if (optID == 1) {
+      if ((MDCore_WaterBalanceDef () == CMfailed) ||
+          ((_MDInResStorageChangeID = MFVarGetID (MDVarReservoir_StorageChange, "km3", MFInput, MFState, MFBoundary)) == CMfailed) ||	//RJS 071511
+          ((_MDInResStorageID       = MFVarGetID (MDVarReservoir_Storage,       "km3", MFInput, MFState, MFInitial))  == CMfailed) ||	//RJS 121311 changed from MFBoundary to MFInitial
+          ((_MDInResCapacityID      = MFVarGetID (MDVarReservoir_Capacity,      "km3", MFInput, MFState, MFBoundary)) == CMfailed))
          return (CMfailed);
     }
 	//input
-	if (((_MDInDischargeID            = MDRouting_DischargeDef()) == CMfailed) ||
-        (( waterBalanceID             = MDCore_WaterBalanceDef()) == CMfailed) ||
-        ((_MDInCommon_SolarRadID             = MDCommon_SolarRadDef()) == CMfailed) ||
-        ((_MDInWTempRiverID           = MDTP2M_WTempRiverDef()) == CMfailed) ||
-        ((_MDInRelativeHumidityID     = MDCommon_HumidityRelativeDef()) == CMfailed) ||
-        ((_MDInRiverWidthID           = MDRouting_RiverWidthDef()) == CMfailed) ||
-        ((_MDInRunoffVolumeID         = MDCore_RunoffVolumeDef()) == CMfailed) ||
-        ((_MDInCloudCoverID           = MDCommon_CloudCoverDef()) == CMfailed) ||
- //      ((_MDInWdl_QxTID	             = MDTP2M_ThermalInputsDef ()) == CMfailed) ||	//RJS 072011	// commented out 013112
-       ((_MDInDischargeIncomingID    = MFVarGetID (MDVarRouting_Discharge0, "m3/s", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-        ((_MDInWindSpeedID            = MFVarGetID (MDVarCommon_WindSpeed, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInAirTemperatureID       = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-//       ((_MDInRelativeHumidityID       = MFVarGetID (MDVarCommon_HumidityRelative,         "%",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
-       ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRouting_RiverStorageChg, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDInRiverStorageID         = MFVarGetID (MDVarRouting_RiverStorage, "m3", MFInput, MFState, MFInitial)) == CMfailed) ||
-            ((_MDInCommon_SnowPackID             = MFVarGetID (MDVarCore_SnowPack, "mm", MFInput, MFState, MFBoundary)) == CMfailed) ||
-//       ((_MDInWarmingTempID	       = MFVarGetID (MDVarWarmingTemp,		        "degC",	    MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 072011		//commented out 013112
-//       ((_MDInThermalWdlID           = MFVarGetID (MDVarThermalWdl, 		        "-",          MFInput,  MFState, MFBoundary)) == CMfailed) ||	//RJS 072011	//commented out 013112
-       // output
-       ((_MDLocalIn_QxTID            = MFVarGetID (MDVarTP2M_BgcLocalIn_QxT, "m3*degC/d", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDRemoval_QxTID            = MFVarGetID (MDVarTP2M_Removal_QxT, "m3*degC/d", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDFlux_QxTID               = MFVarGetID (MDVarTP2M_Flux_QxT, "m3*degC/d", MFRoute, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDStorage_QxTID            = MFVarGetID (MDVarTP2M_Storage_QxT, "m3*degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
-            ((_MDDeltaStorage_QxTID       = MFVarGetID (MDVarTP2M_DeltaStorage_QxT, "m3*degC/d", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDWTemp_QxTID              = MFVarGetID (MDVarTP2M_Temp_QxT, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDWTempDeltaT_QxTID        = MFVarGetID (MDVarTP2M_WTempDeltaT_QxT, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDEquil_Temp   	     = MFVarGetID (MDVarTP2M_Equil_Temp, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-       //output mixing
-       ((_MDFluxMixing_QxTID         = MFVarGetID (MDVarTP2M_FluxMixing_QxT, "m3*degC/d", MFRoute, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDStorageMixing_QxTID      = MFVarGetID (MDVarTP2M_StorageMixing_QxT, "m3*degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
-            ((_MDDeltaStorageMixing_QxTID = MFVarGetID (MDVarTP2M_DeltaStorageMixing_QxT, "m3*degC/d", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDWTempMixing_QxTID        = MFVarGetID (MDVarTP2M_WTempMixing_QxT, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-            (MFModelAddFunction (_MDWTempRiverRoute) == CMfailed)) return (CMfailed);
-      
+	if ((MDCore_WaterBalanceDef () == CMfailed) ||
+	    ((_MDInRouting_DischargeID            = MDRouting_DischargeDef ())       == CMfailed) ||
+        ((_MDInCommon_Common_SolarRadID      = MDCommon_SolarRadDef ())         == CMfailed) ||
+        ((_MDInWTempRiverID           = MDTP2M_WTempRiverDef ())         == CMfailed) ||
+            ((_MDInCommon_HumidityRelativeID     = MDCommon_HumidityRelativeDef ()) == CMfailed) ||
+            ((_MDInRiverWidthID           = MDRouting_RiverWidthDef ())      == CMfailed) ||
+            ((_MDInAux_RunoffVolumeID         = MDCore_RunoffVolumeDef ())       == CMfailed) ||
+            ((_MDInCloudCoverID           = MDCommon_CloudCoverDef ())       == CMfailed) ||
+            ((_MDInDischargeIncomingID    = MFVarGetID (MDVarRouting_Discharge0,          "m3/s",      MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
+            ((_MDInWindSpeedID            = MFVarGetID (MDVarCommon_WindSpeed,            "m/s",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInCommon_AirTemperatureID       = MFVarGetID (MDVarCommon_AirTemperature,       "degC",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInRiverStorageChgID      = MFVarGetID (MDVarRouting_RiverStorageChg,     "m3/s",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+            ((_MDInRiverStorageID         = MFVarGetID (MDVarRouting_RiverStorage,        "m3",        MFInput,  MFState, MFInitial))  == CMfailed) ||
+            ((_MDInCommon_SnowPackID      = MFVarGetID (MDVarCore_SnowPack,               "mm",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
+            ((_MDLocalIn_QxTID            = MFVarGetID (MDVarTP2M_WTLocalIn_QxT, "m3*degC/d", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDRemoval_QxTID            = MFVarGetID (MDVarTP2M_Removal_QxT,            "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDFlux_QxTID               = MFVarGetID (MDVarTP2M_Flux_QxT,               "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDStorage_QxTID            = MFVarGetID (MDVarTP2M_Storage_QxT,            "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDDeltaStorage_QxTID       = MFVarGetID (MDVarTP2M_DeltaStorage_QxT,       "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDWTemp_QxTID              = MFVarGetID (MDVarTP2M_Temp_QxT,               "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDWTempDeltaT_QxTID        = MFVarGetID (MDVarTP2M_WTempDeltaT_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDEquil_Temp   	          = MFVarGetID (MDVarTP2M_Equil_Temp,             "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDFluxMixing_QxTID         = MFVarGetID (MDVarTP2M_FluxMixing_QxT,         "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDStorageMixing_QxTID      = MFVarGetID (MDVarTP2M_StorageMixing_QxT,      "m3*degC",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+        ((_MDDeltaStorageMixing_QxTID = MFVarGetID (MDVarTP2M_DeltaStorageMixing_QxT, "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+        ((_MDWTempMixing_QxTID        = MFVarGetID (MDVarTP2M_WTempMixing_QxT,        "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        (MFModelAddFunction (_MDWTempRiverRoute) == CMfailed)) return (CMfailed);
 	   MFDefLeaving ("Route river temperature");
 	   return (_MDWTemp_QxTID);
 }

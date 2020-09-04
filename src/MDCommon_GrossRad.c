@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
-MDGrossRad.c
+MDCommon_GrossRad.c
 
 bfekete@gc.cuny.edu
 
@@ -17,9 +17,9 @@ bfekete@gc.cuny.edu
 #define  DTOR 0.01745329252
 static float _MDGrossRadStdTAU = 1.0;
 
-static int _MDOutGrossRadID = MFUnset;
+static int _MDOutCommon_GrossRadID = MFUnset;
 
-static void _MDGrossRadianceStd (int itemID) {
+static void _MDCommon_GrossRadianceStd (int itemID) {
 // Input
 	int   day;
 	float lambda;
@@ -41,10 +41,10 @@ static void _MDGrossRadianceStd (int itemID) {
 		sbb = sp * sinphi * pow ((double) _MDGrossRadStdTAU,(double) (1.0 / sinphi));
 		if (sbb > 0) grossRad += sbb;
 	}
-	MFVarSetFloat (_MDOutGrossRadID,  itemID, grossRad / 24.0);
+	MFVarSetFloat (_MDOutCommon_GrossRadID,  itemID, grossRad / 24.0);
 }
 
-static void _MDGrossRadianceOtto (int itemID) {
+static void _MDCommon_GrossRadianceOtto (int itemID) {
 // Input
 	int   day;
 	float lambda;
@@ -67,7 +67,7 @@ static void _MDGrossRadianceOtto (int itemID) {
 		sbb = sp * sinphi / pow (sotd,2.0);
 		if (sbb >= 0) grossRad += sbb;
 	}
-	MFVarSetFloat (_MDOutGrossRadID,  itemID, grossRad / 24.0);
+	MFVarSetFloat (_MDOutCommon_GrossRadID,  itemID, grossRad / 24.0);
 }
 
 enum { MDinput, MDstandard,  MDOtto }; 
@@ -78,25 +78,25 @@ int MDCommon_GrossRadDef () {
 	const char *options [] = { MDInputStr, "standard", "Otto", (char *) NULL };
 	float par;
 
-	if (_MDOutGrossRadID != MFUnset) return (_MDOutGrossRadID);
+	if (_MDOutCommon_GrossRadID != MFUnset) return (_MDOutCommon_GrossRadID);
 
 	MFDefEntering ("Gross Radiance");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutGrossRadID = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFInput, MFFlux, MFBoundary); break;
+		case MDinput: _MDOutCommon_GrossRadID = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFInput, MFFlux, MFBoundary); break;
 		case MDstandard:
 			if (((optStr = MFOptionGet (MDParGrossRadTAU)) != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
 				_MDGrossRadStdTAU = par;
-			if (((_MDOutGrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                (MFModelAddFunction (_MDGrossRadianceStd)  == CMfailed)) return (CMfailed);
+			if (((_MDOutCommon_GrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction(_MDCommon_GrossRadianceStd) == CMfailed)) return (CMfailed);
 			break;
 		case MDOtto:
-			if (((_MDOutGrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                (MFModelAddFunction (_MDGrossRadianceOtto) == CMfailed)) return (CMfailed);
+			if (((_MDOutCommon_GrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction(_MDCommon_GrossRadianceOtto) == CMfailed)) return (CMfailed);
 			break;
 		default:  MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving ("Gross Radiance");
-	return (_MDOutGrossRadID);
+	return (_MDOutCommon_GrossRadID);
 }

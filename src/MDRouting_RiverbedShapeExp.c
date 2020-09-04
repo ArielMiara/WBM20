@@ -15,7 +15,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInDischMeanID              = MFUnset;
+static int _MDInAux_MeanDischargeID              = MFUnset;
 static int _MDInRiverbedSlopeID          = MFUnset;
 // Output
 static int _MDOutRiverbedAvgDepthMeanID  = MFUnset;
@@ -36,14 +36,14 @@ static void _MDRiverbedShapeExponent (int itemID) {
 //	float eta = 0.36, nu = 0.37, tau = 3.55, phi = 0.51;	//new based on Knighton (avg)
 	float eta = 0.33, nu = 0.35, tau = 3.67, phi = 0.45;	// Hey and Thorn (1986)
 
-	if (MFVarTestMissingVal (_MDInDischMeanID, itemID)) {
+	if (MFVarTestMissingVal (_MDInAux_MeanDischargeID, itemID)) {
 		MFVarSetFloat (_MDOutRiverbedAvgDepthMeanID,  itemID, 0.0);
 		MFVarSetFloat (_MDOutRiverbedWidthMeanID,     itemID, 0.0);
 		MFVarSetFloat (_MDOutRiverbedVelocityMeanID,  itemID, 0.0);
 		MFVarSetFloat (_MDOutRiverbedShapeExponentID, itemID, 2.0);
 		return;
 	}
-	discharge = fabs(MFVarGetFloat(_MDInDischMeanID,  itemID, 0.0));
+	discharge = fabs(MFVarGetFloat(_MDInAux_MeanDischargeID,  itemID, 0.0));
 	dL        = MFModelGetLength (itemID);
 	if (CMmathEqualValues (dL, 0.0) || (_MDInRiverbedSlopeID == MFUnset) || MFVarTestMissingVal (_MDInRiverbedSlopeID, itemID)) {
 		// Slope independent riverbed geometry
@@ -90,7 +90,7 @@ int MDRouting_RiverbedShapeExponentDef () {
 			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRouting_RiverbedSlope, "m/km", MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDindependent:
-			if (((_MDInDischMeanID = MDAux_DischMeanDef()) == CMfailed) ||
+			if (((_MDInAux_MeanDischargeID = MDAux_MeanDiscargehDef()) == CMfailed) ||
                 ((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverbedVelocityMean, "m/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||

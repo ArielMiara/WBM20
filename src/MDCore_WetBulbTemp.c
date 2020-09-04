@@ -25,10 +25,10 @@ approximation is returned.
 #include <MD.h>
 
 // Input
-static int _MDInAirTemperatureID = MFUnset;
-static int _MDInSpecificHumidityID = MFUnset;
-static int _MDInAirPressureID = MFUnset;
-static int _MDInRelativeHumidityID = MFUnset;
+static int _MDInCommon_AirTemperatureID = MFUnset;
+static int _MDInCommon_HumiditySpecificID = MFUnset;
+static int _MDInCommon_AirPressureID = MFUnset;
+static int _MDInCommon_HumidityRelativeID = MFUnset;
 
 // Output
 static int _MDOutWetBulbTempID = MFUnset;
@@ -65,10 +65,10 @@ static void _MDWetBulbTemp(int itemID) {
     int x;
     float esw; //Sat. vapor press. (hPa) at Twn
 
-    relativehumidity = MFVarGetFloat(_MDInRelativeHumidityID, itemID, 0.0);
-    airtemp          = MFVarGetFloat(_MDInAirTemperatureID,   itemID, 0.0);
-    airpressure      = MFVarGetFloat(_MDInAirPressureID,      itemID, 0.0) / 100; //pressure (HPa)
-    specifichumidity = MFVarGetFloat(_MDInSpecificHumidityID, itemID, 0.0) * 1000; //specific humidity (g/kg) took out *1000 jan27 2017 (divide by 100 for NCEP)
+    relativehumidity = MFVarGetFloat(_MDInCommon_HumidityRelativeID, itemID, 0.0);
+    airtemp          = MFVarGetFloat(_MDInCommon_AirTemperatureID,   itemID, 0.0);
+    airpressure      = MFVarGetFloat(_MDInCommon_AirPressureID,      itemID, 0.0) / 100; //pressure (HPa)
+    specifichumidity = MFVarGetFloat(_MDInCommon_HumiditySpecificID, itemID, 0.0) * 1000; //specific humidity (g/kg) took out *1000 jan27 2017 (divide by 100 for NCEP)
 
     e  = (specifichumidity * airpressure) / 622; //e (HPa)
     es = 6.112 * exp(17.27 * (airtemp / (237.3 + airtemp))); //Sat. vapor press. (hPa) 
@@ -139,10 +139,10 @@ int MDCommon_WetBulbTempDef () {
             if ((_MDOutWetBulbTempID = MFVarGetID (MDVarCommon_WetBulbTemp, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
-            if (((_MDInSpecificHumidityID = MDCommon_HumiditySpecificDef()) == CMfailed) ||
-                ((_MDInRelativeHumidityID = MDCommon_HumidityRelativeDef()) == CMfailed) ||
-                ((_MDInAirTemperatureID   = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInAirPressureID      = MFVarGetID (MDVarCommon_AirPressure, "pa", MFInput, MFState, MFBoundary)) == CMfailed) ||
+            if (((_MDInCommon_HumiditySpecificID = MDCommon_HumiditySpecificDef()) == CMfailed) ||
+                ((_MDInCommon_HumidityRelativeID = MDCommon_HumidityRelativeDef()) == CMfailed) ||
+                ((_MDInCommon_AirTemperatureID   = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInCommon_AirPressureID      = MFVarGetID (MDVarCommon_AirPressure, "pa", MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutWetBulbTempID     = MFVarGetID (MDVarCommon_WetBulbTemp, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDWetBulbTemp) == CMfailed))) return (CMfailed);
             break;

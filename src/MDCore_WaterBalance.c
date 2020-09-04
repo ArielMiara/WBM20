@@ -20,18 +20,18 @@ static int _MDInCommon_PrecipID             = MFUnset;
 static int _MDInEvaptrsID            = MFUnset;
 static int _MDInSnowPackChgID        = MFUnset;
 static int _MDInSoilMoistChgID       = MFUnset;
-static int _MDInGrdWatChgID          = MFUnset;
-static int _MDInRunoffID             = MFUnset;
-static int _MDInDischargeID          = MFUnset;
+static int _MDInAux_GrdWatChgID          = MFUnset;
+static int _MDInCore_RunoffID             = MFUnset;
+static int _MDInRouting_DischargeID          = MFUnset;
 
 static int _MDInIrrEvapotranspID     = MFUnset;
 static int _MDInIrrSoilMoistChgID    = MFUnset;
 static int _MDInIrrigation_AreaFracID        = MFUnset;
 static int _MDInIrrigation_GrossDemandID     = MFUnset;
 static int _MDInIrrigation_ReturnFlowID      = MFUnset;
-static int _MDInIrrUptakeRiverID     = MFUnset;
+static int _MDInIrrigation_UptakeRiverID     = MFUnset;
 static int _MDInIrrUptakeGrdWaterID  = MFUnset;
-static int _MDInIrrUptakeExcessID    = MFUnset;
+static int _MDInIrrigation_UptakeExcessID    = MFUnset;
 static int _MDInReservoir_FarmPondReleaseID    = MFUnset;
 static int _MDInSmallResStorageChgID = MFUnset;
 static int _MDInSmallResEvapoID      = MFUnset;
@@ -47,8 +47,8 @@ static void _MDWaterBalance(int itemID) {
 	float etp          = MFVarGetFloat(_MDInEvaptrsID,        itemID, 0.0);	
 	float snowPackChg  = MFVarGetFloat(_MDInSnowPackChgID,    itemID, 0.0);	
 	float soilMoistChg = MFVarGetFloat(_MDInSoilMoistChgID,   itemID, 0.0);
-	float grdWaterChg  = MFVarGetFloat(_MDInGrdWatChgID,      itemID, 0.0);
-	float runoff       = MFVarGetFloat(_MDInRunoffID,         itemID, 0.0);
+	float grdWaterChg  = MFVarGetFloat(_MDInAux_GrdWatChgID,      itemID, 0.0);
+	float runoff       = MFVarGetFloat(_MDInCore_RunoffID,         itemID, 0.0);
 	float irrAreaFrac        = 0.0;
 	float irrGrossDemand     = 0.0;
 	float irrReturnFlow      = 0.0;
@@ -70,8 +70,8 @@ static void _MDWaterBalance(int itemID) {
 		irrEvapotransp    = MFVarGetFloat (_MDInIrrEvapotranspID,         itemID, 0.0);
 		irrSoilMoistChg   = _MDInIrrSoilMoistChgID   != MFUnset ? MFVarGetFloat (_MDInIrrSoilMoistChgID,   itemID, 0.0) : 0.0;
 		irrUptakeGrdWater = _MDInIrrUptakeGrdWaterID != MFUnset ? MFVarGetFloat (_MDInIrrUptakeGrdWaterID, itemID, 0.0) : 0.0;
-		irrUptakeRiver    = _MDInIrrUptakeRiverID    != MFUnset ? MFVarGetFloat (_MDInIrrUptakeRiverID,    itemID, 0.0) : 0.0;
-		irrUptakeExcess   = MFVarGetFloat (_MDInIrrUptakeExcessID,        itemID, 0.0);
+		irrUptakeRiver    = _MDInIrrigation_UptakeRiverID    != MFUnset ? MFVarGetFloat (_MDInIrrigation_UptakeRiverID,    itemID, 0.0) : 0.0;
+		irrUptakeExcess   = MFVarGetFloat (_MDInIrrigation_UptakeExcessID,        itemID, 0.0);
 
 		if (_MDInReservoir_FarmPondReleaseID != MFUnset) {
 			smallResRelease    = MFVarGetFloat (_MDInReservoir_FarmPondReleaseID,    itemID, 0.0);
@@ -98,25 +98,25 @@ int MDCore_WaterBalanceDef() {
 	MFDefEntering ("WaterBalance");
 	if ((MDAux_AccumBalanceDef() == CMfailed) ||
         ((_MDInCommon_PrecipID                  = MDCommon_PrecipitationDef()) == CMfailed) ||
-        ((_MDInDischargeID               = MDRouting_DischargeDef()) == CMfailed) ||
+        ((_MDInRouting_DischargeID               = MDRouting_DischargeDef()) == CMfailed) ||
 
         ((_MDInSnowPackChgID             = MDCore_SnowPackChgDef()) == CMfailed) ||
         ((_MDInSoilMoistChgID            = MDCore_SoilMoistChgDef()) == CMfailed) ||
-        ((_MDInRunoffID                  = MDCore_RunoffDef()) == CMfailed) ||
+        ((_MDInCore_RunoffID                  = MDCore_RunoffDef()) == CMfailed) ||
         ((_MDInEvaptrsID                 = MFVarGetID (MDVarCore_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-        ((_MDInGrdWatChgID               = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDInAux_GrdWatChgID               = MFVarGetID (MDVarCore_GroundWaterChange, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
         ((_MDOutWaterBalanceID           = MFVarGetID (MDVarCore_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction(_MDWaterBalance) == CMfailed))
 	    return (CMfailed);
 	if ((_MDInIrrigation_GrossDemandID           = MDIrrigation_GrossDemandDef()) != MFUnset) {
 		if ((_MDInIrrigation_GrossDemandID == CMfailed) ||
-            ((_MDInIrrUptakeRiverID      = MDIrrigation_UptakeRiverDef()) == CMfailed) ||
+            ((_MDInIrrigation_UptakeRiverID      = MDIrrigation_UptakeRiverDef()) == CMfailed) ||
             ((_MDInIrrUptakeGrdWaterID   = MDIrrigation_UptakeGrdWaterDef()) == CMfailed) ||
             ((_MDInIrrSoilMoistChgID     = MDIrrigation_SoilMoistChgDef()) == CMfailed) ||
             ((_MDInIrrigation_AreaFracID         = MDIrrigation_IrrAreaDef()) == CMfailed) ||
             ((_MDInIrrEvapotranspID      = MFVarGetID (MDVarIrrigation_Evapotranspiration, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
             ((_MDInIrrigation_ReturnFlowID       = MFVarGetID (MDVarIrrigation_ReturnFlow, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
-            ((_MDInIrrUptakeExcessID     = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
+            ((_MDInIrrigation_UptakeExcessID     = MFVarGetID (MDVarIrrigation_UptakeExcess, "mm", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
             ((_MDOutIrrUptakeBalanceID   = MFVarGetID (MDVarIrrigation_UptakeBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
             ((_MDOutIrrWaterBalanceID    = MFVarGetID (MDVarIrrigation_WaterBalance, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 	    	return (CMfailed);		

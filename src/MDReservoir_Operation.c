@@ -17,8 +17,8 @@ Feb. 2009 DW
 #include <MD.h>
  
 // Input
-static int _MDInDischargeID       = MFUnset;
-static int _MDInDischMeanID       = MFUnset;
+static int _MDInRouting_DischargeID       = MFUnset;
+static int _MDInAux_MeanDischargeID       = MFUnset;
 static int _MDInResCapacityID     = MFUnset;
 
 // Output
@@ -49,8 +49,8 @@ static void _MDReservoir (int itemID) {
 	float wetSeasonPct = 0.16;	// RJS 071511
 	float year = 0;				// RJS 082311
 	
-	discharge     = MFVarGetFloat (_MDInDischargeID,    itemID, 0.0);
-	meanDischarge = MFVarGetFloat (_MDInDischMeanID,    itemID, discharge);
+	discharge     = MFVarGetFloat (_MDInRouting_DischargeID,    itemID, 0.0);
+	meanDischarge = MFVarGetFloat (_MDInAux_MeanDischargeID,    itemID, discharge);
 	year 		  = MFDateGetCurrentYear();
 
 	if ((resCapacity = MFVarGetFloat (_MDInResCapacityID, itemID, 0.0)) <= 0.0) { 
@@ -115,8 +115,8 @@ int MDReservoir_OperationDef () {
 	MFDefEntering ("Reservoirs");
 	switch (optID) {
 		case MDcalculate:
-			if (((_MDInDischMeanID      = MDAux_DischMeanDef()) == CMfailed) ||
-                ((_MDInDischargeID      = MDRouting_DischLevel2Def()) == CMfailed) ||
+			if (((_MDInAux_MeanDischargeID      = MDAux_MeanDiscargehDef()) == CMfailed) ||
+                ((_MDInRouting_DischargeID      = MDRouting_DischargeUptake()) == CMfailed) ||
                 ((_MDInResCapacityID    = MFVarGetID (MDVarReservoir_Capacity, "km3", MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutResStorageID    = MFVarGetID (MDVarReservoir_Storage, "km3", MFOutput, MFState, MFInitial)) == CMfailed) ||
                 ((_MDOutResStorageChgID = MFVarGetID (MDVarReservoir_StorageChange, "km3", MFOutput, MFState, MFBoundary)) == CMfailed) ||		//RJS, changed MFBoundary o MFIniial

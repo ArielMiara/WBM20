@@ -17,7 +17,7 @@ bfekete@gc.cuny.edu
 // Input
 static int _MDInRainWaterSurplusID       = MFUnset;
 // Output
-static int _MDOutRainSurfRunoffID        = MFUnset;
+static int _MDOutRainSurfCore_RunoffID        = MFUnset;
 static int _MDOutRainInfiltrationID      = MFUnset;
 static int _MDInRainInfiltrationID       = MFUnset;
 
@@ -32,7 +32,7 @@ static void _MDRainInfiltrationSimple (int itemID) {
 	surplus = MFVarGetFloat(_MDInRainWaterSurplusID, itemID, 0.0);
 	surfRunoff   = surplus * (1.0 - _MDInfiltrationFrac);
 	infiltration = surplus *_MDInfiltrationFrac;
-	MFVarSetFloat (_MDOutRainSurfRunoffID,       itemID, surfRunoff);
+	MFVarSetFloat (_MDOutRainSurfCore_RunoffID,       itemID, surfRunoff);
 	MFVarSetFloat (_MDOutRainInfiltrationID,     itemID, infiltration);
 }
 
@@ -46,7 +46,7 @@ int MDCore_RainInfiltrationDef () {
 	
 	MFDefEntering ("Rainfed Infiltration");
 	if (((_MDInRainWaterSurplusID = MDCore_RainWaterSurplusDef()) == CMfailed) ||
-        ((_MDOutRainSurfRunoffID   = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+        ((_MDOutRainSurfCore_RunoffID   = MFVarGetID (MDVarCore_RainSurfRunoff, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
         ((_MDOutRainInfiltrationID = MFVarGetID (MDVarCore_RainInfiltration, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDRainInfiltrationSimple) == CMfailed)) return (CMfailed);
 	MFDefLeaving  ("Rainfed Infiltration");

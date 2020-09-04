@@ -16,9 +16,9 @@ Calculate the temperature in runoff from the local grid cell.  Weight groundwate
 #include <MD.h>
 
 // Input
-static int _MDInSurfRunoffID          = MFUnset;
+static int _MDInSurfCore_RunoffID          = MFUnset;
 static int _MDInBaseFlowID            = MFUnset;
-static int _MDInWTempSurfRunoffID     = MFUnset;
+static int _MDInWTempSurfCore_RunoffID     = MFUnset;
 static int _MDInWTempGrdWaterID       = MFUnset;
 
 // Output
@@ -31,9 +31,9 @@ static void _MDWTempRiver (int itemID) {
 	float GrdWaterRO;
 	float TemperatureRO;
 
-	SurfaceRO          = MFVarGetFloat (_MDInSurfRunoffID,          itemID, 0.0);
+	SurfaceRO          = MFVarGetFloat (_MDInSurfCore_RunoffID,          itemID, 0.0);
 	GrdWaterRO         = MFVarGetFloat (_MDInBaseFlowID,            itemID, 0.0);
-	RechargeT          = MFVarGetFloat (_MDInWTempSurfRunoffID,     itemID, 0.0);
+	RechargeT          = MFVarGetFloat (_MDInWTempSurfCore_RunoffID,     itemID, 0.0);
 	GrdWaterT          = MFVarGetFloat (_MDInWTempGrdWaterID,       itemID, 0.0);
 
 	SurfaceRO  = MDMaximum(0, SurfaceRO);
@@ -49,9 +49,9 @@ int MDTP2M_WTempRiverDef () {
 
 	MFDefEntering ("River temperature");
 
-	if (((_MDInSurfRunoffID      = MDCore_RainSurfRunoffDef()) == CMfailed) ||
+	if (((_MDInSurfCore_RunoffID      = MDCore_RainSurfRunoffDef()) == CMfailed) ||
         ((_MDInBaseFlowID        = MDCore_BaseFlowDef()) == CMfailed) ||
-        ((_MDInWTempSurfRunoffID = MDTP2M_WTempSurfRunoffDef()) == CMfailed) ||
+        ((_MDInWTempSurfCore_RunoffID = MDTP2M_WTempSurfRunoffDef()) == CMfailed) ||
         ((_MDInWTempGrdWaterID   = MDTP2M_WTempGrdWaterDef()) == CMfailed) ||
         ((_MDOutWTempRiverID     = MFVarGetID (MDVarTP2M_WTempRiver, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDWTempRiver) == CMfailed)) return (CMfailed);
