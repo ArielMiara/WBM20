@@ -156,20 +156,6 @@ extern "C" {
 #define MDVarIrrigation_DailyRicePerolationRate "RicePercolationRate"
 #define MDVarIrrigation_RicePondingDepth        "RicePondingDepth"
 
-// Varying Parameters
-#define MDVarParam_Albedo                       "Albedo"
-#define MDVarParam_CHeight                      "CanopyHeight"
-#define MDVarParam_LWidth                       "LeafWidth"
-#define MDVarParam_RSS                          "CParamRSS"
-#define MDVarParam_R5                           "CParamR5"
-#define MDVarParam_CD                           "CParamCD"
-#define MDVarParam_CR                           "CParamCR"
-#define MDVarParam_GLMax                        "CParamGLMax"
-#define MDVarParam_LPMax                        "CParamLPMax"
-#define MDVarParam_Z0g                          "CParamZ0g"
-#define MDVarParam_WetDaysAlpha                 "WetDaysAlpha"
-#define MDVarParam_WetDaysBeta                  "WetDaysBeta"
-
 // Reservoir variables
 #define MDVarReservoir_FarmPondStorageFrac      "SmallReservoirStorageFraction"
 #define MDVarReservoir_FarmPondSmallResCapacity "SmallReservoirCapacity"
@@ -352,6 +338,20 @@ extern "C" {
 #define MDVarTP2M_DeltaStorageMixing_QxT        "QxT_DeltaStorageMixing"
 #define MDVarTP2M_WTempMixing_QxT               "QxT_WaterTempMixing"
 
+// Varying Parameters
+#define MDVarParam_Albedo                       "Albedo"
+#define MDVarParam_CHeight                      "CanopyHeight"
+#define MDVarParam_LWidth                       "LeafWidth"
+#define MDVarParam_RSS                          "CParamRSS"
+#define MDVarParam_R5                           "CParamR5"
+#define MDVarParam_CD                           "CParamCD"
+#define MDVarParam_CR                           "CParamCR"
+#define MDVarParam_GLMax                        "CParamGLMax"
+#define MDVarParam_LPMax                        "CParamLPMax"
+#define MDVarParam_Z0g                          "CParamZ0g"
+#define MDVarParam_WetDaysAlpha                 "WetDaysAlpha"
+#define MDVarParam_WetDaysBeta                  "WetDaysBeta"
+
 // Hardwired constants
 #define MDConstInterceptCI  0.3	   // Interception LAI+SAI constant
 #define MDConstInterceptCH 10.0    // Interception canopy height constant 
@@ -389,124 +389,119 @@ int MDAux_AccumPrecipDef ();
 int MDAux_AccumRunoffDef ();
 int MDAux_AccumSMoistChgDef ();
 int MDAux_AvgNStepsDef ();
+int MDAux_DischMeanDef ();
 
 int MDCommon_CloudCoverDef ();
+int MDCommon_GrossRadDef ();
+int MDCommon_HumidityRelativeDef ();
+int MDCommon_HumiditySpecificDef ();
+int MDCommon_WetBulbTempDef ();
+
 int MDCore_BaseFlowDef ();
+int MDCore_EvapotranspirationDef ();
+int MDCore_RainInfiltrationDef ();
+int MDCore_RainInterceptDef ();
+int MDCore_RainPotETDef ();
+int MDCore_RainPotETHamonDef ();
+int MDCore_RainPotETJensenDef ();
+int MDCore_RainPotETPstdDef ();
+int MDCore_RainPotETPsTaylorDef ();
+int MDCore_RainPotETPMdayDef ();
+int MDCore_RainPotETPMdnDef ();
+int MDCore_RainPotETSWGdayDef ();
+int MDCore_RainPotETSWGdnDef ();
+int MDCore_RainPotETTurcDef ();
+int MDCore_RainSMoistChgDef ();
+int MDCore_RainSurfRunoffDef ();
+int MDCore_RainWaterSurplusDef ();
 
-int MDBQARTpreprocessDef (); //NEW !!!!!  (S.C)
-int MDBankfullQcalcDef ();//NEW !!!!!  (S.C)
-int MDBedloadFluxDef ();//NEW !!!!!  (S.C)
-int MDSedimentFluxDef (); //NEW !!!!!  (S.C)
-int MDDischargeBFDef ();
+int MDIrrigation_IrrAreaDef ();
+int MDIrrigation_GrossDemandDef ();
+int MDIrrigation_ReferenceETDef ();
+int MDIrrigation_ReferenceETFAODef ();
+int MDIrrigation_Reference_ETHamonDef ();
+int MDIrrigation_ReturnFlowDef ();
+int MDIrrigation_SoilMoistDef ();
+int MDIrrigation_SoilMoistChgDef ();
+int MDIrrigation_UptakeRiverDef ();
+int MDIrrigation_UptakeGrdWaterDef ();
 
-int MDRelativeHumidityDef ();
-int MDSpecificHumidityDef ();
-int MDWetBulbTempDef ();
+int MDParam_LCAlbedoDef ();
+int MDParam_LCHeightDef ();
+int MDParam_LCLeafWidthDef ();
+int MDParam_LCRSSDef ();
+int MDParam_LCR5Def ();
+int MDParam_LCCDDef ();
+int MDParam_LCCRDef ();
+int MDParam_LCGLMaxDef ();
+int MDParam_LCLPMaxDef ();
+int MDParam_LCZ0gDef ();
+int MDParam_LandCoverMappingDef ();
+int MDParam_LeafAreaIndexDef ();
 
-int MDCParamAlbedoDef ();
-int MDCParamCHeightDef ();
-int MDCParamLWidthDef ();
-int MDCParamRSSDef ();
-int MDCParamR5Def ();
-int MDCParamCDDef ();
-int MDCParamCRDef ();
-int MDCParamGLMaxDef ();
-int MDCParamLPMaxDef ();
-int MDCParamZ0gDef ();
-int MDDischargeDef ();
-int MDDischLevel1Def ();
-int MDDischLevel2Def ();
-int MDDischLevel3Def ();
-int MDDischLevel3AccumulateDef ();
-int MDDischLevel3CascadeDef ();
-int MDDischLevel3MuskingumDef ();
-int MDDischLevel3MuskingumCoeffDef ();
-int MDDischMeanDef ();
-int MDEvapotranspirationDef ();
-int MDGrossRadDef ();
-int MDIrrigatedAreaDef ();
-int MDIrrGrossDemandDef ();
-int MDIrrRefEvapotransDef ();
-int MDIrrRefEvapotransFAODef ();
-int MDIrrRefEvapotransHamonDef ();
-int MDIrrReturnFlowDef ();
-int MDIrrSoilMoistureDef ();
-int MDIrrSoilMoistChgDef ();
-int MDIrrUptakeRiverDef ();
-int MDIrrUptakeGrdWaterDef ();
-int MDReservoirDef ();
-int MDLandCoverDef ();
-int MDLeafAreaIndexDef ();
-int MDRainInfiltrationDef ();
-int MDRainInterceptDef ();
-int MDRainPotETDef ();
-int MDRainPotETHamonDef ();
-int MDRainPotETJensenDef ();
-int MDRainPotETPstdDef ();
-int MDRainPotETPsTaylorDef ();
-int MDRainPotETPMdayDef ();
-int MDRainPotETPMdnDef ();
-int MDRainPotETSWGdayDef ();
-int MDRainPotETSWGdnDef ();
-int MDRainPotETTurcDef ();
-int MDRainSMoistChgDef ();
-int MDRainSurfRunoffDef ();
-int MDRainWaterSurplusDef ();
-int MDRiverbedShapeExponentDef ();
-int MDRiverWidthDef ();
+int MDRouting_DischargeDef ();
+int MDRouting_DischLevel1Def ();
+int MDRouting_DischLevel2Def ();
+int MDRouting_DischLevel3Def ();
+int MDRouting_DischLevel3AccumulateDef ();
+int MDRouting_DischLevel3CascadeDef ();
+int MDRouting_DischLevel3MuskingumDef ();
+int MDRouting_DischLevel3MuskingumCoeffDef ();
 
-int MDRunoffDef ();
-int MDRunoffMeanDef ();
-int MDRunoffVolumeDef ();
-int MDSPackChgDef ();
-int MDSPackMeltDef ();
-int MDSmallReservoirReleaseDef ();
-int MDSmallReservoirCapacityDef ();
-int MDSolarRadDef ();
-int MDSRadDayLengthDef ();
-int MDSRadI0HDayDef ();
-int MDSoilAvailWaterCapDef ();
-int MDSoilMoistChgDef ();
-int MDSurfRunoffDef ();
-int MDStemAreaIndexDef ();
-int MDWaterBalanceDef ();
-int MDPrecipitationDef ();
-int MDWetDaysDef ();
-int MDPermafrostDef ();
+int MDReservoir_OperationDef ();
+int MDRouting_RiverbedShapeExponentDef ();
+int MDRouting_RiverWidthDef ();
+
+int MDSediment_BQARTpreprocessDef (); //NEW !!!!!  (S.C)
+int MDSediment_BankfullQcalcDef ();//NEW !!!!!  (S.C)
+int MDSediment_BedloadFluxDef ();//NEW !!!!!  (S.C)
+int MDSediment_FluxDef (); //NEW !!!!!  (S.C)
+int MDSediment_DischargeBFDef ();
+
+int MDCore_RunoffDef ();
+int MDAux_RunoffMeanDef ();
+int MDCore_RunoffVolumeDef ();
+int MDCore_SnowPackChgDef ();
+int MDCore_SnowPackMeltDef ();
+int MDReservoir_FarmPondReleaseDef ();
+int MDReservoir_FarmPondCapacityDef ();
+int MDCommon_SolarRadDef ();
+int MDCommon_SolarRadDayLengthDef ();
+int MDCommon_SolarRadI0HDayDef ();
+int MDCore_SoilAvailWaterCapDef ();
+int MDCore_SoilMoistChgDef ();
+int MDCore_SurfRunoffDef ();
+int MDParam_LCStemAreaIndexDef ();
+int MDCore_WaterBalanceDef ();
+int MDCommon_PrecipitationDef ();
+int MDCommon_WetDaysDef ();
 int MDTP2M_WTempGrdWaterDef ();
-int MDWTempRiverDef ();
-int MDWTempRiverRouteDef ();
-int MDThermalInputsDef ();  //changed AM 042415
+int MDTP2M_WTempRiverDef ();
+int MDTP2M_WTempRiverRouteDef ();
+int MDTP2M_ThermalInputsDef ();  //changed AM 042415
+int MDTP2M_WTempSurfRunoffDef();
 
-int MDWTempSurfRunoffDef();
-
-int MDRainWaterSurplusDef();
-int MDRainSMoistChgLayeredSoilDef();
+int MDCore_RainWaterSurplusDef ();
 /* PET & Related Functions */
 
-float MDSRadNETLong(float, float, float, float);
+float MDSRadNETLong (float, float, float, float);
 
-float MDPETlibVPressSat(float);
-float MDPETlibVPressDelta(float);
+float MDPETlibVPressSat (float);
+float MDPETlibVPressDelta (float);
 
-float MDWindAdjustment(float, float, float, float, float, float);
+float MDWindAdjustment (float, float, float, float, float, float);
 
-float MDPETlibLeafAreaIndex(float, float);
-float MDPETlibSteamAreaIndex(float, float);
-float MDPETlibRoughnessClosed(float, float);
-float MDPETlibRoughness(float, float, float, float, float);
-float MDPETlibZPDisplacement(float, float, float, float);
-float MDPETlibCanopySurfResistance(float, float, float, float, float, float,
-		float, float, float);
-float MDPETlibBoundaryResistance(float, float, float, float, float, float,
-		float);
-float MDPETlibLeafResistance(float, float, float, float, float, float, float,
-		float);
-float MDPETlibGroundResistance(float, float, float, float, float, float, float);
-
-float MDPETlibPenmanMontieth(float, float, float, float, float);
-float MDPETlibShuttleworthWallace(float, float, float, float, float, float,
-		float, float, float);
+float MDPETlibLeafAreaIndex (float, float);
+float MDPETlibSteamAreaIndex (float, float);
+float MDPETlibRoughnessClosed (float, float);
+float MDPETlibRoughness (float, float, float, float, float);
+float MDPETlibZPDisplacement (float, float, float, float);
+float MDPETlibCanopySurfResistance (float, float, float, float, float, float, float, float, float);
+float MDPETlibBoundaryResistance (float, float, float, float, float, float, float);
+float MDPETlibLeafResistance (float, float, float, float, float, float, float, float);
+float MDPETlibGroundResistance (float, float, float, float, float, float, float);
+float MDPETlibPenmanMontieth (float, float, float, float, float);
+float MDPETlibShuttleworthWallace (float, float, float, float, float, float, float, float, float);
 
 #if defined(__cplusplus)
 }

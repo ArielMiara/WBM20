@@ -149,17 +149,17 @@ MFVarSetInt (_MDOutBQART_AID, itemID, A);
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDBQARTpreprocessDef() {
+int MDSediment_BQARTpreprocessDef() {
 	MFDefEntering ("QBARTpreprocess");
 	
-	if (((_MDInDischMeanID           = MDDischMeanDef ()) == CMfailed) ||
-            ((_MDInDischargeID           = MDDischargeDef ()) == CMfailed) ||
-            ((_MDInCommon_AirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
-            ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space, "degC", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-            ((_MDInDischargeAccID        = MFVarGetID (MDVarSediment_DischargeAcc, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
-            ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps, MFNoUnit, MFOutput, MFState, MFInitial)) == CMfailed) ||
+	if (((_MDInDischMeanID           = MDAux_DischMeanDef()) == CMfailed) ||
+        ((_MDInDischargeID           = MDRouting_DischargeDef()) == CMfailed) ||
+        ((_MDInCommon_AirTempID             = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space, "degC", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInDischargeAccID        = MFVarGetID (MDVarSediment_DischargeAcc, "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||
+        ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps, MFNoUnit, MFOutput, MFState, MFInitial)) == CMfailed) ||
 
         // output
 	    ((_MDOutBQART_AID  	         = MFVarGetID (MDVarSediment_BQART_A, "km2", MFRoute, MFState, MFBoundary)) == CMfailed) ||

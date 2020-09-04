@@ -54,11 +54,11 @@ char string [256];
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDBedloadFluxDef() {
+int MDSediment_BedloadFluxDef() {
 	
 	MFDefEntering ("BedloadFlux");
 	
-	if (((_MDInDischargeID  = MDDischargeBFDef    ())			 == CMfailed) ||
+	if (((_MDInDischargeID  = MDSediment_DischargeBFDef()) == CMfailed) ||
         ((_MDInMinSlopeID  		= MFVarGetID (MDVarSediment_MinSlope, " ", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInUpStreamQbID  	= MFVarGetID (MDVarSediment_UpStreamQb, " ", MFRoute, MFState, MFBoundary)) == CMfailed) ||
 

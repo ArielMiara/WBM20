@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
-MDDischarge.c
+MDRouting_Discharge.c
 
 bfekete@gc.cuny.edu
 
@@ -14,46 +14,46 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInDischLevel1ID   = MFUnset;
-static int _MDInDischObservedID = MFUnset;
+static int _MDInRouting_DischLevel1ID     = MFUnset;
+static int _MDInDataAssim_DischObservedID = MFUnset;
 
 // Output
-static int _MDOutDischargeID     = MFUnset;
+static int _MDOutRouting_DischargeID      = MFUnset;
 
-static void _MDDischarge (int itemID) {
+static void _MDRouting_Discharge (int itemID) {
 	float discharge; // Discharge [m3/s]
 
-	discharge = MFVarGetFloat (_MDInDischLevel1ID,   itemID, 0.0);
+	discharge = MFVarGetFloat (_MDInRouting_DischLevel1ID,   itemID, 0.0);
 
-	if (_MDInDischObservedID != MFUnset)
-		 discharge = MFVarGetFloat (_MDInDischObservedID, itemID, discharge);
+	if (_MDInDataAssim_DischObservedID != MFUnset)
+		 discharge = MFVarGetFloat (_MDInDataAssim_DischObservedID, itemID, discharge);
 
-	MFVarSetFloat (_MDOutDischargeID, itemID, discharge);
+	MFVarSetFloat (_MDOutRouting_DischargeID, itemID, discharge);
 }
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDDischargeDef() {
+int MDRouting_DischargeDef() {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptConfig_Discharge;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
 
-	if (_MDOutDischargeID != MFUnset) return (_MDOutDischargeID);
+	if (_MDOutRouting_DischargeID != MFUnset) return (_MDOutRouting_DischargeID);
 
 	MFDefEntering ("Discharge");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput: _MDOutDischargeID = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFInput, MFState, MFBoundary); break;
+		case MDinput: _MDOutRouting_DischargeID = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFInput, MFState, MFBoundary); break;
 		case MDcorrected:
-			if ((_MDInDischObservedID   = MFVarGetID (MDVarDataAssim_DischObserved, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed)
+			if ((_MDInDataAssim_DischObservedID   = MFVarGetID (MDVarDataAssim_DischObserved, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:
-			if (((_MDOutDischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInDischLevel1ID    = MDDischLevel1Def ()) == CMfailed) ||
-                (MFModelAddFunction (_MDDischarge) == CMfailed)) return (CMfailed);
+			if (((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInRouting_DischLevel1ID    = MDRouting_DischLevel1Def()) == CMfailed) ||
+                (MFModelAddFunction(_MDRouting_Discharge) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving  ("Discharge");
-	return (_MDOutDischargeID);
+	return (_MDOutRouting_DischargeID);
 }

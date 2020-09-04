@@ -146,7 +146,7 @@ static void _MDBankfullQcalc (int itemID) {
 	}	
 }
 
-int MDBankfullQcalcDef() {
+int MDSediment_BankfullQcalcDef() {
 
 	MFDefEntering ("BankfullQcalc");
 	if (((_MDOutBankfullQ2ID  		= MFVarGetID (MDVarRouting_BankfullQ2, "m2s", MFOutput, MFState, MFBoundary)) == CMfailed) ||

@@ -68,7 +68,7 @@ static int _MDInAirTemperatureID	= MFUnset;
 static int _MDWTemp_QxTID            = MFUnset;
 //static int _MDWTempMixing_QxTID      = MFUnset;
 
-static int _MDOutDischargeID		   = MFUnset;		// Late-night discharge test
+static int _MDOutRouting_DischargeID		   = MFUnset;		// Late-night discharge test
 static int _MDOutAvgEfficiencyID	   = MFUnset;
 static int _MDOutAvgDeltaTempID		   = MFUnset;
 static int _MDOutTotalEvaporationID	   = MFUnset;
@@ -428,7 +428,7 @@ flux_QxT			  = MFVarGetFloat (_MDFlux_QxTID,             itemID, 0.0);	// readin
 fluxmixing_QxT			  = MFVarGetFloat (_MDFluxMixing_QxTID,       itemID, 0.0);	// reading in discharge * tempmixing (m3*degC/day)
 Q               	          = MFVarGetFloat (_MDInDischargeID,          itemID, 0.0);
 Q_incoming_1		  	  = MFVarGetFloat (_MDInDischargeIncomingID, itemID, 0.0);	// already includes local runoff, uncommented 113012
-// 	Q_incoming_1		  = MFVarGetFloat (_MDOutDischargeID,         itemID, 0.0);			// late-night discharge test (and one commented out line above), commented out 113012
+// 	Q_incoming_1		  = MFVarGetFloat (_MDOutRouting_DischargeID,         itemID, 0.0);			// late-night discharge test (and one commented out line above), commented out 113012
 
 air_temp				  = MFVarGetFloat (_MDInAirTemperatureID,	  itemID, 0.0);	//read in air temperature (c)
 
@@ -1236,7 +1236,7 @@ printf("operational_capacity = %f, consumption_T = %f, generation = %f, Q_outgoi
 
 enum { MDnone, MDinput };
 
-int MDThermalInputsDef () {
+int MDTP2M_ThermalInputsDef () {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptTP2M_ThermalInputs;
 	const char *options [] = { MDNoneStr, MDInputStr, (char *) NULL };
@@ -1248,11 +1248,11 @@ int MDThermalInputsDef () {
 		case MDinput:
    
 			if (
-                    ((_MDPlaceHolderID           = MDWTempRiverRouteDef ()) == CMfailed) ||
-                    ((_MDInDischargeID           = MDDischargeDef ())       == CMfailed) ||
-                            ((_MDInWetBulbTempID        = MDWetBulbTempDef())       == CMfailed) ||
+                    ((_MDPlaceHolderID           = MDTP2M_WTempRiverRouteDef()) == CMfailed) ||
+                    ((_MDInDischargeID           = MDRouting_DischargeDef()) == CMfailed) ||
+                    ((_MDInWetBulbTempID        = MDCommon_WetBulbTempDef()) == CMfailed) ||
          
-//				((_MDOutDischargeID         = MFVarGetID (MDVarRouting_Discharge,        "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||		//RJS 113012
+//				((_MDOutRouting_DischargeID         = MFVarGetID (MDVarRouting_Discharge,        "m3/s", MFOutput, MFState, MFInitial)) == CMfailed) ||		//RJS 113012
 //				((_MDInEnergyDemand1ID       = MDEnergyDemandDef ()) == CMfailed) ||
 //				((_MDInEnergyDemand1ID      = MFVarGetID (MDVarEnergyDemand,   "MW", MFInput, MFFlux, MFBoundary)) == CMfailed) ||
 				((_MDInDischargeIncomingID  = MFVarGetID (MDVarRouting_Discharge0, "m3/s", MFInput, MFState, MFInitial)) == CMfailed) ||		// changed from flux to state, and boundary to initial 113012,
@@ -1295,7 +1295,7 @@ int MDThermalInputsDef () {
                  ((_MDOutLossToWaterID       = MFVarGetID (MDVarTP2M_LossToWater, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                  ((_MDOutLossToInletID       = MFVarGetID (MDVarTP2M_LossToInlet, "MW", MFOutput, MFState, MFBoundary)) == CMfailed) ||
 
-//				((_MDOutDischargeID    	      = MFVarGetID (MDVarRouting_Discharge,  "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||		// late night discharge test 113012 -
+//				((_MDOutRouting_DischargeID    	      = MFVarGetID (MDVarRouting_Discharge,  "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||		// late night discharge test 113012 -
 				((_MDOutAvgEfficiencyID       = MFVarGetID (MDVarTP2M_AvgEfficiency, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                  ((_MDOutAvgDeltaTempID        = MFVarGetID (MDVarTP2M_AvgDeltaTemp, "-", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                  ((_MDOutTotalEvaporationID    = MFVarGetID (MDVarTP2M_TotalEvaporation, "m3", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||

@@ -99,13 +99,13 @@ int MDCore_BaseFlowDef () {
 	MFDefEntering ("Base flow");
 	if (((optStr = MFOptionGet (MDParGroundWatBETA))  != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDGroundWatBETA = par;
 
-	if (((_MDInCore_RechargeID       = MDRainInfiltrationDef ()) == CMfailed) ||
-        ((_MDInIrrigation_GrossDemandID = MDIrrGrossDemandDef   ()) == CMfailed)) return (CMfailed);
+	if (((_MDInCore_RechargeID       = MDCore_RainInfiltrationDef()) == CMfailed) ||
+        ((_MDInIrrigation_GrossDemandID = MDIrrigation_GrossDemandDef()) == CMfailed)) return (CMfailed);
 
 	if ( _MDInIrrigation_GrossDemandID != MFUnset) {
-		if (((_MDInReservoir_FarmPondReleaseID = MDSmallReservoirReleaseDef ()) == CMfailed) ||
-            ((_MDInIrrigation_ReturnFlowID     = MDIrrReturnFlowDef ())         == CMfailed) ||
-            ((_MDOutCore_IrrUptakeGrdWaterID   = MDIrrUptakeGrdWaterDef ())     == CMfailed) ||
+		if (((_MDInReservoir_FarmPondReleaseID = MDReservoir_FarmPondReleaseDef()) == CMfailed) ||
+            ((_MDInIrrigation_ReturnFlowID     = MDIrrigation_ReturnFlowDef()) == CMfailed) ||
+            ((_MDOutCore_IrrUptakeGrdWaterID   = MDIrrigation_UptakeGrdWaterDef()) == CMfailed) ||
             ((_MDOutCore_IrrUptakeExternalID = MFVarGetID (MDVarIrrigation_UptakeExternal, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed))
 			return CMfailed;
 	}
