@@ -41,7 +41,7 @@ static void _MDCore_BaseFlow (int itemID) {
 	float grdWaterChg;             // Groundwater change [mm/dt]
 	float grdWaterRecharge;        // Groundwater recharge [mm/dt]
 	float grdWaterUptake;          // Groundwater uptake [mm/dt]
-	float baseFlow          = 0.0; // Base flow from groundwater [mm/dt]
+	float baseFlow;                // Base flow from groundwater [mm/dt]
 	float irrUptakeGrdWater = 0.0; // Irrigational water uptake from shallow groundwater [mm/dt]
 	float irrUptakeExt      = 0.0; // Unmet irrigational water demand [mm/dt]
 // Local
