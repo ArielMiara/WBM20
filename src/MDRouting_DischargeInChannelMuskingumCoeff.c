@@ -77,7 +77,7 @@ static void _MDDischRouteMuskingumCoeff (int itemID) {
 
 enum { MDinput, MDstatic };
 
-int MDRouting_DischLevel3MuskingumCoeffDef () {
+int MDRouting_DischargeInChannelMuskingumCoeffDef () {
 	int  optID = MFUnset;
 	const char *optStr, *optName = MDOptRouting_Muskingum;
 	const char *options [] = { MDInputStr, "static", (char *) NULL };

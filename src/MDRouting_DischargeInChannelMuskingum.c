@@ -61,14 +61,14 @@ static void _MDDischLevel3Muskingum (int itemID) {
 	MFVarSetFloat (_MDOutAux_RiverStorageID, itemID, storage);
 }
 
-int MDRouting_DischLevel3MuskingumDef () {
+int MDRouting_DischargeInChannelMuskingumDef () {
 
 	if (_MDOutRouting_DischLevel3ID != MFUnset) return (_MDOutRouting_DischLevel3ID);
 
 	MFDefEntering ("Discharge Muskingum");
 
 	if (((_MDInAux_RunoffVolumeID  = MDCore_RunoffVolumeDef()) == CMfailed) ||
-        ((_MDInMuskingumC0ID   = MDRouting_DischLevel3MuskingumCoeffDef()) == CMfailed) ||
+        ((_MDInMuskingumC0ID   = MDRouting_DischargeInChannelMuskingumCoeffDef()) == CMfailed) ||
         ((_MDInMuskingumC1ID   = MFVarGetID (MDVarRouting_MuskingumC1, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInMuskingumC2ID   = MFVarGetID (MDVarRouting_MuskingumC2, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||

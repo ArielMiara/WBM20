@@ -11,7 +11,7 @@ sagy.cohen@colorado.edu
 #include <MD.h>
 
 // Input
-static int _MDInRouting_DischLevel1ID   = MFUnset;
+static int _MDInRouting_DischargeID   = MFUnset;
 static int _MDInDataAssim_DischObservedID = MFUnset;
 static int _MDInBankfullQID 	= MFUnset;
 static int _MDInBankfullQ5ID 	= MFUnset;
@@ -35,7 +35,7 @@ static void _MDDischargeBF (int itemID) {
 	
 	FlowCoeff = MFVarGetFloat (_MDInFlowCoefficientID, itemID, 0.0);; // coefficient for water flow from floodplain to river 
 	
-	discharge = MFVarGetFloat (_MDInRouting_DischLevel1ID,   itemID, 0.0);
+	discharge = MFVarGetFloat (_MDInRouting_DischargeID,   itemID, 0.0);
 
 	Q_n = MFVarGetFloat (_MDInBankfull_QnID, itemID, 0.0);
 	//printf("Q_n:%d ",Q_n);
@@ -98,7 +98,7 @@ int MDSediment_DischargeBFDef() {
 				return (CMfailed);
 		case MDcalculate:
 			if (((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRouting_DischLevel1ID    = MDRouting_DischLevel1Def()) == CMfailed) ||
+                ((_MDInRouting_DischargeID    = MDRouting_DischargeReleaseDef()) == CMfailed) ||
                 ((_MDInBankfullQID     = MFVarGetID (MDVarRouting_BankfullQ, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDInBankfullQ5ID     = MFVarGetID (MDVarRouting_BankfullQ5, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDInBankfullQ10ID    = MFVarGetID (MDVarRouting_BankfullQ10, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed) ||

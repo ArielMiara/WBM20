@@ -14,7 +14,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Input
-static int _MDInRouting_DischLevel1ID     = MFUnset;
+static int _MDInRouting_DischargeID       = MFUnset;
 static int _MDInDataAssim_DischObservedID = MFUnset;
 
 // Output
@@ -23,7 +23,7 @@ static int _MDOutRouting_DischargeID      = MFUnset;
 static void _MDRouting_Discharge (int itemID) {
 	float discharge; // Discharge [m3/s]
 
-	discharge = MFVarGetFloat (_MDInRouting_DischLevel1ID,   itemID, 0.0);
+	discharge = MFVarGetFloat (_MDInRouting_DischargeID,   itemID, 0.0);
 
 	if (_MDInDataAssim_DischObservedID != MFUnset)
 		 discharge = MFVarGetFloat (_MDInDataAssim_DischObservedID, itemID, discharge);
@@ -49,7 +49,7 @@ int MDRouting_DischargeDef() {
 				return (CMfailed);
 		case MDcalculate:
 			if (((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRouting_DischLevel1ID    = MDRouting_DischLevel1Def()) == CMfailed) ||
+                ((_MDInRouting_DischargeID    = MDRouting_DischargeReleaseDef()) == CMfailed) ||
                 (MFModelAddFunction(_MDRouting_Discharge) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);

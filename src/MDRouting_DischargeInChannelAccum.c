@@ -34,7 +34,7 @@ static void _MDDischLevel3Accumulate (int itemID) {
 	MFVarSetFloat (_MDOutAux_RiverStorageID, itemID, 0.0);
 }
 
-int MDRouting_DischLevel3AccumulateDef () {
+int MDRouting_DischargeInChannelAccumulateDef () {
 
 	if (_MDOutRouting_DischLevel3ID != MFUnset) return (_MDOutRouting_DischLevel3ID);
 

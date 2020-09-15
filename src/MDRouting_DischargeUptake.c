@@ -72,7 +72,7 @@ int MDRouting_DischargeUptake () {
 	if (_MDOutRouting_DischargeUptakeID != MFUnset) return (_MDOutRouting_DischargeUptakeID);
 
 	MFDefEntering ("Discharge Level 2");
-	if (((_MDInRouting_DischargeInChannelID  = MDRouting_DischLevel3Def()) == CMfailed) ||
+	if (((_MDInRouting_DischargeInChannelID  = MDRouting_DischargeInChannelDef()) == CMfailed) ||
         ((_MDOutRouting_DischargeUptakeID = MFVarGetID ("__DischLevel2",  "m/3", MFOutput, MFState, false)) == CMfailed))
 	    return (CMfailed);
 	

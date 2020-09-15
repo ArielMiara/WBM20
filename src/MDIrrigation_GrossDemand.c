@@ -52,6 +52,7 @@ static int  _MDOutIrrSMoistID           = MFUnset;
 static int  _MDOutIrrSMoistChgID        = MFUnset;
 static int  _MDOutIrrPrecipitationID    = MFUnset;
 static int  _MDOutIrrReturnFlowID       = MFUnset;
+static int  _MDOutIrrRunoffID           = MFUnset;
 static int *_MDOutCropSMoistIDs         = (int *) NULL;
 static int *_MDOutCropActSMoistIDs      = (int *) NULL;
 
@@ -197,14 +198,15 @@ static void _MDIrrGrossDemand (int itemID) {
 	float irrNetDemand;
 	float irrCropETP;
  	float irrReturnFlow;
+    float irrRunoff;
     float irrSMoist;
 	float irrSMoistChg;
 // Local
 	int   cropID, curDay, numGrowingSeasons, daysSincePlanted;
 	float cropAvlWater, cropMinSMoist;
 	float cropETP;
-	float cropReturnFlow;
 	float cropNetDemand, cropGrossDemand;
+    float cropReturnFlow, cropRunoff;
 	float cropCurRootingDepth, cropPrevRootingDepth, cropMaxRootingDepth;
 	float cropSMoist, cropActSMoist, cropPrevSMoist, cropPrevActSMoist;
 	float cropSMoistChg;
@@ -217,7 +219,7 @@ static void _MDIrrGrossDemand (int itemID) {
 	irrAreaFrac = MFVarGetFloat (_MDInIrrigation_AreaFracID, itemID, 0.0);
 	
 	if (0.0 < irrAreaFrac) {
-        irrCropETP = irrNetDemand = irrGrossDemand = irrReturnFlow = irrSMoist = irrSMoistChg = sumOfCropFractions = 0.0;
+        irrCropETP = irrNetDemand = irrGrossDemand = irrRunoff = irrReturnFlow = irrSMoist = irrSMoistChg = sumOfCropFractions = 0.0;
 		for (cropID = 0; cropID < _MDNumberOfIrrCrops; ++cropID) {
 			cropFraction [cropID] = MFVarGetFloat (_MDInCropFractionIDs [cropID],itemID, 0.0);
 			sumOfCropFractions += cropFraction [cropID];
@@ -262,10 +264,12 @@ static void _MDIrrGrossDemand (int itemID) {
 /* Rice */			if (_MDirrigCropStruct [cropID].cropIsRice == 1) {
 	/* Rainfed */		if (precip >= cropETP + ricePercolation) {
 							cropNetDemand  = cropGrossDemand = 0.0;
-							cropReturnFlow = precip - cropETP; // actual percolation can be higher then the rice percolation input
+							cropReturnFlow = 0.0;
+                            cropRunoff     = precip - cropETP; // actual percolation can be higher then the rice percolation input
     /* Irrigated */	    } else {
 							cropNetDemand  = cropGrossDemand = cropETP + ricePercolation - precip;
 							cropReturnFlow = ricePercolation;
+                            cropRunoff     = 0.0;
  						}
                         cropSMoistChg = 0.0;
 						cropActSMoist = cropSMoist = ricePondingDepth;
@@ -280,12 +284,14 @@ static void _MDIrrGrossDemand (int itemID) {
 							cropActSMoist = cropPrevActSMoist + precip - cropETP > cropMinSMoist ? cropPrevSMoist + precip - cropETP : cropMinSMoist;
 							if (cropActSMoist > cropAvlWater) cropActSMoist = cropAvlWater;
 							cropNetDemand  = cropGrossDemand = 0.0;
-							cropReturnFlow = precip + cropPrevActSMoist - cropETP - cropActSMoist;
+							cropReturnFlow = 0.0;
+                            cropRunoff     = precip + cropPrevActSMoist - cropETP - cropActSMoist;
  	/* Irrigated */		} else {
 							cropActSMoist   = cropMinSMoist;
 							cropNetDemand   = cropMinSMoist + cropETP - precip - cropPrevActSMoist;
 							cropGrossDemand = cropNetDemand * 100.0 / irrEfficiency;
 							cropReturnFlow  = cropGrossDemand - cropNetDemand;
+                            cropRunoff      = 0.0;
  						}
 						cropSMoist    = cropActSMoist + (cropMaxRootingDepth - cropCurRootingDepth) * (cropPrevSMoist - cropPrevActSMoist) / (cropMaxRootingDepth - cropPrevRootingDepth);
 						cropSMoistChg = cropPrevSMoist - cropSMoist;
@@ -300,14 +306,16 @@ static void _MDIrrGrossDemand (int itemID) {
 /* Bare */	} else {
 			    cropETP         = precip < refETP >= 0.0 ? precip : refETP;
 			    cropNetDemand   = cropGrossDemand = cropSMoist = cropSMoistChg   = 0.0;
-			    cropReturnFlow  = precip - cropETP;
+			    cropRunoff      = precip - cropETP;
+			    cropReturnFlow  = 0.0;
                 MFVarSetFloat (_MDOutCropSMoistIDs    [cropID], itemID, cropPrevSMoist);
                 MFVarSetFloat (_MDOutCropActSMoistIDs [cropID], itemID, cropPrevActSMoist);
             }
 			irrCropETP       += cropETP         * cropFraction [cropID];
 			irrNetDemand     += cropNetDemand   * cropFraction [cropID];
 			irrGrossDemand   += cropGrossDemand * cropFraction [cropID];
-			irrReturnFlow    += cropReturnFlow  * cropFraction [cropID];
+			irrRunoff        += cropRunoff      * cropFraction [cropID];
+            irrReturnFlow    += cropReturnFlow  * cropFraction [cropID];
 			irrSMoist        += cropSMoist      * cropFraction [cropID];
 			irrSMoistChg     += cropSMoistChg   * cropFraction [cropID];
 		}
@@ -362,23 +370,24 @@ int MDIrrigation_GrossDemandDef () {
 				return (CMfailed);
 			break;
 		case MDcalculate:
-			if (((_MDInCommon_PrecipID       = MDCommon_PrecipitationDef()) == CMfailed) ||
-                ((_MDInSPackChgID            = MDCore_SnowPackChgDef()) == CMfailed) ||
+			if (((_MDInCommon_PrecipID       = MDCommon_PrecipitationDef())   == CMfailed) ||
+                ((_MDInSPackChgID            = MDCore_SnowPackChgDef())       == CMfailed) ||
                 ((_MDInIrrRefEvapotransID    = MDIrrigation_ReferenceETDef()) == CMfailed) ||
-                    ((_MDInIrrigation_AreaFracID         = MDIrrigation_IrrAreaDef()) == CMfailed) ||
-                    ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrigation_Intensity,               MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrigation_Efficiency,              MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrigation_GrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrigation_GrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInWltPntID              = MFVarGetID (MDVarCore_SoilWiltingPoint,              "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInFldCapaID             = MFVarGetID (MDVarCore_SoilFieldCapacity,             "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrigation_RicePondingDepth,        "mm",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrigation_DailyRicePerolationRate, "mm/day", MFInput , MFState, MFBoundary)) == CMfailed) ||
-                    ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrigation_Evapotranspiration,      "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
-                    ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrigation_NetDemand, "mm", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
-                    ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrigation_GrossDemand,             "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                ((_MDInIrrigation_AreaFracID = MDIrrigation_IrrAreaDef())     == CMfailed) ||
+                ((_MDInIrrIntensityID        = MFVarGetID (MDVarIrrigation_Intensity,               MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInIrrEfficiencyID       = MFVarGetID (MDVarIrrigation_Efficiency,              MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInGrowingSeason1ID      = MFVarGetID (MDVarIrrigation_GrowingSeason1Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInGrowingSeason2ID      = MFVarGetID (MDVarIrrigation_GrowingSeason2Start,     "DoY",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInWltPntID              = MFVarGetID (MDVarCore_SoilWiltingPoint,              "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInFldCapaID             = MFVarGetID (MDVarCore_SoilFieldCapacity,             "mm/m",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInRicePondingDepthID    = MFVarGetID (MDVarIrrigation_RicePondingDepth,        "mm",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInRicePercolationRateID = MFVarGetID (MDVarIrrigation_DailyRicePerolationRate, "mm/day", MFInput , MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutIrrEvapotranspID     = MFVarGetID (MDVarIrrigation_Evapotranspiration,      "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                ((_MDOutIrrNetDemandID       = MFVarGetID (MDVarIrrigation_NetDemand,               "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                ((_MDOutIrrGrossDemandID     = MFVarGetID (MDVarIrrigation_GrossDemand,             "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrPrecipitationID   = MFVarGetID (MDVarIrrigation_Precipitation,           "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrReturnFlowID      = MFVarGetID (MDVarIrrigation_ReturnFlow,              "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
+                ((_MDOutIrrRunoffID          = MFVarGetID (MDVarIrrigation_Runoff,                  "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrSMoistID          = MFVarGetID (MDVarIrrigation_SoilMoisture,            "mm",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutIrrSMoistChgID       = MFVarGetID (MDVarIrrigation_SoilMoistChange,         "mm",     MFOutput, MFFlux,  MFBoundary)) == CMfailed))
 				return (CMfailed);
@@ -415,5 +424,15 @@ int MDIrrigation_ReturnFlowDef () {
         default:
             if (MDIrrigation_IrrAreaDef() == CMfailed) return (CMfailed);
             else return (MFVarGetID (MDVarIrrigation_ReturnFlow, "mm", MFInput, MFFlux, MFBoundary));
+    }
+}
+
+int MDIrrigation_RunoffDef () {
+    switch (MDIrrigation_GrossDemandDef()) {
+        case CMfailed: return (CMfailed);
+        case MFUnset:  return (MFUnset);
+        default:
+            if (MDIrrigation_IrrAreaDef() == CMfailed) return (CMfailed);
+            else return (MFVarGetID (MDVarIrrigation_Runoff, "mm", MFInput, MFFlux, MFBoundary));
     }
 }

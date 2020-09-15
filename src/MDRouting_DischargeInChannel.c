@@ -17,7 +17,7 @@ enum { MDaccumulate, MDmuskingum, MDcascade };
 
 static int _MDDischLevel3ID = MFUnset;
 
-int MDRouting_DischLevel3Def() {
+int MDRouting_DischargeInChannelDef() {
 	int optID = MFUnset;
 	const char *optStr, *optName = MDOptConfig_Routing;
 	const char *options []    = { "accumulate", "muskingum", "cascade", (char *) NULL };
@@ -28,9 +28,9 @@ int MDRouting_DischLevel3Def() {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 
 	switch (optID) {
-		case MDaccumulate: _MDDischLevel3ID = MDRouting_DischLevel3AccumulateDef(); break;
-		case MDmuskingum:  _MDDischLevel3ID = MDRouting_DischLevel3MuskingumDef(); break;
-		case MDcascade:    _MDDischLevel3ID = MDRouting_DischLevel3CascadeDef(); break;
+		case MDaccumulate: _MDDischLevel3ID = MDRouting_DischargeInChannelAccumulateDef(); break;
+		case MDmuskingum:  _MDDischLevel3ID = MDRouting_DischargeInChannelMuskingumDef(); break;
+		case MDcascade:    _MDDischLevel3ID = MDRouting_DischargeInChannelCascadeDef(); break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	if (_MDDischLevel3ID == CMfailed) return (CMfailed);

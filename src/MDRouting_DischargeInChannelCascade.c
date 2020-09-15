@@ -13,6 +13,6 @@ bfekete@gc.cuny.edu
 #include <MF.h>
 #include <MD.h>
 
-int MDRouting_DischLevel3CascadeDef () {
+int MDRouting_DischargeInChannelCascadeDef () {
 	return (CMfailed);
 }
