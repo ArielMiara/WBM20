@@ -45,15 +45,15 @@ int MDRouting_DischargeDef() {
 	switch (optID) {
 		case MDinput: _MDOutRouting_DischargeID = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFInput, MFState, MFBoundary); break;
 		case MDcorrected:
-			if ((_MDInDataAssim_DischObservedID   = MFVarGetID (MDVarDataAssim_DischObserved, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed)
+			if ((_MDInDataAssim_DischObservedID = MFVarGetID (MDVarDataAssim_DischObserved, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:
 			if (((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRouting_DischargeID    = MDRouting_DischargeReleaseDef()) == CMfailed) ||
+                ((_MDInRouting_DischargeID      = MDRouting_DischargeReleaseDef()) == CMfailed) ||
                 (MFModelAddFunction(_MDRouting_Discharge) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
 	MFDefLeaving  ("Discharge");
 	return (_MDOutRouting_DischargeID);
-}
+}ß

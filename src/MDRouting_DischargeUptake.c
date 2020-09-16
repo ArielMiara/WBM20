@@ -4,7 +4,7 @@ GHAAS Water Balance/Transport Model V2.0
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
-MDDischLevel2.c
+MDRouting_DischargeUptake.c
 
 bfekete@gc.cuny.edu
 
@@ -43,23 +43,21 @@ static void _MDRouting_DischargeUptake (int itemID) {
 				irrUptakeRiver  = irrUptakeExt;
 				irrUptakeExcess = 0.0;
 				discharge_mm    = discharge_mm - irrUptakeRiver;
-			}
-			else {
-				// Irrigation is paritally satisfied from river and the rest is from unsustainable sources
-				irrUptakeRiver  = discharge_mm;
-				irrUptakeExcess = irrUptakeExt - discharge_mm;
-				discharge_mm    = 0.0;
+			} else {
+			    // Irrigation is paritally satisfied from river and the rest is from unsustainable sources
+			    irrUptakeRiver  = discharge_mm;
+			    irrUptakeExcess = irrUptakeExt - discharge_mm;
+			    discharge_mm    = 0.0;
 			}
 			MFVarSetFloat (_MDOutIrrigation_UptakeRiverID,  itemID, irrUptakeRiver);
 			discharge = discharge_mm * MFModelGetArea (itemID) / (1000.0 * MFModelGet_dt ());
-			MFVarSetFloat (_MDOutRouting_DischargeUptakeID,  itemID, discharge);
-		}
-		else {
-			// River uptake is turned off all irrigational demand is from unsustainable sources
-			irrUptakeExcess = irrUptakeExt;
+		} else {
+		    // River uptake is turned off all irrigational demand is from unsustainable sources
+		    irrUptakeExcess = irrUptakeExt;
 		}
 		MFVarSetFloat (_MDOutIrrigation_UptakeExcessID, itemID, irrUptakeExcess);
 	}
+    MFVarSetFloat (_MDOutRouting_DischargeUptakeID,  itemID, discharge);
 }
 
 enum { MDnone, MDcalculate };

@@ -20,7 +20,7 @@ static int _MDInRouting_DischReleasedID = MFUnset;
 // Output
 static int _MDOutRouting_DischargeID = MFUnset;
 
-static void _MDRouting_DischLevel1 (int itemID) {
+static void _MDRouting_DischRelease (int itemID) {
 	float discharge;
 
 	if ((_MDInRouting_DischReleasedID != MFUnset) && (!MFVarTestMissingVal (_MDInRouting_DischReleasedID, itemID)))
@@ -38,14 +38,14 @@ int MDRouting_DischargeReleaseDef () {
    
 	if (_MDOutRouting_DischargeID != MFUnset) return (_MDOutRouting_DischargeID);
 
-	MFDefEntering ("Discharge Level 1");
+	MFDefEntering ("Discharge - Reservoir Release");
 	if ((_MDInRouting_Routing_DischargeUptakeID = MDRouting_DischargeUptake()) == CMfailed) return (CMfailed);
 
 	if (((optStr = MFOptionGet (MDOptConfig_Reservoirs)) != (char *) NULL) && (CMoptLookup (options, optStr, true) == CMfailed)) {
 		if ((_MDInRouting_DischReleasedID = MDReservoir_OperationDef()) == CMfailed) return (CMfailed);
 	}
 	if (((_MDOutRouting_DischargeID = MFVarGetID ("__DischLevel1", "m3/s",  MFOutput,  MFState, MFBoundary)) == CMfailed) ||
-	    (MFModelAddFunction (_MDRouting_DischLevel1) == CMfailed)) return (CMfailed);
-	MFDefLeaving ("Discharge Level 1");
+	    (MFModelAddFunction(_MDRouting_DischRelease) == CMfailed)) return (CMfailed);
+	MFDefLeaving ("Discharge - Reservoir Release");
 	return (_MDOutRouting_DischargeID);
 }
