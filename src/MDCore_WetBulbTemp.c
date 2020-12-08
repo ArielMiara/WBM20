@@ -142,7 +142,7 @@ int MDCommon_WetBulbTempDef () {
             if (((_MDInCommon_HumiditySpecificID = MDCommon_HumiditySpecificDef()) == CMfailed) ||
                 ((_MDInCommon_HumidityRelativeID = MDCommon_HumidityRelativeDef()) == CMfailed) ||
                 ((_MDInCommon_AirTemperatureID   = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInCommon_AirPressureID      = MFVarGetID (MDVarCommon_AirPressure, "pa", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInCommon_AirPressureID      = MFVarGetID (MDVarCommon_AirPressure, "kPa", MFInput, MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutWetBulbTempID     = MFVarGetID (MDVarCommon_WetBulbTemp, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDWetBulbTemp) == CMfailed))) return (CMfailed);
             break;
