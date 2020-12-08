@@ -367,7 +367,7 @@ int MDTP2M_WTempRiverRouteDef () {
         ((_MDInCommon_AirTemperatureID   = MFVarGetID (MDVarCommon_AirTemperature,       "degC",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageChgID         = MFVarGetID (MDVarRouting_RiverStorageChg,     "m3",        MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDInRiverStorageID            = MFVarGetID (MDVarRouting_RiverStorage,        "m3",        MFInput,  MFState, MFInitial))  == CMfailed) ||
-        ((_MDInCommon_SnowPackID         = MFVarGetID (MDVarCore_SnowPack,               "mm",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInCommon_SnowPackID         = MFVarGetID (MDVarCore_SnowPack,               "mm",        MFInput,  MFState, MFInitial))  == CMfailed) ||
         ((_MDLocalIn_QxTID               = MFVarGetID (MDVarTP2M_WTLocalIn_QxT,          "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDRemoval_QxTID               = MFVarGetID (MDVarTP2M_Removal_QxT,            "m3*degC/d", MFOutput, MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDFlux_QxTID                  = MFVarGetID (MDVarTP2M_Flux_QxT,               "m3*degC/d", MFRoute,  MFFlux,  MFBoundary)) == CMfailed) ||
