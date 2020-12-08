@@ -86,8 +86,7 @@ int MDCommon_GrossRadDef () {
 	switch (optID) {
 		case MDinput: _MDOutCommon_GrossRadID = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFInput, MFFlux, MFBoundary); break;
 		case MDstandard:
-			if (((optStr = MFOptionGet (MDParGrossRadTAU)) != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1))
-				_MDGrossRadStdTAU = par;
+			if (((optStr = MFOptionGet (MDParGrossRadTAU)) != (char *) NULL) && (sscanf (optStr,"%f",&par) == 1)) _MDGrossRadStdTAU = par;
 			if (((_MDOutCommon_GrossRadID    = MFVarGetID (MDVarCore_GrossRadiance, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction(_MDCommon_GrossRadianceStd) == CMfailed)) return (CMfailed);
 			break;

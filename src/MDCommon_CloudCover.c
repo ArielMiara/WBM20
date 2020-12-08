@@ -67,7 +67,7 @@ int MDCommon_CloudCoverDef() {
             break;
         case MDcalculate:
             if (((_MDInCommon_Common_GrossRadID    = MDCommon_GrossRadDef()) == CMfailed) ||
-                ((_MDInCommon_Common_SolarRadID    = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m2", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInCommon_Common_SolarRadID    = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFInput,  MFState, MFBoundary)) == CMfailed) ||
                 ((_MDOutCommon_CloudCoverID = MFVarGetID (MDVarCommon_CloudCover,   "%",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDCommon_CloudCover) == CMfailed))) return (CMfailed);
             break;
