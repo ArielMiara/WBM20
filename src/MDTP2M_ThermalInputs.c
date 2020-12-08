@@ -448,7 +448,7 @@ static void _MDThermalInputs3 (int itemID) {
 
     ///////////// IF THERE ARE ERRORS IN INPUT DATA:
 
-    if (((technology_2 == 2) || (technology_2 == 5)) & ((technology_1 == 1) || (technology_1 == 4))) {
+/*  if (((technology_2 == 2) || (technology_2 == 5)) && ((technology_1 == 1) || (technology_1 == 4))) {
         printf("TECH ERROR \n");
         printf("nameplate_1 = %f, fuel_type_1 = %f, technology_1 = %f, nameplate_2 = %f, fuel_type_2 = %f, technology_2 = %f \n", nameplate_1, fuel_type_1, technology_1, nameplate_2, fuel_type_2, technology_2);
     }
@@ -458,21 +458,22 @@ static void _MDThermalInputs3 (int itemID) {
         printf("demand_1 = %f, nameplate_1 = %f, fuel_type_1 = %f, technology_1 = %f, nameplate_2 = %f, fuel_type_2 = %f, technology_2 = %f, demand_2 = %f \n", demand_1, nameplate_1, fuel_type_1, technology_1, nameplate_2, fuel_type_2, technology_2, demand_2);
         printf("demand_3 = %f, nameplate_3 = %f, fuel_type_3 = %f, technology_3 = %f, nameplate_4 = %f, fuel_type_4 = %f, technology_4 = %f, demand_4 = %f \n", demand_3, nameplate_3, fuel_type_3, technology_3, nameplate_4, fuel_type_4, technology_4, demand_4);
     }
+*/
 
     ///////////
-    opt_efficiency_1 = opt_efficiency_1 /100;
-    opt_efficiency_2 = opt_efficiency_2 /100;
-    opt_efficiency_3 = opt_efficiency_3 /100;
-    opt_efficiency_4 = opt_efficiency_4 /100;
+    opt_efficiency_1 = opt_efficiency_1 / 100;
+    opt_efficiency_2 = opt_efficiency_2 / 100;
+    opt_efficiency_3 = opt_efficiency_3 / 100;
+    opt_efficiency_4 = opt_efficiency_4 / 100;
 
     // 	energyDemand_1      = MFVarGetFloat (_MDInEnergyDemand1ID,      itemID, 0.0);
     drybulbT	     = airT;
-    wet_b_temp	     = MFVarGetFloat (_MDInWetBulbTempID,           itemID, 0.0);
-    LakeOcean        = MFVarGetFloat (_MDInLakeOcean1ID,            itemID, 0.0);		// 1 is lakeOcean, 0 is nothing
-    CWA_limit        = MFVarGetFloat (_MDInCWA_LimitID,            itemID, 0.0);
-    CWA_delta        = MFVarGetFloat (_MDInCWA_DeltaID,            itemID, 0.0);
-    CWA_onoff	     = MFVarGetFloat (_MDInCWA_OnOffID,            itemID, 0.0);
-    Downstream_onoff = MFVarGetFloat (_MDInDownstream_OnOffID,            itemID, 0.0);
+    wet_b_temp	     = MFVarGetFloat (_MDInWetBulbTempID,      itemID, 0.0);
+    LakeOcean        = MFVarGetFloat (_MDInLakeOcean1ID,       itemID, 0.0);		// 1 is lakeOcean, 0 is nothing
+    CWA_limit        = MFVarGetFloat (_MDInCWA_LimitID,        itemID, 0.0);
+    CWA_delta        = MFVarGetFloat (_MDInCWA_DeltaID,        itemID, 0.0);
+    CWA_onoff	     = MFVarGetFloat (_MDInCWA_OnOffID,        itemID, 0.0);
+    Downstream_onoff = MFVarGetFloat (_MDInDownstream_OnOffID, itemID, 0.0);
     discharge = Q;
     day_discharge = Q * 86400;
 
@@ -672,7 +673,6 @@ static void _MDThermalInputs3 (int itemID) {
 
             /**************************************************** //    ONCE-THROUGH START    // ****************************************************/
 
-
             // CALCS FOR ONCE THROUGH NGCC ------
 
             if ( (nameplate > 0) && (technology == 4.0) ){
@@ -772,13 +772,14 @@ static void _MDThermalInputs3 (int itemID) {
 
             /////////////////////////////////////////////////////////
 
-            if ((operational_capacity * 0.8) > nameplate ) {
+/*            if ((operational_capacity * 0.8) > nameplate ) {
                 printf("error: operational capacity is greater than given nameplate OT\n");
                 printf("nameplate = %f, tech = %f, fuel = %f, eff = %f, lake = %f \n", nameplate, technology, fuel_type, opt_efficiency, LakeOcean);
                 printf("inlet_temp = %f, consumption = %f, post_temperature = %f, opt_heat_cond = %f \n", inlet_temp, consumption, post_temperature, opt_heat_cond);
             }
 
             //////////// CHECKING FOR BUGS:
+
             if (LakeOcean < 0.5) {
                 if (( ( technology == 1.0 ) || ( technology == 4.0) ) && CWA_limit > 0.0 && inlet_temp > 0.0 && Q > 0.1) {
                     if ((post_temperature > ( max_river_temp + 0.1 ) ) && (operational_capacity > nameplate) ) {
@@ -848,7 +849,7 @@ static void _MDThermalInputs3 (int itemID) {
                     }
                 }
             }
-
+*/
             ////////////////////////////////////////////////////////////////////////////////////
 
             if (m == 1) inlet_temp_1 = inlet_temp;
@@ -1005,7 +1006,7 @@ static void _MDThermalInputs3 (int itemID) {
 
     flux_QxT_new = Q_outgoing_WTemp_1 * Q_outgoing_1 * 86400.0;
 
-    if ((nameplate_1 > 187.4) && (nameplate_1 < 187.6) && (Q_WTemp > 40.0) && (Q > 2)) {
+/*    if ((nameplate_1 > 187.4) && (nameplate_1 < 187.6) && (Q_WTemp > 40.0) && (Q > 2)) {
         printf(" INTITAL INITIAL INITIAL flux_QxT = %f, cccc= %f \n", flux_QxT, cccc);
         printf(" RESULTS CHECK \n");
         printf("heat_to_river = %f, river_temp = %f \n", heat_to_river, river_temp); 
@@ -1020,16 +1021,16 @@ static void _MDThermalInputs3 (int itemID) {
         printf("checking \n");
         printf("operational_capacity = %f, consumption_T = %f, generation = %f, Q_outgoing_WTemp_1 = %f, Q_outgoing_1 = %f, flux_QxT_new = %f \n",operational_capacity, consumption_T, generation, Q_outgoing_WTemp_1, Q_outgoing_1, flux_QxT_new);
     }
-
+*/
     if (totalDaily_output_1 < 0.0) {
-	    printf("!!!!!! NEG OUTPUT: y = %d, m = %d, d = %d, TotalDaily_output_1 = %f, namplate = %f\n", MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay(), totalDaily_output_1, NamePlate_1);
+	    CMmsgPrint(CMmsgUsrError, "!!!!!! NEG OUTPUT: y = %d, m = %d, d = %d, TotalDaily_output_1 = %f, namplate = %f\n", MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay(), totalDaily_output_1, NamePlate_1);
     }
 
     if (wdl_1 > Q && Q > 0.0) {
-	    printf("!!!!!! WDL > Q: y = %d, m = %d, d = %d, wdl_1 = %f, Q = %f, namplate = %f\n", MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay(), wdl_1, Q, NamePlate_1);
+	    CMmsgPrint(CMmsgUsrError,"!!!!!! WDL > Q: y = %d, m = %d, d = %d, wdl_1 = %f, Q = %f, namplate = %f\n", MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay(), wdl_1, Q, NamePlate_1);
     }
 
-    if (Q_outgoing_WTemp_1 < 0.0) printf("!!!!! negative Temp, itemID = %d, y = %d, m = %d, d = %d\n", itemID, MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay());
+    if (Q_outgoing_WTemp_1 < 0.0) CMmsgPrint(CMmsgUsrError,"!!!!! negative Temp, itemID = %d, y = %d, m = %d, d = %d\n", itemID, MFDateGetCurrentYear(), MFDateGetCurrentMonth(), MFDateGetCurrentDay());
 
     MFVarSetFloat(_MDOutLossToInletID,         itemID, loss_inlet_total);
     MFVarSetFloat(_MDOutLossToWaterID,         itemID, loss_water_total);
