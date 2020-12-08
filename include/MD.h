@@ -36,7 +36,6 @@ extern "C" {
 // River routing options
 #define MDOptRouting_Muskingum                  "Muskingum"
 #define MDOptRouting_Riverbed                   "Riverbed"
-#define MDOptSoilWaterCapacity		            "SoilWaterCapacity"
 
 // Weather options
 #define MDOptWeather_CloudCover		            "CloudCover"
