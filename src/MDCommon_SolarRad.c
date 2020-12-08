@@ -154,18 +154,18 @@ int MDCommon_SolarRadDef () {
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options, optStr, true);
 
 	switch (optID) {
-		case MDinput: _MDOutCommon_SolarRadID = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFInput, MFFlux, MFBoundary); break;
+		case MDinput: _MDOutCommon_SolarRadID = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFInput, MFState, MFBoundary); break;
 		case MDcloud:
 		//	printf ("Option: Cloud!!!");
 			if (((_MDCommon_GrossRadID     = MDCommon_GrossRadDef ())  == CMfailed) ||
                 ((_MDInputID               = MDCommon_CloudCoverDef()) == CMfailed) ||
-                ((_MDOutCommon_SolarRadID  = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                ((_MDOutCommon_SolarRadID  = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction (_MDSolarRadiationCloud) == CMfailed)) return (CMfailed);
 			break;
 		case MDsun:
 			if (((_MDCommon_GrossRadID    = MDCommon_GrossRadDef()) == CMfailed) ||
                 ((_MDInputID              = MFVarGetID (MDVarCore_SunShine, "%", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutCommon_SolarRadID = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFOutput, MFFlux, MFBoundary)) == CMfailed) ||
+                ((_MDOutCommon_SolarRadID = MFVarGetID (MDVarCore_SolarRadiation, "MJ/m^2", MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction (_MDSolarRadiationSun) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
