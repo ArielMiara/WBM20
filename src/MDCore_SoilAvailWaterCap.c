@@ -36,7 +36,7 @@ static void _MDSoilAvailWaterCap (int itemID) {
 
 enum { MDinput, MDcalculate};
 int MDCore_SoilAvailWaterCapDef () {
-	int  optID = MFUnset;
+	int  optID = MDinput;
 	const char *optStr, *optName = MDVarCore_SoilAvailWaterCap;
 	const char *options [] = { MDInputStr, MDCalculateStr,  (char *) NULL };
 	
