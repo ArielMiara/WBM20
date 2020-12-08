@@ -62,9 +62,9 @@ int MDCommon_HumidityRelativeDef () {
             break;
         case MDcalculate:
             if (((_MDInCommon_AirTemperatureID    = MFVarGetID (MDVarCommon_AirTemperature,   "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInCommon_AirPressureID       = MFVarGetID (MDVarCommon_AirPressure,      "g/kg", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+                ((_MDInCommon_AirPressureID       = MFVarGetID (MDVarCommon_AirPressure,      "kPa",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
                 ((_MDInCommon_HumiditySpecificID  = MFVarGetID (MDVarCommon_HumiditySpecific, "%",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutCommon_HumidityRelativeID = MFVarGetID (MDVarCommon_HumidityRelative, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutCommon_HumidityRelativeID = MFVarGetID (MDVarCommon_HumidityRelative, "%",    MFOutput, MFState, MFBoundary)) == CMfailed) ||
                 ((MFModelAddFunction (_MDRelativeHumidity) == CMfailed))) return (CMfailed);
             break;
         default: MFOptionMessage (optName, optStr, options);
