@@ -63,7 +63,7 @@ int MDCommon_HumiditySpecificDef () {
     
     switch (optID) {
         case MDinput:
-            if ((_MDOutCommon_HumiditySpecificID = MFVarGetID (MDVarCommon_HumiditySpecific, "degC", MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
+            if ((_MDOutCommon_HumiditySpecificID = MFVarGetID (MDVarCommon_HumiditySpecific, "%",      MFInput, MFState, MFBoundary)) == CMfailed) return (CMfailed);
             break;
         case MDcalculate:
             if (((_MDInCommon_HumidityRelativeID  = MDCommon_HumidityRelativeDef()) == CMfailed) ||
