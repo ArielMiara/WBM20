@@ -1092,7 +1092,7 @@ int MDTP2M_ThermalInputsDef () {
         ((_MDInRouting_DischargeID     = MDRouting_DischargeDef())    == CMfailed) ||
         ((_MDInWetBulbTempID           = MDCommon_WetBulbTempDef())   == CMfailed) ||
 	    ((_MDInCommon_AirTemperatureID = MFVarGetID (MDVarCommon_AirTemperature,    "degC",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInDischargeIncomingID     = MFVarGetID (MDVarRouting_Discharge0,       "m3/s",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInDischargeIncomingID     = MFVarGetID (MDVarRouting_Discharge0,       "m3/s",      MFInput,  MFState, MFInitial))  == CMfailed) ||
 	    ((_MDFluxMixing_QxTID          = MFVarGetID (MDVarTP2M_FluxMixing_QxT,      "m3*degC/d", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
         ((_MDFlux_QxTID                = MFVarGetID (MDVarTP2M_Flux_QxT,            "m3*degC/d", MFInput,  MFFlux,  MFBoundary)) == CMfailed) ||
 	    ((_MDWTemp_QxTID               = MFVarGetID (MDVarTP2M_Temp_QxT,            "degC",      MFOutput, MFState, MFBoundary)) == CMfailed) ||
