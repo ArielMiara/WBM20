@@ -1,14 +1,14 @@
 /******************************************************************************
 
- GHAAS Water Balance/Transport Model V3.0
- Global Hydrologic Archive and Analysis System
- Copyright 1994-2020, UNH - ASRC/CUNY
+GHAAS Water Balance/Transport Model
+Global Hydrologic Archive and Analysis System
+Copyright 1994-2020, UNH - ASRC/CUNY
 
- MD.h
+MD.h
 
- bfekete@gc.cuny.edu
+bfekete@gc.cuny.edu
 
- *******************************************************************************/
+*******************************************************************************/
 
 #ifndef MD_H_INCLUDED
 #define MD_H_INCLUDED

@@ -1,5 +1,5 @@
 /******************************************************************************
-WBMsed V2.0
+WBMsed
 MDDischarge_w_overbank.c
 Add an overbank water loss and storage.
 

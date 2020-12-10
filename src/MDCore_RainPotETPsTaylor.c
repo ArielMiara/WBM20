@@ -1,6 +1,6 @@
 /****************************************************************************
 
-GHAAS Water Balance/Transport Model V2.0
+GHAAS Water Balance/Transport Model
 Global Hydrologic Archive and Analysis System
 Copyright 1994-2020, UNH - ASRC/CUNY
 
