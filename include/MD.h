@@ -191,7 +191,7 @@ extern "C" {
 #define MDVarRouting_RiverDepth                 "RiverDepth"
 #define MDVarRouting_RiverStorage               "RiverStorage"
 #define MDVarRouting_RiverStorageChg            "RiverStorageChange"
-#define MDVarRouting_RiverWidth                 "RiverbedWidth"
+#define MDVarRouting_RiverWidth                 "RiverWidth"
 
 // Sediment variable
 #define MDVarSediment_DischargeAcc	            "DischargeAcc"
