@@ -44,9 +44,9 @@ int MDTP2M_WTempGrdWaterDef () {
 
 	MFDefEntering ("Groundwater temperature");
 
-	if (((_MDInCommon_AirTemperatureID        = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInTP2M_GW_TempID        = MFVarGetID (MDVarTP2M_GW_Temp,          "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutTP2M_WTempGrdWaterID = MFVarGetID (MDVarTP2M_WTempGrdWater,    "degC", MFOutput, MFState, MFInitial))  == CMfailed) ||
+	if (((_MDInCommon_AirTemperatureID = MFVarGetID (MDVarCommon_AirTemperature, "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInTP2M_GW_TempID          = MFVarGetID (MDVarTP2M_GW_Temp,          "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutTP2M_WTempGrdWaterID   = MFVarGetID (MDVarTP2M_WTempGrdWater,    "degC", MFOutput, MFState, MFInitial))  == CMfailed) ||
 		(MFModelAddFunction(_MDWTP2M_TempGrdWater) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving ("Groundwater temperature");

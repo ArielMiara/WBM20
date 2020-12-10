@@ -68,7 +68,7 @@ int MDRouting_RiverWidthDef () {
 
 	MFDefEntering ("River Geometry");
 
-	if (((_MDInRouting_DischargeID             = MDRouting_DischargeDef()) == CMfailed) ||
+	if (((_MDInRouting_DischargeID     = MDRouting_DischargeDef()) == CMfailed) ||
         ((_MDInRiverbedShapeExponentID = MDRouting_RiverbedShapeExponentDef()) == CMfailed) ||
         ((_MDInRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
         ((_MDInRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||

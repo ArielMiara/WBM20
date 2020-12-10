@@ -273,7 +273,6 @@ static void _MDWTempRiverRoute (int itemID) {
 	            printf("ResCap = %f", resCapacity);
             }
 
-
             deltaT = Q_WTemp_new - Q_WTemp;
             StorexT_new  = waterStorage * Q_WTemp_new; //m3*degC
             DeltaStorexT = StorexT_new - StorexT; //

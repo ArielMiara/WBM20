@@ -15,6 +15,7 @@ bfekete@gc.cuny.edu
 
 // Input
 static int _MDInRouting_DischargeID       = MFUnset;
+static int _MDInRouting_RiverWidthID      = MFUnset;
 static int _MDInDataAssim_DischObservedID = MFUnset;
 
 // Output
@@ -48,8 +49,9 @@ int MDRouting_DischargeDef() {
 			if ((_MDInDataAssim_DischObservedID = MFVarGetID (MDVarDataAssim_DischObserved, "m3/s", MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:
-			if (((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDInRouting_DischargeID      = MDRouting_DischargeReleaseDef()) == CMfailed) ||
+			if (((_MDInRouting_DischargeID      = MDRouting_DischargeReleaseDef ()) == CMfailed) ||
+				((_MDInRouting_RiverWidthID     = MDRouting_RiverWidthDef ()) == CMfailed) ||
+				((_MDOutRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge, "m3/s", MFRoute, MFState, MFBoundary)) == CMfailed) ||
                 (MFModelAddFunction(_MDRouting_Discharge) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
