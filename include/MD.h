@@ -112,7 +112,7 @@ extern "C" {
 #define MDVarCore_SolarRadiation                "SolarRadiation"
 #define MDVarCore_SolarRadDayLength             "DayLength"
 #define MDVarCore_SolarRadI0HDay                "I0HDay"
-#define MDVarCore_SoilAvailWaterCap             "AvailableWaterCapacity"
+#define MDVarCore_SoilAvailWaterCap             "SoilWaterCapacity"
 #define MDVarCore_SoilFieldCapacity             "FieldCapacity"
 #define MDVarCore_SoilRootingDepth              "RootingDepth"
 #define MDVarCore_SoilMoisture                  "SoilMoisture"
