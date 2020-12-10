@@ -15,7 +15,7 @@ bfekete@gc.cuny.edu
 #include <MD.h>
 
 // Inputs
-static int _MDInRouting_DischargeID             = MFUnset;
+static int _MDInRouting_DischargeID     = MFUnset;
 static int _MDInRiverbedShapeExponentID = MFUnset;
 static int _MDInRiverbedAvgDepthMeanID  = MFUnset;
 static int _MDInRiverbedWidthMeanID     = MFUnset;
@@ -69,11 +69,12 @@ int MDRouting_RiverWidthDef () {
 	MFDefEntering ("River Geometry");
 
 	if (((_MDInRiverbedShapeExponentID = MDRouting_RiverbedShapeExponentDef()) == CMfailed) ||
-        ((_MDInRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverbedVelocityMean, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutRiverDepthID           = MFVarGetID (MDVarRouting_RiverDepth, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-        ((_MDOutRiverWidthID           = MFVarGetID (MDVarRouting_RiverWidth, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRouting_DischargeID     = MFVarGetID (MDVarRouting_Discharge,            "m3/s", MFRoute,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean,    "m",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverbedVelocityMean, "m/s",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutRiverDepthID           = MFVarGetID (MDVarRouting_RiverDepth,           "m",    MFOutput, MFState, MFBoundary)) == CMfailed) ||
+        ((_MDOutRiverWidthID           = MFVarGetID (MDVarRouting_RiverWidth,           "m",    MFOutput, MFState, MFBoundary)) == CMfailed) ||
         (MFModelAddFunction (_MDRiverWidth) == CMfailed)) return (CMfailed);
 	MFDefLeaving ("River Geometry");
 
