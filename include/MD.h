@@ -60,6 +60,9 @@ extern "C" {
 #define MDVarAux_AccRunoff                      "AccumRunoff"
 #define MDVarAux_AvgNSteps                      "AverageNSteps"
 #define MDVarAux_DischMean                      "DischargeMean"
+#define MDVarAux_DischMin                       "MinimumLongTermInflow"
+#define MDVarAux_DischMax                       "MaximumLongTermInflow"
+#define MDVarAux_YearCount                      "YearCount"
 
 // Common variables
 #define MDVarCommon_AirTemperature              "AirTemperature"
@@ -70,7 +73,9 @@ extern "C" {
 #define MDVarCommon_HumiditySpecific            "SpecificHumidity"
 #define MDVarCommon_HumidityRelative            "RelativeHumidity"
 #define MDVarCommon_IceCover		            "IceCover"
-#define	MDVarCommon_MeanElevation               "Elevation"
+#define	MDVarCommon_Elevation                   "Elevation"
+#define	MDVarCommon_ElevationMin                "ElevationMin"
+#define	MDVarCommon_ElevationMax                "ElevationMax"
 #define MDVarCommon_Precipitation               "Precipitation"
 #define MDVarCommon_PrecipFraction              "PrecipitationFraction"
 #define MDVarCommon_PrecipMonthly               "MonthlyPrecipitation"
@@ -180,20 +185,24 @@ extern "C" {
 #define MDVarRouting_Discharge                  "Discharge"
 #define MDVarRouting_Discharge0                 "Discharge0"
 #define MDVarRouting_Discharge1                 "Discharge1"
+#define MDVarRouting_MeanLogQMax                "MeanLogQMax"
+#define MDVarRouting_LogQMaxM2                  "LogQMaxM2"
+#define MDVarRouting_LogQMaxM3                  "LogQMaxM3"
 #define MDVarRouting_MuskingumC0                "MuskingumC0"
 #define MDVarRouting_MuskingumC1                "MuskingumC1"
 #define MDVarRouting_MuskingumC2                "MuskingumC2"
-#define MDVarRouting_RiverbedAvgDepthMean       "RiverbedAvgDepthMean"
-#define MDVarRouting_RiverbedSlope              "RiverbedSlope"
-#define MDVarRouting_RiverbedShapeExponent      "RiverbedShapeExponent"
-#define MDVarRouting_RiverbedWidthMean          "RiverbedWidthMean"
-#define MDVarRouting_RiverbedVelocityMean       "RiverbedVelocityMean"
+#define MDVarRouting_RiverAvgDepthMean          "RiverbedAvgDepthMean"
+#define MDVarRouting_RiverSlope                 "RiverbedSlope"
+#define MDVarRouting_RiverhapeExponent          "RiverbedShapeExponent"
+#define MDVarRouting_RiverWidthMean             "RiverbedWidthMean"
+#define MDVarRouting_RiverVelocityMean          "RiverVelocityMean"
 #define MDVarRouting_RiverDepth                 "RiverDepth"
 #define MDVarRouting_RiverStorage               "RiverStorage"
 #define MDVarRouting_RiverStorageChg            "RiverStorageChange"
 #define MDVarRouting_RiverWidth                 "RiverWidth"
 
 // Sediment variable
+#define MDVarSediment_BedloadEquation           "BedloadEquation"
 #define MDVarSediment_DischargeAcc	            "DischargeAcc"
 #define MDVarSediment_NewDischargeAcc	        "NewDischargeAcc"
 #define MDVarSediment_OverBankQ	                "OverBankQ"
@@ -203,6 +212,7 @@ extern "C" {
 #define MDVarSediment_AirTemperatureAcc_space	"AirTempAcc_space"
 #define MDVarSediment_AirTemperatureAcc_time    "AirTempAcc_time"
 #define MDVarSediment_NewAirTemperatureAcc_time "NewAirTempAcc_time"
+#define MDVarSediment_ContributingArea          "ContributingArea"
 #define MDVarSediment_ContributingAreaAcc       "ContributingAreaAcc"
 #define MDVarSediment_TimeSteps                 "TimeSteps"
 #define MDVarSediment_NewTimeSteps              "NewTimeSteps"
@@ -212,7 +222,7 @@ extern "C" {
 #define MDVarSediment_BQART_Qbar_km3y           "BQART_Qbar_km3y"
 #define MDVarSediment_BQART_Qbar_m3s            "BQART_Qbar_m3s"
 #define MDVarSediment_BQART_R                   "BQART_R"
-#define MDVarSediment_QART_T                    "BQART_T"
+#define MDVarSediment_BQART_T                   "BQART_T"
 #define MDVarSediment_BQART_Lithology           "BQART_Lithology"
 #define MDVarSediment_BQART_GNP                 "BQART_GNP"
 #define MDVarSediment_Population                "Population"
@@ -228,12 +238,23 @@ extern "C" {
 #define MDVarSediment_ResStorageAcc             "ResStorageAcc"
 #define MDVarSediment_Qs_bar                    "Qs_bar"
 #define MDVarSediment_rnseed                    "rnseed"
+#define MDVarSediment_QsConc                    "QsConc"
 #define MDVarSediment_MinSlope                  "Slope-Min"
 #define MDVarSediment_UpStreamQb                "UpStreamQb"
+#define MDVarSediment_KinematicViscosity        "KinematicViscosity"
+#define MDVarSediment_VelocityTH                "VelocityTH"
+#define MDVarSediment_SettlingVelocity          "SettlingVelocity"
 #define MDVarSediment_DeltaBedload              "DeltaBedload"
 #define MDVarSediment_UpStreamQs                "UpStreamQs"
 #define MDVarSediment_DeltaQs                   "DeltaQs"
 #define MDVarSediment_FlowCoefficient           "FlowCoefficient"
+#define MDVarSediment_CritStreamPower           "CritStreamPower"
+#define MDVarSediment_StreamPower               "StreamPower"
+#define MDVarSediment_WaterDensity              "WaterDensity"
+#define MDVarSediment_ParticleSize              "ParticleSize"
+#define MDVarSediment_Qb_bar_Ashley             "Qb_bar_Ashley"
+#define MDVarSediment_NumPixels                 "NumPixels"
+#define MDVarSediment_PCQdifference             "PCQdifference"
 
 // TP2M Variables
 #define MDVarTP2M_AvgEfficiency                 "AvgEfficiency"
@@ -461,11 +482,15 @@ int MDReservoir_OperationDef ();
 int MDReservoir_FarmPondReleaseDef ();
 int MDReservoir_FarmPondCapacityDef ();
 
-int MDSediment_BQARTpreprocessDef (); //NEW !!!!!  (S.C)
-int MDSediment_BankfullQcalcDef ();//NEW !!!!!  (S.C)
-int MDSediment_BedloadFluxDef ();//NEW !!!!!  (S.C)
-int MDSediment_FluxDef (); //NEW !!!!!  (S.C)
+int MDSediment_BQARTpreprocessDef ();
+int MDSediment_BankfullQcalcDef ();
+int MDSediment_BedloadFluxDef ();
+int MDSediment_FluxDef ();
 int MDSediment_DischargeBFDef ();
+int MDSediment_Flux_noBFDef ();
+int MDSediment_ParticulateNutrientsDef ();
+int MDSediment_ParticulateNutrients_noBFDef ();
+int MDSediment_WaterDensityDef ();
 
 int MDTP2M_WTempGrdWaterDef ();
 int MDTP2M_WTempRiverDef ();
