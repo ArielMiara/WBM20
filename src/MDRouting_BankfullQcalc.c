@@ -20,7 +20,7 @@ last update: May 16 2011
 static int _MDInLogQMaxM2ID         = MFUnset;
 static int _MDInLogQMaxM3ID         = MFUnset;
 static int _MDInYearCountID         = MFUnset;
-//static int _MDInDischargeID   	   = MFUnset;
+
 // Output
 static int _MDOutBankfullQ2ID   	= MFUnset;
 static int _MDOutBankfullQ5ID   	= MFUnset;
@@ -29,7 +29,6 @@ static int _MDOutBankfullQ25ID   	= MFUnset;
 static int _MDOutBankfullQ50ID   	= MFUnset;
 static int _MDOutBankfullQ100ID   	= MFUnset;
 static int _MDOutBankfullQ200ID   	= MFUnset;
-
 
 
 

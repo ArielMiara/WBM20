@@ -475,7 +475,7 @@ int MDRouting_DischargeInChannelMuskingumDef ();
 int MDRouting_DischargeInChannelMuskingumCoeffDef ();
 int MDRouting_DischargeReleaseDef ();
 int MDRouting_DischargeUptake ();
-int MDRouting_RiverbedShapeExponentDef ();
+int MDRouting_RiverShapeExponentDef ();
 int MDRouting_RiverWidthDef ();
 
 int MDReservoir_OperationDef ();
