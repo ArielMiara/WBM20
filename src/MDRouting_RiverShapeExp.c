@@ -23,7 +23,7 @@ static int _MDOutRiverbedWidthMeanID     = MFUnset;
 static int _MDOutRiverbedVelocityMeanID  = MFUnset;
 static int _MDOutRiverbedShapeExponentID = MFUnset;
 
-static void _MDRiverbedShapeExponent (int itemID) {
+static void _MDRiverShapeExponent (int itemID) {
 // Input
 	float slope;     // Riverbed slope [m/km]
 	float discharge; // Mean annual discharge [m3/s]
@@ -80,22 +80,22 @@ int MDRouting_RiverbedShapeExponentDef () {
 
 	switch (optID) {
 		case MDinput:
-			if (((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverbedVelocityMean, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRouting_RiverbedShapeExponent, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed))
+			if (((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverAvgDepthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverWidthMean, "m", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverVelocityMean, "m/s", MFInput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRouting_RiverShapeExponent, MFNoUnit, MFInput, MFState, MFBoundary)) == CMfailed))
 				return (CMfailed);
 			break;
 		case MDdependent:
-			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRouting_RiverbedSlope, "m/km", MFInput, MFState, MFBoundary)) == CMfailed)
+			if ((_MDInRiverbedSlopeID           = MFVarGetID (MDVarRouting_RiverSlope, "m/km", MFInput, MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDindependent:
 			if (((_MDInAux_MeanDischargeID = MDAux_MeanDiscargehDef()) == CMfailed) ||
-                ((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverbedAvgDepthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverbedWidthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverbedVelocityMean, "m/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-                ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRouting_RiverbedShapeExponent, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
-                (MFModelAddFunction (_MDRiverbedShapeExponent) == CMfailed)) return (CMfailed);
+                ((_MDOutRiverbedAvgDepthMeanID  = MFVarGetID (MDVarRouting_RiverAvgDepthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedWidthMeanID     = MFVarGetID (MDVarRouting_RiverWidthMean, "m", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedVelocityMeanID  = MFVarGetID (MDVarRouting_RiverVelocityMean, "m/s", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                ((_MDOutRiverbedShapeExponentID = MFVarGetID (MDVarRouting_RiverShapeExponent, MFNoUnit, MFOutput, MFState, MFBoundary)) == CMfailed) ||
+                (MFModelAddFunction (_MDRiverShapeExponent) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);
 	}
