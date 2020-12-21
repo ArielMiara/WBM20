@@ -43,7 +43,7 @@ static void _MDBankfullQcalc (int itemID) {
 
     float M2, M3, N, Var;
         
-    if (MFDateGetDayOfYear() == MFDateGetYearLength()) {
+    if (MFDateGetDayOfYear() == MFDateGetYearLength ()) {
         M2 = MFVarGetFloat(_MDInLogQMaxM2ID, itemID, 0.0);
         M3 = MFVarGetFloat(_MDInLogQMaxM3ID, itemID, 0.0);
         N = MFVarGetInt(_MDInYearCountID, itemID, 0);
@@ -83,11 +83,12 @@ static void _MDBankfullQcalc (int itemID) {
 		MFVarSetFloat (_MDOutBankfullQ50ID, itemID, BankfullQ50);
 		MFVarSetFloat (_MDOutBankfullQ100ID, itemID, BankfullQ100);
 		MFVarSetFloat (_MDOutBankfullQ200ID, itemID, BankfullQ200);
+	}
 }
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDSediment_BankfullQcalcDef() {
+int MDRouting_BankfullQcalcDef () {
 
 	MFDefEntering ("BankfullQcalc");
 	// inputs set as initial but don't update, always use last values to calc var, skew of distribution

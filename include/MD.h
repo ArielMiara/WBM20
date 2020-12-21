@@ -193,7 +193,7 @@ extern "C" {
 #define MDVarRouting_MuskingumC2                "MuskingumC2"
 #define MDVarRouting_RiverAvgDepthMean          "RiverbedAvgDepthMean"
 #define MDVarRouting_RiverSlope                 "RiverbedSlope"
-#define MDVarRouting_RiverhapeExponent          "RiverbedShapeExponent"
+#define MDVarRouting_RiverShapeExponent         "RiverbedShapeExponent"
 #define MDVarRouting_RiverWidthMean             "RiverbedWidthMean"
 #define MDVarRouting_RiverVelocityMean          "RiverVelocityMean"
 #define MDVarRouting_RiverDepth                 "RiverDepth"
@@ -228,6 +228,7 @@ extern "C" {
 #define MDVarSediment_Population                "Population"
 #define MDVarSediment_LithologyAreaAcc          "LithologyAreaAcc"
 #define MDVarSediment_LithologyMean             "LithologyMean"
+#define MDVarSediment_Pristine                  "SedPristine"
 #define MDVarSediment_PopulationAcc             "PopulationAcc"
 #define MDVarSediment_PopulationDensity         "PopulationDensity"
 #define MDVarSediment_GNPAreaAcc                "GNPAreaAcc"
@@ -237,6 +238,7 @@ extern "C" {
 #define MDVarSediment_TeAacc                    "TeAacc"
 #define MDVarSediment_ResStorageAcc             "ResStorageAcc"
 #define MDVarSediment_Qs_bar                    "Qs_bar"
+#define MDVarSediment_QsYield                   "QsYield"
 #define MDVarSediment_rnseed                    "rnseed"
 #define MDVarSediment_QsConc                    "QsConc"
 #define MDVarSediment_MinSlope                  "Slope-Min"
@@ -250,11 +252,26 @@ extern "C" {
 #define MDVarSediment_FlowCoefficient           "FlowCoefficient"
 #define MDVarSediment_CritStreamPower           "CritStreamPower"
 #define MDVarSediment_StreamPower               "StreamPower"
+#define MDVarSediment_Trapping                  "SedimentTrapping"
 #define MDVarSediment_WaterDensity              "WaterDensity"
 #define MDVarSediment_ParticleSize              "ParticleSize"
 #define MDVarSediment_Qb_bar_Ashley             "Qb_bar_Ashley"
 #define MDVarSediment_NumPixels                 "NumPixels"
 #define MDVarSediment_PCQdifference             "PCQdifference"
+#define MDVarSediment_POCarbonPercent           "POCarbonPercent"
+#define MDVarSediment_POCarbonYield             "POCarbonYield"
+#define MDVarSediment_POCarbonConcentration     "POCarbonConcentration"
+#define MDVarSediment_POCarbonFlux              "POCarbonFlux"
+#define MDVarSediment_PNitrogenPercent          "PNitrogenPercent"
+#define MDVarSediment_PNitrogenYield            "PNitrogenYield"
+#define MDVarSediment_PNitrogenConcentration    "PNitrogenConcentration"
+#define MDVarSediment_PNitrogenFlux             "PNitrogenFlux"
+#define MDVarSediment_PPhosphorusPercent        "PPhosphorusPercent"
+#define MDVarSediment_PPhosphorusYield          "PPhosphorusYield"
+#define MDVarSediment_PPhosphorusConcentration  "PPhosphorusConcentration"
+#define MDVarSediment_PPhosphorusFlux           "PPhosphorusFlux"
+#define MDVarSediment_UpStreamWd                "UpStreamWd"
+#define MDVarSediment_DeltaWd                   "DeltaWd"
 
 // TP2M Variables
 #define MDVarTP2M_AvgEfficiency                 "AvgEfficiency"
@@ -467,6 +484,7 @@ int MDParam_LandCoverMappingDef ();
 int MDParam_LeafAreaIndexDef ();
 int MDParam_LCStemAreaIndexDef ();
 
+int MDRouting_BankfullQcalcDef ();
 int MDRouting_DischargeDef ();
 int MDRouting_DischargeInChannelDef ();
 int MDRouting_DischargeInChannelAccumulateDef ();
@@ -483,9 +501,9 @@ int MDReservoir_FarmPondReleaseDef ();
 int MDReservoir_FarmPondCapacityDef ();
 
 int MDSediment_BQARTpreprocessDef ();
-int MDSediment_BankfullQcalcDef ();
 int MDSediment_BedloadFluxDef ();
 int MDSediment_FluxDef ();
+int MDSediment_FluxOLDDef ();
 int MDSediment_DischargeBFDef ();
 int MDSediment_Flux_noBFDef ();
 int MDSediment_ParticulateNutrientsDef ();

@@ -123,26 +123,21 @@ int MDSediment_ParticulateNutrientsDef() {
 	
 	MFDefEntering ("ParticulateNutrients");
 	
-	if (((_MDInSedimentFluxID   = MDSedimentFluxDef   ()) == CMfailed) || 
-	((_MDInQsConcID				= MFVarGetID (MDQsConc 			,"g/L",MFInput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDInQsYieldID			= MFVarGetID (MDQsYield 		,"kg/s/km2",MFInput, MFState, MFBoundary)) == CMfailed) ||
-//	((_MDInSedimentFluxID		= MFVarGetID (MDSedimentFlux 		,"kg/s",MFInput, MFState, MFBoundary)) == CMfailed) ||
-    
-	// output
-	((_MDOutPOCarbonPercentID		= MFVarGetID (MDPOCarbonPercent			,"%",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPOCarbonConcentrationID	= MFVarGetID (MDPOCarbonConcentration	,"mg/L",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPOCarbonYieldID			= MFVarGetID (MDPOCarbonYield			,"kg/km2/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPOCarbonFluxID			= MFVarGetID (MDPOCarbonFlux			,"kg/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	
-	((_MDOutPNitrogenPercentID		= MFVarGetID (MDPNitrogenPercent		,"%",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPNitrogenConcentrationID= MFVarGetID (MDPNitrogenConcentration	,"mg/L",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPNitrogenYieldID		= MFVarGetID (MDPNitrogenYield			,"kg/km2/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPNitrogenFluxID			= MFVarGetID (MDPNitrogenFlux			,"kg/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	
-	((_MDOutPPhosphorusPercentID		= MFVarGetID (MDPPhosphorusPercent		,"%",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPPhosphorusConcentrationID= MFVarGetID (MDPPhosphorusConcentration	,"mg/L",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPPhosphorusYieldID		= MFVarGetID (MDPPhosphorusYield			,"kg/km2/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutPPhosphorusFluxID			= MFVarGetID (MDPPhosphorusFlux			,"kg/y",MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	if (((_MDInSedimentFluxID          = MDSediment_FluxDef ()) == CMfailed) || 
+	((_MDInQsConcID                    = MFVarGetID (MDVarSediment_QsConc,                  "g/L",       MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	((_MDInQsYieldID                   = MFVarGetID (MDVarSediment_QsYield,                  "kg/s/km2", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPOCarbonPercentID          = MFVarGetID (MDVarSediment_POCarbonPercent,          "%",        MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPOCarbonConcentrationID    = MFVarGetID (MDVarSediment_POCarbonConcentration,    "mg/L",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPOCarbonYieldID            = MFVarGetID (MDVarSediment_POCarbonYield,            "kg/km2/y", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPOCarbonFluxID             = MFVarGetID (MDVarSediment_POCarbonFlux,             "kg/y",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPNitrogenPercentID         = MFVarGetID (MDVarSediment_PNitrogenPercent,         "%",        MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPNitrogenConcentrationID   = MFVarGetID (MDVarSediment_PNitrogenConcentration,   "mg/L",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPNitrogenYieldID           = MFVarGetID (MDVarSediment_PNitrogenYield,           "kg/km2/y", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPNitrogenFluxID            = MFVarGetID (MDVarSediment_PNitrogenFlux,            "kg/y",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPPhosphorusPercentID       = MFVarGetID (MDVarSediment_PPhosphorusPercent,       "%",        MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPPhosphorusConcentrationID = MFVarGetID (MDVarSediment_PPhosphorusConcentration, "mg/L",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPPhosphorusYieldID         = MFVarGetID (MDVarSediment_PPhosphorusYield,         "kg/km2/y", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	((_MDOutPPhosphorusFluxID          = MFVarGetID (MDVarSediment_PPhosphorusFlux,          "kg/y",     MFOutput, MFState, MFBoundary)) == CMfailed) ||
 	(MFModelAddFunction (_MDParticulateNutrients) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving  ("ParticulateNutrients");

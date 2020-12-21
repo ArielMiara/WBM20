@@ -68,9 +68,9 @@ static void _MDDischargeBF (int itemID) {
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDSediment_DischargeBFDef() {
+int MDSediment_DischargeBFDef () {
 	int optID = MFUnset;
-	const char *optStr, *optName = MDOptDischarge;
+	const char *optStr, *optName = MDOptConfig_Discharge;
 	const char *options [] = { MDInputStr, MDCalculateStr, "corrected", (char *) NULL };
 
 	if (_MDOutDischargeID != MFUnset) return (_MDOutDischargeID);
@@ -78,18 +78,18 @@ int MDSediment_DischargeBFDef() {
 	MFDefEntering ("DischargeBF");
 	if ((optStr = MFOptionGet (optName)) != (char *) NULL) optID = CMoptLookup (options,optStr,true);
 	switch (optID) {
-		case MDinput: _MDOutDischargeID = MFVarGetID (MDVarRouting_Discharge,         "m3/s",  MFInput,  MFState, MFBoundary); break;
+		case MDinput: _MDOutDischargeID = MFVarGetID (MDVarRouting_Discharge,         "m3/s",   MFInput,  MFState, MFBoundary); break;
 		case MDcorrected:
-			if ((_MDInDischObservedID   = MFVarGetID (MDVarDataAssim_DischObserved,   "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed)
+			if ((_MDInDischObservedID   = MFVarGetID (MDVarDataAssim_DischObserved,   "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed)
 				return (CMfailed);
 		case MDcalculate:
-			if (((_MDOutDischargeID      = MFVarGetID (MDVarRouting_Discharge,        "m3/s",  MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDInDischLevel1ID     = MDDischLevel1Def ()) == CMfailed) ||
-				((_MDInBankfullQID       = MFVarGetID (MDVarRouting_BankfullQ,        "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDInBankfull_QnID  	 = MFVarGetID (MDVarRouting_Bankfull_Qn,      "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDInFlowCoefficientID = MFVarGetID (MDVarSediment_FlowCoefficient, "m3/s",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
-				((_MDOutOverBankQID      = MFVarGetID (MDVarSediment_OverBankQ,       "m3/s",  MFOutput, MFState, MFInitial))  == CMfailed) ||
-				((_MDOutPCQdifferenceID  = MFVarGetID (MDVarSediment_PCQdifference,   NoUnit,  MFOutput, MFState, MFInitial))  == CMfailed) ||
+			if (((_MDOutDischargeID      = MFVarGetID (MDVarRouting_Discharge,        "m3/s",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDInDischLevel1ID     = MDRouting_DischargeReleaseDef ()) == CMfailed) ||
+				((_MDInBankfullQID       = MFVarGetID (MDVarRouting_BankfullQ,        "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDInBankfull_QnID  	 = MFVarGetID (MDVarRouting_Bankfull_Qn,      "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDInFlowCoefficientID = MFVarGetID (MDVarSediment_FlowCoefficient, "m3/s",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+				((_MDOutOverBankQID      = MFVarGetID (MDVarSediment_OverBankQ,       "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
+				((_MDOutPCQdifferenceID  = MFVarGetID (MDVarSediment_PCQdifference,   MFNoUnit, MFOutput, MFState, MFInitial))  == CMfailed) ||
 				(MFModelAddFunction (_MDDischargeBF) == CMfailed)) return (CMfailed);
 			break;
 		default: MFOptionMessage (optName, optStr, options); return (CMfailed);

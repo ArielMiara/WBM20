@@ -140,12 +140,13 @@ MFVarSetInt (_MDOutBQART_AID, itemID, A);
 
 enum { MDinput, MDcalculate, MDcorrected };
 
-int MDBSediment_QARTpreprocessDef() {
+int MDSediment_BQARTpreprocessDef () {
 	
 	MFDefEntering ("QBARTpreprocess");
 	
-	if (((_MDInDischargeID = MDDischargeBFDef ()) == CMfailed) || 
-	    ((_MDInDischMeanID = MDDischMeanDef ())   == CMfailed) ||
+	if (((_MDInDischargeID  = MDSediment_DischargeBFDef ()) == CMfailed) || 
+	    ((_MDInDischMeanID  = MDAux_MeanDiscargehDef ())    == CMfailed) ||
+	    ((_MDInBankfullQ5ID = MDRouting_BankfullQcalcDef()) == CMfailed) ||
         ((_MDInAirTempID             = MFVarGetID (MDVarCommon_AirTemperature,           "degC",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc,    "km2",     MFRoute,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time, "degC",    MFOutput, MFState, MFInitial))  == CMfailed) ||
@@ -162,8 +163,6 @@ int MDBSediment_QARTpreprocessDef() {
         ((_MDOutLogQMaxM2ID          = MFVarGetID (MDVarRouting_LogQMaxM2,                "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
         ((_MDOutLogQMaxM3ID          = MFVarGetID (MDVarRouting_LogQMaxM3,                "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
         ((_MDOutMeanLogQMaxID        = MFVarGetID (MDVarRouting_MeanLogQMax ,             "m3/s",   MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInBankfullQ5ID = MDBankfullQcalcDef()) == CMfailed) ||
-        
        (MFModelAddFunction (_MDQBARTpreprocess) == CMfailed)) return (CMfailed);
 
 	MFDefLeaving  ("QBARTpreprocess");

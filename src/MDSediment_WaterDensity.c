@@ -66,16 +66,14 @@ int MDSediment_WaterDensityDef() {
 	
 	MFDefEntering ("WaterDensity");
 	
-	if (((_MDInSedimentFluxID   = MDSedimentFluxDef   ()) == CMfailed) || 
-	((_MDWTempRiverRouteID  	= MDWTempRiverRouteDef   ()) == CMfailed) ||
-	((_MDInQsConcID				= MFVarGetID (MDVarQsConc 			,"g/L",MFInput, MFState, MFBoundary)) == CMfailed) ||
-    ((_MDInWTemp_QxTID            = MFVarGetID (MDVarWTemp_QxT,   "degC", MFInput, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutWaterDensityID        = MFVarGetID (MDVarWaterDensity,   "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
-	//((_MDOutWaterDensityID        = MFVarGetID (MDVarWaterDensity, "", MFOutput, MFState, MFBoundary)) == CMfailed)   ||
-	((_MDInUpStreamWdID  		= MFVarGetID (MDVarUpStreamWd,  		"degC",	 MFRoute, MFState, MFBoundary)) == CMfailed) ||
-	((_MDOutDeltaWdID			= MFVarGetID (MDDeltaWd  			,"degC",MFOutput, MFState, MFBoundary)) == CMfailed) ||
-
-	(MFModelAddFunction (_MDWaterDensity) == CMfailed)) return (CMfailed);
+	if (((_MDInSedimentFluxID  = MDSediment_FluxDef ())  == CMfailed) || 
+	    ((_MDWTempRiverRouteID = MDTP2M_WTempRiverDef ()) == CMfailed) ||
+	    ((_MDInQsConcID        = MFVarGetID (MDVarSediment_QsConc,       "g/L",  MFInput,  MFState, MFBoundary)) == CMfailed) ||
+        ((_MDInWTemp_QxTID     = MFVarGetID (MDVarTP2M_Temp_QxT,         "degC", MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutWaterDensityID = MFVarGetID (MDVarSediment_WaterDensity, "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInUpStreamWdID    = MFVarGetID (MDVarSediment_UpStreamWd,   "degC", MFRoute,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDOutDeltaWdID      = MFVarGetID (MDVarSediment_DeltaWd,      "degC", MFOutput, MFState, MFBoundary)) == CMfailed) ||
+	    (MFModelAddFunction (_MDWaterDensity) == CMfailed)) return (CMfailed);
 	
 	MFDefLeaving  ("WaterDensity");
 	return (_MDOutWaterDensityID);

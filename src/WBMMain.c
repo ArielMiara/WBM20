@@ -68,16 +68,16 @@ int main (int argc,char *argv []) {
         case MDdischarge:                 return (MFModelRun(argc, argv, argNum, MDRouting_DischargeDef));
         case MDbalance:                   return (MFModelRun(argc, argv, argNum, MDCore_WaterBalanceDef));
         case MDgeometry:                  return (MFModelRun(argc, argv, argNum, MDRouting_RiverWidthDef));
-        case MDbankfullQcalc:             return (MFModelRun(argc, argv, argNum, MDSediment_BankfullQcalcDef));
-        case MDRiverbedShape:             return (MFModelRun(argc, argv, argNum, MDRouting_RiverbedShapeExponentDef));
+        case MDbankfullQcalc:             return (MFModelRun(argc, argv, argNum, MDRouting_BankfullQcalcDef));
+        case MDRiverbedShape:             return (MFModelRun(argc, argv, argNum, MDRouting_RiverShapeExponentDef));
         case MDwatertemp:                 return (MFModelRun(argc, argv, argNum, MDTP2M_WTempRiverRouteDef));
         case MDthermal:                   return (MFModelRun(argc, argv, argNum, MDTP2M_ThermalInputsDef));
         case MDBQARTpreprocess:           return (MFModelRun(argc, argv, argNum, MDSediment_BQARTpreprocessDef));
         case MDsedimentflux:              return (MFModelRun(argc, argv, argNum, MDSediment_FluxDef));
         case MDbedloadflux:               return (MFModelRun(argc, argv, argNum, MDSediment_BedloadFluxDef));
-        case MDsedimentflux_noBF:         return (MFModelRun (argc,argv,argNum,  MDSediment_Flux_noBFDef));
+//       case MDsedimentflux_noBF:         return (MFModelRun (argc,argv,argNum,  MDSediment_Flux_noBFDef));
         case MDparticulatenutrients:      return (MFModelRun (argc,argv,argNum,  MDSediment_ParticulateNutrientsDef));
-        case MDparticulatenutrients_noBF: return (MFModelRun (argc,argv,argNum,  MDSediment_ParticulateNutrients_noBFDef));
+//      case MDparticulatenutrients_noBF: return (MFModelRun (argc,argv,argNum,  MDSediment_ParticulateNutrients_noBFDef));
         case MDwaterdensity:              return (MFModelRun (argc,argv,argNum,  MDSediment_WaterDensityDef));
     }
     MFOptionMessage(optName, optStr, options);
