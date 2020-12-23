@@ -146,13 +146,13 @@ int MDSediment_BedloadFluxDef() {
 	if (((_MDInDischargeID            = MDSediment_DischargeBFDef ()) == CMfailed) || 
 	    ((_MDInSedimentFluxID         = MDSediment_FluxDef ())        == CMfailed) ||
 	    ((_MDInWTemp_QxT              = MDTP2M_WTempRiverDef ())      == CMfailed) ||
-	    ((_MDInDischMeanID            = MFVarGetID (MDVarAux_DischMean,               "m3/s",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInDischMeanID            = MFVarGetID (MDVarAux_DischMean,               "m3/s",   MFRoute,  MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInQs_barID               = MFVarGetID (MDVarSediment_Qs_bar,             "kg/s",   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInRiverSlopeID           = MFVarGetID (MDVarRouting_RiverSlope,          "m/kn",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInRiverSlopeID           = MFVarGetID (MDVarRouting_RiverSlope,          "m/km",   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInMDVarVelocityTHID      = MFVarGetID (MDVarSediment_VelocityTH,         MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInRiverbedVelocityMeanID = MFVarGetID (MDVarRouting_RiverVelocityMean,   "m/s",    MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInMDVarBedloadEquationID = MFVarGetID (MDVarSediment_BedloadEquation,    MFNoUnit, MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInQsConcID               = MFVarGetID (MDVarSediment_QsConc,             "g/L",    MFRoute,  MFState, MFBoundary)) == CMfailed) ||
+	    ((_MDInQsConcID               = MFVarGetID (MDVarSediment_QsConc,             "g/l",    MFRoute,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutBedloadFluxID         = MFVarGetID (MDVarSediment_BedloadFlux,        "kg/s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDOutSettlingVelocityID    = MFVarGetID (MDVarSediment_SettlingVelocity,   "m/s",    MFOutput, MFState, MFBoundary)) == CMfailed) ||
  	    ((_MDOutKinematicViscosityID  = MFVarGetID (MDVarSediment_KinematicViscosity, "m2/s",   MFOutput, MFState, MFBoundary)) == CMfailed) ||
