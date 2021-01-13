@@ -42,10 +42,6 @@ static int _MDOutBQART_TeID 	   = MFUnset;
 static int _MDOutPopulationAccID   = MFUnset;
 static int _MDOutMeanGNPID		   = MFUnset;
 static int _MDOutBQART_EhID		   = MFUnset;
-static int _MDInNewDischargeAccID  = MFUnset;
-static int _MDInNewAirTempAcc_timeID = MFUnset;
-static int _MDInNewTimeStepsID 	   = MFUnset;
-static int _MDInNewSedimentAccID   = MFUnset;
 static int _MDInAirTempAcc_spaceID = MFUnset;
 static int _MDInUpStreamQsID 	   = MFUnset;
 static int _MDInBedloadFluxID 	   = MFUnset;
@@ -106,33 +102,17 @@ static void _MDSedimentFlux (int itemID) {
 	if (R <= 0) R = 0.00005;
 //Calculating maximum Relief for each pixel
 
-	
-// Geting the phase 1 (BQARTpreprocess) values for the first run 
-	tmp= MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0); 
-	if (tmp == 0) {
-		T_time = MFVarGetFloat (_MDInAirTempAcc_timeID, itemID, 0.0);
-		MFVarSetFloat (_MDInNewAirTempAcc_timeID, itemID, T_time);
-		//Qacc = MFVarGetFloat (_MDInDischargeAccID, itemID, 0.0);
-		//MFVarSetFloat (_MDInNewDischargeAccID, itemID, Qacc);
-		TimeStep = MFVarGetInt (_MDInTimeStepsID, itemID, 0.0);
-		MFVarSetInt (_MDInNewTimeStepsID, itemID, TimeStep);
-	}
+
 //Accumulate temperature
-	T_time = (MFVarGetFloat (_MDInNewAirTempAcc_timeID, itemID, 0.0) + Tday); 
-	MFVarSetFloat (_MDInNewAirTempAcc_timeID, itemID, T_time);	
+	T_time = (MFVarGetFloat (_MDInAirTempAcc_timeID, itemID, 0.0) + Tday); 
+	MFVarSetFloat (_MDInAirTempAcc_timeID, itemID, T_time);	
 	TupSlop = MFVarGetFloat (_MDInAirTempAcc_spaceID, itemID, 0.0); 
 	Tacc = TupSlop + (T_time * PixSize_km2);
 	MFVarSetFloat (_MDInAirTempAcc_spaceID, itemID, Tacc);
 
-//Accumulate discharge
-	//Qacc = (MFVarGetFloat (_MDInNewDischargeAccID, itemID, 0.0)+ Qday);// in m3/s
-	//MFVarSetFloat (_MDInNewDischargeAccID, itemID, Qacc);			
-
 // Accumulate time steps
-	//TimeStep = MFVarGetInt (_MDInTimeStepsID, itemID, 0.0);
-	//tempTimeStep = (MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0)+1);//		!!! Chnaged for constant 7/10/10
-	TimeStep = (MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0) +1 );
-	MFVarSetInt (_MDInNewTimeStepsID, itemID, TimeStep);		//	!!! Chnaged for constant 7/10/10
+	TimeStep = (MFVarGetInt (_MDInTimeStepsID, itemID, 0) + 1);
+	MFVarSetInt (_MDInTimeStepsID, itemID, TimeStep); //	!!! Chnaged for constant 7/10/10
 	MFVarSetFloat (_MDOutBQART_AID, itemID, A);
 	MFVarSetFloat (_MDOutBQART_RID, itemID, R);
 //Calculate moving avarege temperature (Tbar) and discharge
@@ -190,23 +170,7 @@ static void _MDSedimentFlux (int itemID) {
 		if (Qbar_km3y == 0.0) Te = 0.0;
 		if (Te > 1) Te = 1.0;
 		if (Te < 0) Te = 0.0;
-//Old Te calculation
-/*		if (ResCapacity > 0.00001){	
-			if (ResCapacity > 0.5){
-				deltaTau = ResCapacityAcc/Qbar_km3y; 
-				Te = 1 - (0.05/pow(deltaTau, 0.5));
-			}else{
-				Te = 1.0 - (1.0 / (1 + 0.00021 * (ResCapacity/A)));
-				Te = Te + (TeAacc/A); //new!!!!
-				}
-		    TeAacc = (TeAacc/A) + (Te*A);
-			MFVarSetFloat (_MDInTeAaccID, itemID, TeAacc);
-		}else{
-			if (Qbar_km3y == 0.0){
-			Te = 0.0;
-			}else Te = TeAacc/A ;			
-		}	
-*/		
+
 		//Calculating Eh
 		// Calculating mean population density
 		PopulationAcc = MFVarGetFloat(_MDOutPopulationAccID, itemID, 0.0) + MFVarGetFloat(_MDInPopulationID, itemID, 0.0); 
@@ -229,15 +193,7 @@ static void _MDSedimentFlux (int itemID) {
 		if (MeanGNP < 2500){
 			if (PopuDesity > 140)Eh = 2.0;
 		}	
-		
-		//if (PopuDesity > 50){
-		//	if (MeanGNP > 20000) Eh = 0.3;
-		//	if (MeanGNP < 2500) Eh = 2.0;
-		//}
-		//if (PopuDesity > 200){
-		//	if (MeanGNP > 15000) Eh = 0.3;
-		//	if (MeanGNP < 1000) Eh = 2.0;
-		//}
+
 	}
 	if (SedPristine == 1) { // Pristine sediment !!!!!
 		Te = 0.0;
@@ -245,7 +201,7 @@ static void _MDSedimentFlux (int itemID) {
 	}	
 	
 	if (SedPristine == 2) { // semi-Pristine sediment (no reservoirs !!!!!
-		//Calculating Eh
+		// Calculating Eh
 		// Calculating mean population density
 		PopulationAcc = MFVarGetFloat(_MDOutPopulationAccID, itemID, 0.0) + MFVarGetFloat(_MDInPopulationID, itemID, 0.0); //devided by 25 for the 06min simulation in order to account for the smaler pixel size.
 		MFVarSetFloat (_MDOutPopulationAccID, itemID, PopulationAcc);
@@ -387,11 +343,7 @@ int MDSediment_FluxDef() {
 	    ((_MDInBQART_LithologyID     = MFVarGetID (MDVarSediment_BQART_Lithology,           MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInBQART_GNPID           = MFVarGetID (MDVarSediment_BQART_GNP,                 MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInPopulationID          = MFVarGetID (MDVarSediment_Population,                MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInNewAirTempAcc_timeID  = MFVarGetID (MDVarSediment_NewAirTemperatureAcc_time, "degC",     MFInput,  MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space,   "degC",     MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInNewDischargeAccID     = MFVarGetID (MDVarSediment_NewDischargeAcc,           "m3/s",     MFInput,  MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInNewSedimentAccID      = MFVarGetID (MDVarSediment_NewSedimentAcc,            "m3/s",     MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInNewTimeStepsID        = MFVarGetID (MDVarSediment_NewTimeSteps,              MFNoUnit,   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInResCapacityID         = MFVarGetID (MDVarReservoir_Capacity,                 "km3",      MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInTeAaccID              = MFVarGetID (MDVarSediment_TeAacc,                    "",         MFRoute,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc,       "km2",      MFRoute,  MFState, MFBoundary)) == CMfailed) ||

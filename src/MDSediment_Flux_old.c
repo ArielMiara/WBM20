@@ -42,10 +42,6 @@ static int _MDOutBQART_TeID 	   = MFUnset;
 static int _MDOutPopulationAccID   = MFUnset;
 static int _MDOutMeanGNPID		   = MFUnset;
 static int _MDOutBQART_EhID		   = MFUnset;
-static int _MDInNewDischargeAccID  = MFUnset;
-static int _MDInNewAirTempAcc_timeID = MFUnset;
-static int _MDInNewTimeStepsID 	   = MFUnset;
-static int _MDInNewSedimentAccID   = MFUnset;
 static int _MDInAirTempAcc_spaceID = MFUnset;
 static int _MDInUpStreamQsID 	   = MFUnset;
 static int _MDInBedloadFluxID 	   = MFUnset;
@@ -106,33 +102,16 @@ static void _MDSedimentFlux (int itemID) {
 	if (R <= 0) R = 0.00005;
 //Calculating maximum Relief for each pixel
 
-	
-// Geting the phase 1 (BQARTpreprocess) values for the first run 
-	tmp= MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0); 
-	if (tmp == 0) {
-		T_time = MFVarGetFloat (_MDInAirTempAcc_timeID, itemID, 0.0);
-		MFVarSetFloat (_MDInNewAirTempAcc_timeID, itemID, T_time);
-		//Qacc = MFVarGetFloat (_MDInDischargeAccID, itemID, 0.0);
-		//MFVarSetFloat (_MDInNewDischargeAccID, itemID, Qacc);
-		TimeStep = MFVarGetInt (_MDInTimeStepsID, itemID, 0.0);
-		MFVarSetInt (_MDInNewTimeStepsID, itemID, TimeStep);
-	}
+
 //Accumulate temperature
-	T_time = (MFVarGetFloat (_MDInNewAirTempAcc_timeID, itemID, 0.0) + Tday); 
-	MFVarSetFloat (_MDInNewAirTempAcc_timeID, itemID, T_time);	
+	T_time = (MFVarGetFloat (_MDInAirTempAcc_timeID, itemID, 0.0) + Tday); 
+	MFVarSetFloat (_MDInAirTempAcc_timeID, itemID, T_time);	
 	TupSlop = MFVarGetFloat (_MDInAirTempAcc_spaceID, itemID, 0.0); 
 	Tacc = TupSlop + (T_time * PixSize_km2);
 	MFVarSetFloat (_MDInAirTempAcc_spaceID, itemID, Tacc);
 
-//Accumulate discharge
-	//Qacc = (MFVarGetFloat (_MDInNewDischargeAccID, itemID, 0.0)+ Qday);// in m3/s
-	//MFVarSetFloat (_MDInNewDischargeAccID, itemID, Qacc);			
-
-// Accumulate time steps
-	//TimeStep = MFVarGetInt (_MDInTimeStepsID, itemID, 0.0);
-	//tempTimeStep = (MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0)+1);//		!!! Chnaged for constant 7/10/10
-	TimeStep = (MFVarGetInt (_MDInNewTimeStepsID, itemID, 0.0) +1 );
-	MFVarSetInt (_MDInNewTimeStepsID, itemID, TimeStep);		//	!!! Chnaged for constant 7/10/10
+	TimeStep = (MFVarGetInt (_MDInTimeStepsID, itemID, 0) + 1);
+	MFVarSetInt (_MDInTimeStepsID, itemID, TimeStep); //	!!! Chnaged for constant 7/10/10
 	MFVarSetFloat (_MDOutBQART_AID, itemID, A);
 	MFVarSetFloat (_MDOutBQART_RID, itemID, R);
 //Calculate moving avarege temperature (Tbar) and discharge
@@ -359,11 +338,7 @@ int MDSediment_FluxOLDDef() {
 	    ((_MDInBQART_LithologyID     = MFVarGetID (MDVarSediment_BQART_Lithology,           MFNoUnit,	MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInBQART_GNPID           = MFVarGetID (MDVarSediment_BQART_GNP,                 MFNoUnit,	MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInPopulationID          = MFVarGetID (MDVarSediment_Population,                MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
-        ((_MDInNewAirTempAcc_timeID  = MFVarGetID (MDVarSediment_NewAirTemperatureAcc_time, "degC",     MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInAirTempAcc_spaceID    = MFVarGetID (MDVarSediment_AirTemperatureAcc_space,   "degC" ,    MFRoute,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInNewDischargeAccID     = MFVarGetID (MDVarSediment_NewDischargeAcc,           "m3/s",     MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInNewSedimentAccID      = MFVarGetID (MDVarSediment_NewSedimentAcc,            "m3/s",     MFOutput, MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInNewTimeStepsID        = MFVarGetID (MDVarSediment_NewTimeSteps,              MFNoUnit,   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInResCapacityID         = MFVarGetID (MDVarReservoir_Capacity,                 "km3"	,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInTeAaccID              = MFVarGetID (MDVarSediment_TeAacc,                    MFNoUnit,   MFRoute,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInContributingAreaAccID = MFVarGetID (MDVarSediment_ContributingAreaAcc,       "km2",      MFRoute,  MFState, MFBoundary)) == CMfailed) ||
