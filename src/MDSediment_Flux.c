@@ -105,8 +105,8 @@ static void _MDSedimentFlux (int itemID) {
 	MFVarSetFloat (_MDInAirTempAcc_spaceID, itemID, Tacc);
 
 // Accumulate time steps
-	TimeStep =  (int) MFVarGetFloat (_MDInTimeStepsID, itemID, 0) + 1;
-	MFVarSetFloat (_MDInTimeStepsID, itemID, (float) TimeStep); //	!!! Chnaged for constant 7/10/10
+	TimeStep = MFVarGetInt (_MDInTimeStepsID, itemID, 0) + 1;
+	MFVarSetInt (_MDInTimeStepsID, itemID, TimeStep); //	!!! Chnaged for constant 7/10/10
 	MFVarSetFloat (_MDOutBQART_AID, itemID, A);
 	MFVarSetFloat (_MDOutBQART_RID, itemID, R);
 //Calculate moving avarege temperature (Tbar) and discharge
@@ -308,8 +308,8 @@ int MDSediment_FluxDef() {
 		((_MDInSmallResCapacityID    = MDReservoir_FarmPondCapacityDef ()) == CMfailed) ||
 	    ((_MDInDischMeanID 		     = MDAux_MeanDiscargehDef ())          == CMfailed) ||
 	    ((_MDInAirTempID             = MFVarGetID (MDVarCommon_AirTemperature,              "degC",     MFInput,  MFState, MFBoundary)) == CMfailed) ||
-	    ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time,    "degC",     MFInput,  MFState, MFInitial))  == CMfailed) ||
-	    ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps,                 MFNoUnit,   MFInput,  MFState, MFInitial))  == CMfailed) ||
+	    ((_MDInAirTempAcc_timeID     = MFVarGetID (MDVarSediment_AirTemperatureAcc_time,    "degC",     MFOutput, MFState, MFInitial))  == CMfailed) ||
+	    ((_MDInTimeStepsID           = MFVarGetID (MDVarSediment_TimeSteps,                 MFNoUnit,   MFOutput, MFState, MFInitial))  == CMfailed) ||
 	    ((_MDInReliefID              = MFVarGetID (MDVarSediment_Relief,                    "m",        MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInIceCoverID            = MFVarGetID (MDVarCommon_IceCover,                    MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
 	    ((_MDInBQART_LithologyID     = MFVarGetID (MDVarSediment_BQART_Lithology,           MFNoUnit,   MFInput,  MFState, MFBoundary)) == CMfailed) ||
