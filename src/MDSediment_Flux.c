@@ -105,8 +105,8 @@ static void _MDSedimentFlux (int itemID) {
 	MFVarSetFloat (_MDInAirTempAcc_spaceID, itemID, Tacc);
 
 // Accumulate time steps
-	TimeStep = (MFVarGetInt (_MDInTimeStepsID, itemID, 0) + 1);
-	MFVarSetInt (_MDInTimeStepsID, itemID, TimeStep); //	!!! Chnaged for constant 7/10/10
+	TimeStep =  (int) MFVarGetFloat (_MDInTimeStepsID, itemID, 0) + 1;
+	MFVarSetFloat (_MDInTimeStepsID, itemID, (float) TimeStep); //	!!! Chnaged for constant 7/10/10
 	MFVarSetFloat (_MDOutBQART_AID, itemID, A);
 	MFVarSetFloat (_MDOutBQART_RID, itemID, R);
 //Calculate moving avarege temperature (Tbar) and discharge
