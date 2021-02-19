@@ -9,6 +9,7 @@ MDTempSurfRunoff.c
 wil.wollheim@unh.edu
 
 EDITED: amiara@ccny.cuny.edu Sep 2016
+EDITED: ariel.miara@nrel.gov Feb11 2021
 
 This module calculates the temperature of surface runoff and infiltration to groundwater
 Irrigation inputs are not accounted here.
@@ -35,8 +36,11 @@ static void _MDWTempSurfRunoff (int itemID) {
     wet_b_temp         = MFVarGetFloat (_MDInWetBulbTempID,     itemID, 0.0);
     airT               = MFVarGetFloat (_MDInCommon_AirTemperatureID,         itemID, 0.0);
 
-    SurfWatT = wet_b_temp; // CHANGED TO EQUAL WET BULB --> Feb 22 2019 MIARA
-    SurfWatT = (SurfWatT >= airT) ? wet_b_temp : SurfWatT;
+//    SurfWatT = wet_b_temp; // CHANGED TO EQUAL WET BULB --> Feb 22 2019 MIARA
+//    SurfWatT = (SurfWatT >= airT) ? wet_b_temp : SurfWatT;
+
+// NEW METHOD: https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2018WR023250.
+SurfWatT = MDMaximum(airT - 1.5, 0);
 
     MFVarSetFloat (_MDOutWTempSurfROID, itemID, SurfWatT);
 }

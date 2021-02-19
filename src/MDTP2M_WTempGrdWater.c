@@ -9,8 +9,7 @@ MDTempGrdWater.c
 wil.wollheim@unh.edu
 
 EDITED: amiara@ccny.cuny.edu
-
-// CHANGING AUG 11 2018  FOR SAGY EXPERIMENT --> COULD GO WRONG.
+EDITED: ariel.miara@nrel.gov Feb11 2021
 
 Calculate groundwater temperature by mixing existing groundwater, rain recharge, and irrigation return flow.
 Rain recharge temperature is calculated in MDWTempSurfRunoff
@@ -33,7 +32,11 @@ static void _MDWTP2M_TempGrdWater (int itemID) {
 	float Gw_Temp;
 	airT               = MFVarGetFloat (_MDInCommon_AirTemperatureID,         itemID, 0.0);
 	Gw_Temp            = MFVarGetFloat (_MDInTP2M_GW_TempID,         itemID, 0.0);
-   if (Gw_Temp == 0) { Gw_Temp = airT - 5.0; }
+//   if (Gw_Temp == 0) { Gw_Temp = airT - 5.0; }
+
+//High‐Resolution Global Water Temperature Modeling 2019.
+Gw_Temp = MDMaximum(5.0, airT); 
+
 
     MFVarSetFloat (_MDOutTP2M_WTempGrdWaterID,itemID,Gw_Temp);
 }
